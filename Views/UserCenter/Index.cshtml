@@ -1,0 +1,129 @@
+﻿@{
+    ViewData["Title"] = "用户记录";
+}
+
+<div class="row">
+    <div class="col-md-2">
+        <div class="text-center">
+            <input type="hidden" id="userInfoId" value="@ViewData["Id"]" />
+            <img class="img-thumbnail" src="@ViewData["HeadPhoto"]" style="width:140px; height:140px;" alt="@ViewData["UserName"]" />
+            <a href="/usercenter/index" alt="@ViewData["UserName"]">
+                <h4>@ViewData["UserName"]</h4>
+            </a>
+            <a href="/usercenter/AccountSettings" class="btn btn-default">
+                <span>个人信息</span>
+            </a>
+            <a href="/usercenter/upheadphoto" class="btn btn-default">
+                <span>换头像</span>
+            </a>
+        </div>
+        <hr />
+        <div class="list-group">
+            <a href="/usercenter/index/" class="list-group-item"><span class="glyphicon glyphicon-home active" aria-hidden="true"></span> 个人主页</a>
+            <a href="/usercenter/accountsettings" class="list-group-item"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> 账户设置</a>
+            <a href="/usercenter/securitysettings" class="list-group-item"><span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> 安全设置</a>
+            @if (ViewData["Role"].ToString() == "superadmin")
+            {
+                <a href="/superadmin/index/" class="list-group-item"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> 后台管理</a>
+            }
+            @if (ViewData["Role"].ToString() == "admin")
+            {
+                <a href="/admin/index/" class="list-group-item"><span class="glyphicon glyphicon-tasks" aria-hidden="true"></span> 管理员中心</a>
+            }
+        </div>
+    </div>
+    <div class="col-md-10">
+        <div class="col-md-6">
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">发帖记录&nbsp;&nbsp;<span id="tabUserTopicNum">0</span></div>
+                    <div class="panel-body" style="padding-bottom:2px;">
+                        <table id="tabUserTopic" class="table col-md-12" style="margin-bottom:1px;">
+                            <tbody>
+                                <tr>
+                                    <td colspan="2">
+                                        <div class="fa fa-fw fa-spinner fa-spin"></div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">关注的人&nbsp;&nbsp;<span id="tabUserStarNum">0</span></div>
+                    <div class="panel-body" style="padding-bottom:2px;">
+                        <table id="tabUserStar" class="table col-md-12" style="margin-bottom:1px;">
+                            <tbody>
+                                <tr>
+                                    <td colspan="2">
+                                        <div class="fa fa-fw fa-spinner fa-spin"></div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">回帖记录&nbsp;&nbsp;<span id="tabReplyLogNum">0</span></div>
+                    <div class="panel-body" style="padding-bottom:2px;">
+                        <table id="tabReplyLog" class="table col-md-12" style="margin-bottom:1px;">
+                            <tbody>
+                                <tr>
+                                    <td colspan="2">
+                                        <div class="fa fa-fw fa-spinner fa-spin"></div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">你的粉丝&nbsp;&nbsp;<span id="tabByUserStarNum">0</span></div>
+                    <div class="panel-body" style="padding-bottom:2px;">
+                        <table id="tabByUserStar" class="table col-md-12" style="margin-bottom:1px;">
+                            <tbody>
+                                <tr>
+                                    <td colspan="2">
+                                        <div class="fa fa-fw fa-spinner fa-spin"></div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        var userId = $("#userInfoId").val();
+        if (userId != null && userId != "") {
+            bbs.getLogCount("tabUserTopicNum", userId, "/usercenter/getusertopiccount/");
+            bbs.getLogCount("tabReplyLogNum", userId, "/usercenter/getuserreplycount/");
+            bbs.getLogCount("tabUserStarNum", userId, "/usercenter/getuserstarcount/");
+            bbs.getLogCount("tabByUserStarNum", userId, "/usercenter/getbyuserstarcount/");
+            bbs.getUserTopicLog("tabUserTopic", userId, 1);
+            bbs.getUserReplyLog("tabReplyLog", userId, 1);
+            bbs.getUserStarLog("tabUserStar", userId, 1);
+            bbs.getByUserStarLog("tabByUserStar", userId, 1);
+        }
+    })
+</script>

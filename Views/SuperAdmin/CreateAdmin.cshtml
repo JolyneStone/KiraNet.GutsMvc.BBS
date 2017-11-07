@@ -1,0 +1,109 @@
+﻿@{
+    ViewData["Title"] = "后台管理";
+}
+<div class="row">
+    <div class="col-md-2">
+        <div class="text-center">
+            <img class="img-thumbnail" src="@ViewData["HeadPhoto"]" style="width:140px; height:140px;" alt="@ViewData["UserName"]" />
+            <a href="/usercenter/index" alt="@ViewData["UserName"]">
+                <h4>@ViewData["UserName"]</h4>
+            </a>
+            <a href="/usercenter/AccountSettings" class="btn btn-default">
+                <span>个人信息</span>
+            </a>
+            <a href="/usercenter/upheadphoto" class="btn btn-default">
+                <span>换头像</span>
+            </a>
+        </div>
+        <hr />
+        <div class="list-group">
+            <a href="/usercenter/index" class="list-group-item"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> 个人中心</a>
+            <a href="/usercenter/accountsettings" class="list-group-item"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> 账户设置</a>
+            <a href="/usercenter/securitysettings" class="list-group-item"><span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> 安全设置</a>
+            @if (ViewData["Role"].ToString() == "superadmin")
+            {
+            <a href="/superadmin/index/" class="list-group-item active"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> 后台管理</a>
+            }
+            @if (ViewData["Role"].ToString() == "admin")
+            {
+            <a href="/admin/index/" class="list-group-item"><span class="glyphicon glyphicon-tasks" aria-hidden="true"></span> 管理员中心</a>
+            }
+        </div>
+    </div>
+    <div class="col-md-10">
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/superadmin/index">后台管理</a>
+                </div>
+                <div>
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a href="/superadmin/admins/">版主管理</a></li>
+                        <li><a href="/superadmin/users/">用户管理</a></li>
+                        <li><a href="/superadmin/createbbs/">创建论坛</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="row col-md-12">
+            <!--创建版主-->
+            <form id="form_submit" name="form_submit" method="post">
+                <div class="form-horizontal">
+                    <hr />
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">账号</label>
+                        <div class="col-md-3">
+                            <input id="email" name="email" required="required" type="email" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">论坛</label>
+                        <div class="col-md-3">
+                            <select id="bbsId" name="bbsId" class="form-control">
+                                <option value="-1">请选择版块</option>
+                                @if (Model.Length > 0)
+                                {
+                                    foreach (var bbs in Model)
+                                    {
+                                        <option value="@bbs.BBSId">@bbs.BBSName</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-2">
+                            <input type="button" value="确 定" name="btnSubmit" class="btn btn-default" />
+                            <span id="msgbox" style="color:red">@ViewData["msgbox"]</span>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name="ReturnUrl" value="@(ViewData["returnUrl"]??"")" />
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script src="../../wwwroot/bower_components/jquery-validate/jquery.validate.min.js"></script>
+<script src="../../wwwroot/bower_components/jquery-validate/messages_zh.js"></script>
+<script>
+    $().ready(function () {
+        $("#form_submit").validate({
+            rules: {
+                email: {
+                    required: true,
+                    minlength: 3,
+                    maxlength: 50
+                }
+            },
+            message: {
+                email: {
+                    required: "请输入账号",
+                    minlength: "账号不能小于3个字符",
+                    maxlength: "账号过长"
+                }
+            }
+        });
+    });
+</script>

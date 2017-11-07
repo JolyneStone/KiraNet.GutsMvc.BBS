@@ -1,0 +1,526 @@
+﻿@using KiraNet.GutsMvc.BBS.Commom;
+@{
+    var bbsId = ViewData["BBSId"].ToString();
+}
+
+<link rel="stylesheet" href="../../wwwroot/bower_components/site/topic.css" />
+<link rel="stylesheet" href="../../wwwroot/bower_components/paging/paging.css" />
+
+<div class="col-md-12">
+    <div class="col-md-9">
+        <div class="col-md-12">
+            <nav class="navbar navbar-default" role="navigation">
+                <div class="container-fluid">
+                    <div class="navbar-collapse collapse">
+                        <ul class="nav navbar-nav navbar-left">
+                            <li>
+                                <a class="navbar-brand text-muted active" href="/bbs/index/?id=@bbsId">@ViewData["BBSName"]</a>
+                            </li>
+                            <li>
+                                <a class="navbar-default" href="/bbs/createtopic/?bbsid=@bbsId">发帖</a>
+                            </li>
+                            @if (ViewData["Role"] == "Admin")
+                            {
+                                <li>
+                                    @if (ViewData["TopicStatus"] == TopicStatus.Top.ToString())
+                                    {
+                                        <a id="btnTop" href="#" class="navbar-default pointer" data-istop="1">取消置顶</a>
+                                    }
+                                    else
+                                    {
+                                        <a id="btnTop" href="#" class="navbar-default pointer" data-istop="0">置顶</a>
+                                    }
+                                </li>
+                                <li>
+                                    <a id="btnDelTopic" href="#" class="navbar-default pointer" style="color:crimson;">删除</a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <div class="page-container col-md-12">
+            <div class="row">
+                <div class="col-md-10 main-listing">
+                    <h3 style="color:dimgray;">@ViewData["Title"]
+                    @if ((bool)ViewData["IsLike"] == true)
+                    {
+                        <span id="btnLike" data-islike="1" style="float:right;" class="like star pointer">&nbsp;&nbsp;&nbsp; @ViewData["StarCount"]</span>
+                    }
+                    else
+                    {
+                        <span id="btnLike" data-islike="0" style="float:right;" class="like pointer">&nbsp;&nbsp;&nbsp;@ViewData["StarCount"]</span>
+                    }
+                    </h3>
+                    <section class="col-md-12">
+                        <!--评论-->
+                        <ol id="paging" class="commentlist"></ol>
+                    </section>
+                    <div id="pagination" class="box center">
+                        <!--分页-->
+                    </div>
+                </div>
+                <div id="addcomment" name="addcomment" class="col-md-12">
+                    <!--添加评论-->
+                    <hr style="color:cadetblue;width:100%;" />
+                    <form id="ajform" method="post" action="/bbs/submitreply" class="col-md-12 form-horizontal">
+                        <input type="hidden" id="topicId" name="topicId" value="@ViewData["TopicId"]" />
+                        <input type="hidden" id="replyObject" name="replyObject" value="0" />
+                        <input type="hidden" id="replyUserId" name="replyUserId" />
+                        <input type="hidden" id="replyIndex" name="replyIndex" />
+                        <input type="hidden" id="replyType" name="replyType" value="0" />
+                        <div class="col-md-4" style="margin-bottom:2%;">
+                            <span>
+                                <span id="editTxt" class="fa fa-fw fa-edit pointer fa-2x"></span>
+                            </span>
+                            <span>
+                                <span id="editPic" class="fa fa-fw fa-picture-o pointer fa-2x"></span>
+                            </span>
+                            <span>
+                                <span id="btnTopic" class="fa fa-fw fa-reply pointer fa-2x hidden"></span>
+                            </span>
+                        </div>
+                        <div id="topic_box" class="col-md-12 form-group">
+                            <textarea class="col-md-12 form-control" name="message" id="replyTxt" cols="55" rows="10"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <div style="margin-top:20px;margin-left:20px;" class="col-md-offset-0 col-md-6">
+                                <input type="button" value="回 复" id="submitbtn" class="btn btn-default" />
+                                <span id="msgbox" style="color:red">@ViewData["msgbox"]</span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <!--搜索框-->
+        <ul id="myTab" class="nav nav-tabs">
+            <li class="active"><a href="#search_topic" data-toggle="tab">搜帖子</a></li>
+            <li><a href="#search_content" data-toggle="tab">搜内容</a></li>
+            <li><a href="#search_user" data-toggle="tab">搜用户</a></li>
+        </ul>
+        <div id="myTabContent" class="tab-content">
+            <div class="tab-pane fade in active" id="search_topic">
+                <form method="post" action="/home/search/">
+                    <p class="input-group">
+                        <input type="hidden" name="searchtype" value="1" />
+                        <input id="search_topic_input" name="query" type="text" list="topic_historyList" class="form-control" placeholder="请输入帖子名称" />
+                        <span class="input-group-btn">
+                            <button class="btn btn-info btn-search">查找</button>
+                        </span>
+                        <datalist id="topic_historyList" name="historyList"></datalist>
+                    </p>
+                </form>
+            </div>
+            <div class="tab-pane fade" id="search_content">
+                <form method="post" action="/home/search/">
+                    <p class="input-group">
+                        <input type="hidden" name="searchtype" value="2" />
+                        <input id="search_content_input" name="query" type="text" list="content_historyList" class="form-control" placeholder="请输入内容关键字" />
+                        <span class="input-group-btn">
+                            <button class="btn btn-info btn-search">查找</button>
+                        </span>
+                        <datalist id="content_historyList" name="historyList"></datalist>
+                    </p>
+                </form>
+            </div>
+            <div class="tab-pane fade" id="search_user">
+                <form method="post" action="/home/search/">
+                    <p class="input-group">
+                        <input type="hidden" name="searchtype" value="3" />
+                        <input id="search_user_input" name="query" type="text" class="form-control" list="user_historyList" placeholder="请输入用户名称" />
+                        <span class="input-group-btn">
+                            <button class="btn btn-info btn-search">查找</button>
+                        </span>
+                        <datalist id="user_historyList" name="historyList"></datalist>
+                    </p>
+                </form>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <!--热点推荐-->
+            <div class="col-md-12">
+                <h4>一周热点<span id="recommendCount" class="text-info">0</span></h4>
+            </div>
+            <hr style="color:chocolate;" />
+            <div id="recommends" class="col-md-12">
+                <!--推荐项-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../../wwwroot/bower_components/paging/paging.min.js"></script>
+<script src="../../wwwroot/bower_components/jquery-form/dist/jquery.form.min.js"></script>
+<script>
+    var topicId = @ViewData["TopicId"];
+    var bbsId = @ViewData["BBSId"];
+    var isAbility = (('@ViewData["Role"]' == 'Admin') || ('@ViewData["Role"]' == 'User'));
+
+    $('#pagination').paging({
+        initPageNo: 1, // 初始页码
+        totalPages: @((Model.Total + Model.PageSize - 1) / Model.PageSize), //总页数
+        totalCount: '合计<span id="total_count">' + @Model.Total + '</span>条数据', // 条目总数
+        slideSpeed: 600, // 缓动速度，单位毫秒
+        jump: true, //是否支持跳转
+        callback: function (page) { // 回调函数
+           getPaging(page);
+        }
+    });
+
+    function hashComment(replyObject, tab) {
+        var t = $(tab);
+
+        $('#replyObject').val(1);
+        $('#replyUserId').val(t.data("userid"));
+        $('#replyIndex').val(t.data('replyindex'));
+
+
+        var btntopic = $("#btnTopic");
+        if (btntopic.hasClass("hidden")) {
+            btntopic.removeClass("hidden");
+        }
+
+        //location.hash = "#addcomment";
+        //不知为何跳转锚点不成功，改用jQuery的方式
+        $("html,body").animate({ scrollTop: $("#addcomment").offset().top }, 100);
+    };
+
+
+    function delReply(tab) {
+        var t = $(tab);
+        var replyId = t.data('replyid');
+
+        $.get('/bbs/deletereply/', { id: replyId }, function (data) {
+            if (data) {
+                if (data.IsOk) {
+                    $('#comment' + replyId).remove();
+                    var total = $('#total_count');
+                    total.html(Number(total.html()) - 1);
+                } else {
+                    alert(data.Msg);
+                }
+            } else {
+                alert("删除失败，请稍后再试");
+            }
+
+        });
+    };
+
+
+    function delChildReply(tab) {
+        var t = $(tab);
+        var childReplyId = t.data('childreplyid');
+
+        $.get('/bbs/deletechildreply/', { id: childReplyId }, function (data) {
+            if (data) {
+                if (data.IsOk) {
+                    $('#childcomment' + childReplyId).remove();
+                } else {
+                    alert(data.Msg);
+                }
+            } else {
+                alert("删除失败，请稍后再试");
+            }
+
+        });
+    };
+
+
+    function getPaging(page) {
+        $.get("/bbs/gettopiccontent/", { id: topicId, page: page }, function (data) {
+            if (data != null && data.IsOk && data.Data != null) {
+                var arr = [];
+                $.each(data.Data.PageData, function (i, item) {
+                    var des = item.DesType == 0 ? ('<p>' + item.Message + '</p>') : ('<img class="attachment-std-thumbnail wp-post-image" style="max-width:85%;" src="' + item.Message + '" />');
+                    arr.push('<li id="comment' + item.ReplyId + '" class="comment">' +
+                        '<article>' +
+                        '<a href="/user/index/' + item.UserId + '"><img src="' + item.HeadPhoto + '" class="avatar" height="60" width="60" /></a>' +
+                        '<div class="comment-meta">' +
+                        '<h5 class="author">' +
+                        '<cite class="fn">' +
+                        '<a href="/user/index/' + item.UserId + '" rel="external nofollow" class="url">' + item.UserName + '</a>' +
+                        (item.ReplyIndex == 1 ? '' : (' - <a class="comment-reply-link" href= "#" data-userid="' + item.UserId + '" data-replyindex="' + item.ReplyIndex + '" onclick="hashComment(1, this)" >回复</a> ')) +
+                        (item.ReplyIndex == 1 ? '' : (isAbility ? ('&nbsp;&nbsp;<span class="pointer" data-replyid="' + item.ReplyId + '" onclick="delReply(this)" >删除</span>') : '')) +
+                        '<span style="float:right">' + item.ReplyIndex + '</span>' +
+                        '</cite>' +
+                        '</h5>' +
+                        '<p class="date">' +
+                        '<span>' + item.CreateTime + '</span>' +
+                        '<span name="replyDisplay" id="replyDisplay' + item.ReplyIndex + '" data-reply="' + item.ReplyIndex + '" style="float:right;" class="pointer" >' + (item.ReplyCount == 0 ? '' : '展开评论') + '</span>' +
+                        '</p>' +
+                        '</div>' +
+                        '<div class="comment-body">' +
+                        '<p>' + des + '</p>' +
+                        '</div>' +
+                        '</article > ' +
+                        '<ul id="child' + item.ReplyIndex + '" class="children"></ul>' +
+                        '</li>');
+                });
+
+                if (arr.length > 0) {
+                    $("#paging").html(arr.join(''));
+
+                    $('span[name="replyDisplay"]').bind("click", function () {
+                        getChildReply($(this).data('reply'), 1, 5);
+                    })
+                } else {
+                    $("#paging").html("<li><h4>帖子丢失啦~~~</h4></li>");
+                }
+
+            } else {
+                $("#paging").html("<li><h4>帖子丢失啦~~~</h4></li>");
+            }
+        })
+    };
+
+    function getChildRelyPaging(tab) {
+        var t = $(tab);
+        getChildReply(t.data('reply'), t.data('page'), 5);
+    }
+
+    function getChildReply(replyIndex, page, pageSize) {
+        $.get('/bbs/getchildreply', { id: topicId, index: replyIndex, page: page, pageSize: pageSize }, function (data) {
+            if (data != null && data.IsOk && data.Data != null) {
+                var arr = [];
+                $.each(data.Data.PageData, function (i, item) {
+                    arr.push('<li id="childcomment' + item.Id + '" class="comment bypostauthor odd alt">' +
+                        '<article>' +
+                        '<a href="/user/index/' + item.UserId + '"><img src="' + item.HeadPhoto + '" class="avatar" height="40" width="40" /></a>' +
+                        '<div class="comment-meta">' +
+                        '<h5 class="author">' +
+                        '<cite class="fn">' +
+                        '<a href="/user/index/' + item.UserId + '" rel="external nofollow" class="url">' + item.UserName + '</a>' +
+                        '</cite>' +
+                        (isAbility ? ('&nbsp;&nbsp;<span class="pointer" data-childreplyid="' + item.Id + '" onclick="delChildReply(this)" >删除</span>') : '') +
+                        '</h5>' +
+                        '<p class="date">' +
+                        '<span>' + item.CreateTime + '</span>' +
+                        '</p>' +
+                        '</div>' +
+                        '<div class="comment-body">' +
+                        '<p>' + (item.DesType == 0 ? item.Message : ('<img width="85%;" src="' + item.Message + '" />')) + '</p>' +
+                        '</div>' +
+                        '</article > ' +
+                        '</li>');
+                });
+
+                if (arr.length > 0) {
+                    var paging = '<li class="smpage">';
+                    if (data.Data.PreviousPage > 0) {
+                        paging = paging + '<span class="previous pointer" onclick="getChildRelyPaging(this)" data-reply="' + replyIndex + '" data-page="' + data.Data.PreviousPage + '">上一页</span>';
+                    }
+                    if (data.Data.NextPage > 0) {
+                        paging = paging + '<span class="previous pointer" onclick="getChildRelyPaging(this)" data-reply="' + replyIndex + '" data-page="' + data.Data.NextPage + '">下一页</span>';
+                    }
+
+                    paging = paging + '</li>';
+                    arr.push(paging);
+
+                    $('#child' + replyIndex).html(arr.join(''));
+                    var replyDisplay = $('#replyDisplay' + replyIndex);
+                    replyDisplay.html("收起评论");
+                    replyDisplay.unbind();
+                    replyDisplay.bind("click", function () {
+                        $('#child' + replyIndex).html('');
+                        $(this).html("展开评论");
+                        replyDisplay.unbind();
+                        replyDisplay.bind('click', function () {
+                            getChildReply($(this).data('reply'), 1, 5);
+                         })
+                    });
+                } else {
+                    $('#child' + replyIndex).html("<li><h3>回复丢失啦~~~</h3></li>");
+                }
+            } else {
+                $('#child' + replyIndex).html("<li><h3>回复丢失啦~~~</h3></li>");
+            }
+        });
+    }
+
+    $(function () {
+
+        bbs.getRecommends('recommends', 'recommendCount');
+
+        $("#btnDelTopic").click(function () {
+            $.get("/bbs/deletetopic/", { id: topicId }, function (data) {
+                if (data) {
+                    if (data.IsOk) {
+                        window.location = "/bbs/index/" + bbsId;
+                    } else {
+                        alert(data.Msg);
+                    }
+                } else {
+                    alert("删除此贴失败，请稍后再试");
+                }
+
+            });
+        });
+
+        $("#btnLike").click(function () {
+            var topicId = $("#topicId").val();
+            if (topicId == null && topicId == undefined) {
+                return;
+            }
+
+            var isLike = !($(this).data("islike") == 1);
+            var btnLike = $(this);
+
+            $.get("/user/gotopicstar/", { id: topicId, isLike: isLike }, function (data) {
+                if (data != null) {
+                    if (data.IsOk) {
+                        
+                        if (isLike) {
+                            btnLike.data("islike", '1');
+                            btnLike.html('  ' + data.Msg);
+                            if (!btnLike.hasClass("star")) {
+                                btnLike.addClass("star");
+                            }
+                        } else {
+                            btnLike.data('islike', '0');
+                            btnLike.html('  ' + data.Msg);
+                            if (btnLike.hasClass("star")) {
+                                btnLike.removeClass("star");
+                            }
+                        }
+                    } else {
+                        alert(data.Msg);
+                    }
+                }
+            });
+        });
+
+        $("#btnTop").click(function () {
+            var topicId = $("#topicId").val();
+            if (topicId == null && topicId == undefined) {
+                return;
+            }
+
+            var istop = !($(this).data("istop") == 1)
+            $.get("/admin/gotopictop/", { id: topicId, isTop: istop }, function (data) {
+                if (data != null) {
+                    if (data.IsOk) {
+                        if (istop) {
+                            $("#btnTop").data("istop", '1');
+                            $("#btnTop").html("取消置顶");
+                        } else {
+                            $("#btnTop").data('istop', '0');
+                            $("#btnTop").html("置顶");
+                        }
+                    } else {
+                        alert(data.Msg);
+                    }
+                }
+            });
+        });
+
+        $("#submitbtn").click(function () {
+            $("#ajform").ajaxSubmit(function (data) {
+                if (data != null && data.IsOk) {
+                    $("#ajform").resetForm();
+                    $("#msgbox").html("回复成功！");
+                    if ($('#replyObject').val() == 0) {
+                        var total = $('#total_count')
+                        total.html(Number(total.html()) + 1);
+                    }
+                } else if (!data.IsOk) {
+                    $("#ajform").resetForm();
+                    $("#msgbox").html(data.Msg);
+                } else {
+                    $("#ajform").resetForm();
+                    $("#msgbox").html("回复失败，请稍后再试");
+                }
+            });
+        })
+
+        $("#editTxt").click(function () {
+            var txt = $('#editTxt');
+            if (!txt.hasClass("active")) {
+                txt.addClass("active");
+            }
+
+            var pic = $("#editPic");
+            if (pic.hasClass("active")) {
+                pic.removeClass("active");
+            }
+
+            if ($('#replyImg').length > 0) {
+                //var filebtn = $('#filebtn');
+                //if (filebtn) {
+                //    filebtn.value = '';
+                //    filebtn.outerHTML = filebtn.outerHTML;
+                //}
+                $('#replyImg').remove();
+            }
+
+            $('#replyType').val('Text');
+            if ($('#replyTxt').length > 0) {
+                return null;
+            }
+
+            var tag = '<textarea class="col-md-12 form-control" name="message" id="replyText" cols="55" rows="10"></textarea>';
+            $("#topic_box").prepend(tag);
+            $('#ajform').attr('enctype', "application/x-www-form-urlencoded");
+
+            //var btnreply = $("#btnreply");
+            //if (btnreply.hasClass("active")) {
+            //    btnreply.removeClass("active");
+            //}
+        });
+
+        $("#editPic").click(function () {
+            var pic = $('#editPic');
+            if (!pic.hasClass("active")) {
+                pic.addClass("active");
+            }
+
+            var txt = $("#editTxt");
+            if (txt.hasClass("active")) {
+                txt.removeClass("active");
+            }
+
+            if ($('#replyTxt').length > 0) {
+                $('#replyTxt').remove();
+            }
+
+            $('#replyType').val('Image');
+            if ($('#replyImg').length > 0) {
+                return null;
+            }
+
+            var tag = '<div id="replyImg" ><img src="../../wwwroot/images/planet_univearse_telestial_space_pluto_sm.png" id="img_Photo" style="max-width:80%" required="required" class="img-thumbnail" />' +
+                '<div class="filebtnDiv">' +
+                '<div class="filebtnDiv-txt">点击上传</div>' +
+                '<input type="file" id="filebtn" name="my_picture" class="file_input" />' +
+                '</div ></div>';
+            $("#topic_box").prepend(tag);
+            $('#ajform').attr('enctype', "multipart/form-data");
+
+            var filebtn = $("#filebtn");
+            filebtn.unbind();
+            filebtn.bind('change', function () {
+                var file = this.files[0];
+                if (file != null) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) { // 该事件在file加载完毕后被触发
+                        $("#img_Photo").attr("src", e.target.result); // e.target.result 为加载的文件
+                    }
+
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+
+        $("#btnTopic").click(function () {
+            $('#replyObject').val(0);
+
+            var btntopic = $("#btnTopic");
+            if (!btntopic.hasClass("hidden")) {
+                btntopic.addClass("hidden");
+            }
+        });
+    });
+</script>

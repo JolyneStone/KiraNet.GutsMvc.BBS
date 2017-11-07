@@ -1,0 +1,189 @@
+﻿@using KiraNet.GutsMvc.BBS.Commom;
+@{
+    ViewData["Title"] = "搜索结果";
+}
+
+<link rel="stylesheet" href="../../wwwroot/bower_components/site/topic.css" />
+<link rel="stylesheet" href="../../wwwroot/bower_components/paging/paging.css" />
+<input type="hidden" id="str_query" value="@ViewData["Query"]" />
+<input type="hidden" id="search_type" value="@ViewData["SearchType"]" />
+<div class="col-md-12">
+    <div class="col-md-9">
+        <div class="row">
+            <div class="col-md-12 main-listing">
+                <div id="paging">
+                    <!--搜索结果-->
+                </div>
+                <div>
+                    <!--分页-->
+                    <nav>
+                        <ul class="pager">
+                            <li class="previous hidden" id="previousPage" name="search_page" data-page="1"><span><span aria-hidden="true">&larr;</span>上一页</span></li>
+                            <li class="next hidden" id="nextPage" name="search_page" data-page="1"><span>下一页<span aria-hidden="true">&rarr;</span></span></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <ul id="myTab" class="nav nav-tabs">
+            <li class="active"><a href="#search_topic" data-toggle="tab">搜帖子</a></li>
+            <li><a href="#search_content" data-toggle="tab">搜内容</a></li>
+            <li><a href="#search_user" data-toggle="tab">搜用户</a></li>
+        </ul>
+        <div id="myTabContent" class="tab-content">
+            <div class="tab-pane fade in active" id="search_topic">
+                <form method="post" action="/home/search/">
+                    <p class="input-group">
+                        <input type="hidden" name="searchtype" value="1" />
+                        <input id="search_topic_input" name="query" type="text" list="topic_historyList" class="form-control" placeholder="请输入帖子名称" />
+                        <span class="input-group-btn">
+                            <button class="btn btn-info btn-search">查找</button>
+                        </span>
+                        <datalist id="topic_historyList" name="historyList"></datalist>
+                    </p>
+                </form>
+            </div>
+            <div class="tab-pane fade" id="search_content">
+                <form method="post" action="/home/search/">
+                    <p class="input-group">
+                        <input type="hidden" name="searchtype" value="2" />
+                        <input id="search_content_input" name="query" type="text" list="content_historyList" class="form-control" placeholder="请输入内容关键字" />
+                        <span class="input-group-btn">
+                            <button class="btn btn-info btn-search">查找</button>
+                        </span>
+                        <datalist id="content_historyList" name="historyList"></datalist>
+                    </p>
+                </form>
+            </div>
+            <div class="tab-pane fade" id="search_user">
+                <form method="post" action="/home/search/">
+                    <p class="input-group">
+                        <input type="hidden" name="searchtype" value="3" />
+                        <input id="search_user_input" name="query" type="text" class="form-control" list="user_historyList" placeholder="请输入用户名称" />
+                        <span class="input-group-btn">
+                            <button class="btn btn-info btn-search">查找</button>
+                        </span>
+                        <datalist id="user_historyList" name="historyList"></datalist>
+                    </p>
+                </form>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <!--热点推荐-->
+            <div class="col-md-12">
+                <h4>一周热点<span id="recommendCount" class="text-info">0</span></h4>
+            </div>
+            <hr style="color:chocolate;" />
+            <div id="recommends" class="col-md-12">
+                <!--推荐项-->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="../../wwwroot/bower_components/paging/paging.min.js"></script>
+<script>
+    var query = $("#str_query").val();
+    var searchType = $("#search_type").val();
+
+    function hiddenTab(tabId) {
+        var tab = $('#' + tabId);
+        if (!tab.hasClass('hidden')) {
+            tab.addClass('hidden');
+        }
+    };
+
+    function showTab(tabId, page) {
+        var tab = $('#' + tabId);
+        if (tab.hasClass('hidden')) {
+            tab.removeClass('hidden');
+        }
+
+        tab.data('page', page);
+    };
+
+    function getPaging(page) {
+        $.get("/home/getsearchresult/", { query: query, searchType: searchType, page: page }, function (data) {
+            if (data != null && data.IsOk && data.Data != null) {
+                var arr = [];
+
+                $.each(data.Data.PageData, function (i, item) {
+                    if (searchType == 1) {
+                        arr.push('<article class="type-post hentry clearfix">' +
+                            '<header class="clearfix">' +
+                            '<h3 class="post-title"><a href="/bbs/topic/' + item.Id + '">' + item.TopicName + '</a></h3>' +
+                            '<div class="post-meta clearfix">' +
+                            '<span class="date">' + item.CreateTime + '</span>' +
+                            '<span class="comments">' + item.ReplyCount + ' Comments</span>' +
+                            '<span class="like-count">' + item.StarCount + '</span>' +
+                            '</div>' +
+                            '</header>' +
+                            '</article>');
+                    } else if (searchType == 3) {
+                        arr.push('<article class="type-post hentry clearfix">' +
+                            '<header class="clearfix">' +
+                            '<h3 class="post"><a href="/user/index/' + item.Id + '">' + '<img id="userheadphoto" class="img img-circle" src="' + item.HeadPhoto + '" style="width:30px;height:30px;" />&nbsp;&nbsp;' + item.UserName + '</a></h3>' +
+                            '<p class="post-meta clearfix">' + item.Introduce + '</p>' +
+                            '</header>' +
+                            '</article>');
+                    } else if (searchType == 2) {
+                        arr.push('<article class="type-post hentry clearfix">' +
+                            '<header class="clearfix">' +
+                            '<h3 class="post-title"><a href="/bbs/topic/' + item.TopicId + '">' + item.TopicName + '</a></h3>' +
+                            '</header>' +
+                            '<div class="post-meta clearfix">' +
+                            '<span class="date">' + item.CreateTime + '</span>' +
+                            '</div>' +
+                            '<div class="comment-body">' +
+                            '<p>' + item.Content + '</p>' +
+                            '</div>' +
+                            '</article>');
+                    }
+                });
+
+                if (arr.length > 0) {
+                    $("#paging").html(arr.join(''));
+                    if (data.Data.PageData.PreviousPage > 0) {
+                        showTab('previousPage', data.Data.PageData.PreviousPage);
+                    } else {
+                        hiddenTab('previousPage');
+                    }
+
+                    if (data.Data.PageData.NextPage > 0) {
+                        showTab('nextPage', data.Data.PageData.NextPage);
+                    } else {
+                        hiddenTab('nextPage');
+                    }
+
+                } else {
+                    $("#paging").html("<h2>暂无搜索结果</h2>");
+                    hiddenTab('previousPage');
+                    hiddenTab('nextPage');
+                }
+
+            } else {
+                $("#paging").html("<h2>暂无搜索结果</h2>");
+                hiddenTab('previousPage');
+                hiddenTab('nextPage');
+            }
+        })
+    };
+
+    $(function () {
+        //getPaging(1);
+        bbs.bindSearchHistory("historyList");
+        bbs.pushSearchHistory(query);
+        bbs.getRecommends('recommends', 'recommendCount');
+        getPaging(1);
+
+        $('li[name="search_page"]').click(function () {
+            var page = $(this).data('page');
+            if (page > 0) {
+                getPaging(page);
+            }
+        });
+    });
+</script>

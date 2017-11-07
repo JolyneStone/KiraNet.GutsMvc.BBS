@@ -1,0 +1,115 @@
+﻿@{
+    ViewData["Title"] = "后台管理 - 创建论坛";
+}
+
+<link rel="stylesheet" href="../../wwwroot/bower_components/bootstrap-select/dist/css/bootstrap-select.min.css" />
+
+<div class="row">
+    <div class="col-md-2">
+        <div class="text-center">
+            <img class="img-thumbnail" src="@ViewData["HeadPhoto"]" style="width:140px; height:140px;" alt="@ViewData["UserName"]" />
+            <a href="/usercenter/index" alt="@ViewData["UserName"]">
+                <h4>@ViewData["UserName"]</h4>
+            </a>
+            <a href="/usercenter/AccountSettings" class="btn btn-default">
+                <span>个人信息</span>
+            </a>
+            <a href="/usercenter/upheadphoto" class="btn btn-default">
+                <span>换头像</span>
+            </a>
+        </div>
+        <hr />
+        <div class="list-group">
+            <a href="/usercenter/index" class="list-group-item"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> 个人中心</a>
+            <a href="/usercenter/accountsettings" class="list-group-item"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> 账户设置</a>
+            <a href="/usercenter/securitysettings" class="list-group-item"><span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> 安全设置</a>
+            @if (ViewData["Role"].ToString() == "superadmin")
+            {
+            <a href="/superadmin/index/" class="list-group-item active"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> 后台管理</a>
+            }
+            @if (ViewData["Role"].ToString() == "admin")
+            {
+            <a href="/admin/index/" class="list-group-item"><span class="glyphicon glyphicon-tasks" aria-hidden="true"></span> 管理员中心</a>
+            }
+        </div>
+    </div>
+    <div class="col-md-10">
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/superadmin/index">后台管理</a>
+                </div>
+                <div>
+                    <ul class="nav navbar-nav">
+                        <li><a href="/superadmin/admins/">版主管理</a></li>
+                        <li><a href="/superadmin/users/">用户管理</a></li>
+                        <li class="active"><a href="/superadmin/createbbs/">创建论坛</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="row col-md-12">
+            <form name="form_submit" method="post">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">论坛类型</label>
+                        <div class="col-md-3">
+                            <select id="bbstype" name="bbstype" class="selectpicker show-tick form-control">
+                                <option value="1">DotNet技术</option>
+                                <option value="2">数据库技术</option>
+                                <option value="3">云计算</option>
+                                <option value="4">计算机网络</option>
+                                <option value="5">Web前端</option>
+                                <option value="6">iOS开发</option>
+                                <option value="7">Android开发</option>
+                                <option value="8">Linux运维</option>
+                                <option value="9">IT人生</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">论坛名称</label>
+                        <div class="col-md-3">
+                            <input id="bbsname" name="bbsname" required="required" type="text" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-4">
+                            <input type="button" value="创 建" name="btnSubmit" class="btn btn-default" />
+                            <span id="msgbox" style="color:red">@ViewData["msgbox"]</span>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="../../wwwroot/bower_components/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
+<script src="../../wwwroot/bower_components/jquery-validate/jquery.validate.min.js"></script>
+<script src="../../wwwroot/bower_components/jquery-validate/messages_zh.js"></script>
+<script>
+    $().ready(function () {
+        $('form[name="form_submit"]').validate({
+            rules: {
+                bbstype: {
+                    required: true,
+                },
+                bbsname: {
+                    required: true,
+                    minlength: 1,
+                    maxlength: 20
+                }
+            },
+            message: {
+                bbstype: {
+                    required: "论坛类型必选"
+                },
+                bbsname: {
+                    required: "请输入论坛名称",
+                    minlength: "论坛名称不能小于1个字符",
+                    maxlength: "论坛名称不能超过20个字符"
+                }
+            }
+        });
+    });
+</script>

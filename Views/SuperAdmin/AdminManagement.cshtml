@@ -1,0 +1,127 @@
+﻿@{
+    ViewData["Title"] = "后台管理";
+}
+<div class="row">
+    <div class="col-md-2">
+        <div class="text-center">
+            <img class="img-thumbnail" src="@ViewData["HeadPhoto"]" style="width:140px; height:140px;" alt="@ViewData["UserName"]" />
+            <a href="/usercenter/index" alt="@ViewData["UserName"]">
+                <h4>@ViewData["UserName"]</h4>
+            </a>
+            <a href="/usercenter/AccountSettings" class="btn btn-default">
+                <span>个人信息</span>
+            </a>
+            <a href="/usercenter/upheadphoto" class="btn btn-default">
+                <span>换头像</span>
+            </a>
+        </div>
+        <hr />
+        <div class="list-group">
+            <a href="/usercenter/index" class="list-group-item"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> 个人中心</a>
+            <a href="/usercenter/accountsettings" class="list-group-item"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> 账户设置</a>
+            <a href="/usercenter/securitysettings" class="list-group-item"><span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> 安全设置</a>
+            @if (ViewData["Role"].ToString() == "superadmin")
+            {
+                <a href="/superadmin/index/" class="list-group-item active"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> 后台管理</a>
+            }
+            @if (ViewData["Role"].ToString() == "admin")
+            {
+                <a href="/admin/index/" class="list-group-item"><span class="glyphicon glyphicon-tasks" aria-hidden="true"></span> 管理员中心</a>
+            }
+        </div>
+    </div>
+    <div class="col-md-10">
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/superadmin/index">后台管理</a>
+                </div>
+                <div>
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a href="/superadmin/admins/">版主管理</a></li>
+                        <li><a href="/superadmin/users/">用户管理</a></li>
+                        <li><a href="/superadmin/createbbs/">创建论坛</a></li>
+                        <li><a href="/superadmin/createadmin">添加版主</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="row col-md-12">
+            <!--版主信息-->
+            <div class="form-horizontal col-md-8">
+                <input type="hidden" id="adminId" value="@Model.Id" />
+                <div class="col-md-10 form-group">
+                    <a href="/user/index/@Moel.Id"><img src="@Model.HeadPhoto" width="120" class="img img-circle" /></a>
+                </div>
+                <div class="col-md-10 form-group">
+                    <label>账号：<span>@Model.Email</span></label>
+                </div>
+                <div class="col-md-10 form-group">
+                    <label>昵称：<span>@Model.UserName</span></label>
+                </div>
+                <div class="col-md-10 form-group">
+                    <label>真实名称：<span>@Model.RealName</span></label>
+                </div>
+                <div class="col-md-10 form-group">
+                    <label>负责版块：<span id="bbsName">@Model.BBSName</span></label>
+                    <button id="btnModify" type="button" class="btn btn-success btn-sm">更改</button>
+                </div>
+                <div id="divId" class="col-md-10 form-group hidden">
+                    <label>更改版块：</label>
+                    <select id="selectBBS" class="form-control" style="width:30%;display:inline;">
+                        @if (Model.BBSList.Length > 0)
+                        {
+                            <option value="-1">请选择版块</option>
+                            foreach (var bbs in Model.BBSList)
+                            {
+                                <option value="@bbs.BBSId">@bbs.BBSName</option>
+                            }
+                        }
+                    </select>
+                    <button id="btnOk" type="button" class="btn btn-danger btn-sm">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $("#btnModify").click(function () {
+            var div = $("#divId");
+            if (div.hasClass('hidden')) {
+                // 显示
+                div.removeClass('hidden');
+                $(this).html('取消');
+            } else {
+                // 隐藏
+                $("#selectBBS").val("-1");
+                div.addClass('hidden');
+                $(this).html('更改');
+            }
+        });
+
+        $("#btnOk").click(function () {
+            var bbsId = $("#selectBBS").val();
+            var bbsName = $("#selectBBS").find("option:selected").text();
+            if (bbsId == -1) {
+                alert('请选择版块');
+                return;
+            }
+
+            var adminId = $("#adminId").val();
+            $.get('/superadmin/modifyadmin', { id: adminId, bbsId: bbsId }, function (data) {
+                if (data) {
+                    if (data.IsOk) {
+                        $("#btnModify").click();
+                        $("#bbsName").html(bbsName);
+                    } else {
+                        alert(data.Msg);
+                    }
+                } else {
+                    alert("出现未知错误，请检查您的网络");
+                }
+            });
+        });
+    });
+</script>

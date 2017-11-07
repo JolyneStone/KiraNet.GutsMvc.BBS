@@ -1,0 +1,141 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" content="text/html" />
+    <meta name="keywords" content="KiraNet.GutsMvc for BBS" />
+    <meta name="author" content="KiraYoshikage">
+    <title>GutsBBS - @(ViewData["Title"] ?? "分享你的点滴")</title>
+    <link rel="stylesheet" href="../../wwwroot/bower_components/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../../wwwroot/bower_components/font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="../../wwwroot/bower_components/site/navsite.css" />
+    <link rel="stylesheet" href="../../wwwroot/bower_components/site/site.css" />
+    <script src="../../wwwroot/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="../../wwwroot/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-default navbar-fixed-top selfnav">
+        <div class="container">
+            <button type="button" class="hamburger is-closed animated fadeInLeft" data-toggle="offcanvas">
+                <span class="hamb-top"></span>
+                <span class="hamb-middle"></span>
+                <span class="hamb-bottom"></span>
+            </button>
+            <div class="navbar-header" style="margin-left: 5%;">
+                <a href="http://localhost:17758/home/index" class="navbar-brand">GutsBBS</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-text">
+                    <li class="text-center"><span style="font-family:'MS Outlook'; font-style:italic; color:lightcoral;">两个囚犯站在铁窗前向外眺望，一个看着泥土，一个仰望星辰。 &nbsp;&nbsp; ———&nbsp;《不灭之诗》</span></li>
+                </ul>
+                <ul id="ul_login" class="nav navbar-nav navbar-right">
+                    <li class="loginli"><a href="/member/login">登录</a></li>
+                    <li class="loginli"><a href="/member/register">注册</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+    <div id="wrapper" class="col-lg-12 col-md-12">
+        <div class="overlay"></div>
+        <nav class="navbar navbar-inverse navbar-fixed-top" id="sidebar-wrapper" role="navigation">
+            <ul class="nav sidebar-nav">
+                <li class="sidebar-brand">
+                    <a href="#"></a>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-fw fa-windows"></i> DotNet技术 <span class="caret"></span></a>
+                    <ul id="bbslist1" class="dropdown-menu" role="menu">
+                        <!--<li><a href="#">#</a></li>-->
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-fw fa-database"></i> 数据库技术 <span class="caret"></span></a>
+                    <ul id="bbslist2" class="dropdown-menu" role="menu"></ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-fw fa-skyatlas"></i> 云计算 <span class="caret"></span></a>
+                    <ul id="bbslist3" class="dropdown-menu" role="menu"></ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-fw fa-wifi"></i> 计算机网络 <span class="caret"></span></a>
+                    <ul id="bbslist4" class="dropdown-menu" role="menu"></ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-fw fa-html5"></i> Web前端 <span class="caret"></span></a>
+                    <ul id="bbslist5" class="dropdown-menu" role="menu"></ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-fw fa-apple"></i> iOS开发 <span class="caret"></span></a>
+                    <ul id="bbslist6" class="dropdown-menu" role="menu"></ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-fw fa-android"></i> Android开发 <span class="caret"></span></a>
+                    <ul id="bbslist7" class="dropdown-menu" role="menu"></ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-fw fa-linux"></i> Linux运维 <span class="caret"></span></a>
+                    <ul id="bbslist8" class="dropdown-menu" role="menu"></ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-fw fa-github-alt"></i> IT人生 <span class="caret"></span></a>
+                    <ul id="bbslist9" class="dropdown-menu" role="menu"></ul>
+                </li>
+            </ul>
+        </nav>
+        <div id="page-content-wrapper" style="padding-top:5%;">
+            <div class="container" style="padding-right:0; padding-left:0;">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12" style="padding-right:0; padding-left:0;">
+                        @IncludeBody()
+                    </div>
+                </div>
+                <hr />
+                <footer class="text-center">
+                    <p>
+                        <a href="/home/about" target="_blank">关于我们</a>
+                        <a href="/home/contact" target="_blank">联系我们</a>
+                    </p>
+                    <p>
+                        &copy; 2017 - GutsMvcBBS &nbsp;&nbsp; 作者 - Kira Yoshikage
+                    </p>
+                </footer>
+            </div>
+        </div>
+    </div>
+    <script src="../../wwwroot/bower_components/site/site.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var trigger = $('.hamburger'),
+                overlay = $('.overlay'),
+                isClosed = false;
+
+            trigger.click(function () {
+                hamburger_cross();
+            });
+
+            function hamburger_cross() {
+
+                if (isClosed == true) {
+                    overlay.hide();
+                    trigger.removeClass('is-open');
+                    trigger.addClass('is-closed');
+                    isClosed = false;
+                } else {
+                    overlay.show();
+                    trigger.removeClass('is-closed');
+                    trigger.addClass('is-open');
+                    isClosed = true;
+                }
+            }
+
+            $('[data-toggle="offcanvas"]').click(function () {
+                $('#wrapper').toggleClass('toggled');
+            });
+        });
+    </script>
+</body>
+</html>

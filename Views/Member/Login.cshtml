@@ -1,0 +1,71 @@
+﻿@{
+    ViewData["Title"] = "登录";
+}
+<style>
+    .error {
+        color: red;
+    }
+</style>
+<h3><span class="glyphicon glyphicon-send" aria-hidden="true"></span> 登录</h3>
+<form id="form_submit" name="form_submit" method="post">
+    <div class="form-horizontal">
+        <h4>GutsMvcBBS：即刻登录，让我们一起分享生活中的喜怒哀乐吧。</h4>
+        <hr />
+        <div class="form-group">
+            <label class="col-md-2 control-label">账号</label>
+            <div class="col-md-3">
+                <input id="userName" name="userName" required="required" type="email" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">密码</label>
+            <div class="col-md-3">
+                <input id="userPwd" name="userPwd" required="required" type="password" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-2">
+                <input type="button" value="登 录" name="btnSubmit" class="btn btn-default" />
+                <span id="msgbox" style="color:red">@ViewData["msgbox"]</span>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" name="ReturnUrl" value="@(ViewData["returnUrl"]??"")" />
+</form>
+<br />
+<div>
+    <a href="/member/register">没账号这里注册</a> | <a href="/member/ForgetPassword">忘记密码？</a>
+</div>
+
+<script src="../../wwwroot/bower_components/jquery-validate/jquery.validate.min.js"></script>
+<script src="../../wwwroot/bower_components/jquery-validate/messages_zh.js"></script>
+<script>
+    $().ready(function () {
+        $("#form_submit").validate({
+            rules: {
+                userName: {
+                    required: true,
+                    minlength: 3,
+                    maxlength: 50
+                },
+                userPwd: {
+                    required: true,
+                    minlength: 6,
+                    maxlength: 20
+                }
+            },
+            message: {
+                userName: {
+                    required: "请输入账号",
+                    minlength: "账号不能小于3个字符",
+                    maxlength: "账号过长"
+                },
+                userPwd: {
+                    required: "请输入密码",
+                    minlength: "密码不能小于6个字符",
+                    maxlength: "密码不能超过20个字符"
+                }
+            }
+        });
+    });
+</script>

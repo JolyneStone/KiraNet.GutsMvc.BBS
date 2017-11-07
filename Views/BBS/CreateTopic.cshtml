@@ -1,0 +1,245 @@
+﻿
+@{
+    ViewData["Title"] = "发帖中";
+    var bbsId = ViewData["BBSId"].ToString(); 
+    var bbsName = ViewData["BBSName"].ToString();
+}
+
+<link rel="stylesheet" href="../../wwwroot/bower_components/site/topic.css" />
+<link rel="stylesheet" href="../../wwwroot/bower_components/paging/paging.css" />
+<link rel="stylesheet" href="../../wwwroot/bower_components/site/topic.css" />
+<div class="col-md-12">
+    <div class="col-md-9">
+        <div class="col-md-12">
+            <nav class="navbar navbar-default" role="navigation">
+                <div class="container-fluid">
+                    <div class="navbar-collapse collapse">
+                        <ul class="nav navbar-nav navbar-left">
+                            <li>
+                                <a class="navbar-brand text-muted" href="/bbs/index/?id=@bbsId">@bbsName</a>
+                            </li>
+                            <li>
+                                <a class="navbar-default active" href="/bbs/createtopic/?bbsid=@bbsId">发帖</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <div class="container col-md-12">
+            <div id="respond" class="row">
+                <h3>发表新帖</h3>
+                <form name="form_submit" method="post" class="form-horizontal">
+                    <p>请勿发表污秽、暴力的言论<span class="required">*</span></p>
+                    <input type="hidden" name="bbsId" value="@ViewData["BBSId"]" />
+                    <input type="hidden" name="bbsName" value="@bbsName" />
+                    <input type="hidden" id="replyType" name="replyType" value="0" />
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">帖子名称</label>
+                        <div class="col-md-3">
+                            <input id="topicName" name="topicName" required="required" type="text" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">内容</label>
+                        <div class="col-md-10">
+                            <div class="col-md-4" style="margin-bottom:2%;">
+                                <span>
+                                    <span class="fa fa-fw fa-edit pointer fa-2x active" id="editTxt"></span>
+                                </span>
+                                <span>
+                                    <span id="editPic" class="fa fa-fw fa-2x pointer fa-picture-o"></span>
+                                </span>
+                            </div>
+                            <div id="topic_box" class="col-md-12">
+                                <textarea class="col-md-12 form-control" name="topicDes" id="topicDes1" cols="55" rows="10"></textarea>
+                                <!--<img src="../../wwwroot/images/planet_univearse_telestial_space_pluto.png" id="img_Photo" style="max-width:80%;z-index:8;position:absolute;left:10%" required="required" class="img-thumbnail" />
+                                <input type="file" id="topicDes2" name="topicDes" class="filebtn" />
+                                <input type="button" class="upimgbtn" />-->
+                                <!--<img src="../../wwwroot/images/planet_univearse_telestial_space_pluto_sm.png" id="img_Photo" style="max-width:80%" required="required" class="img-thumbnail" />
+                                <input type="file" id="filebtn" name="topicDes" class="btn btn-default" />-->
+                                <!--<div class="filebtnDiv">
+                                    <div class="filebtnDiv-txt">点击上传</div>
+                                    <input type="file" id="filebtn" name="topicDes" class="file_input" />
+                                </div>-->
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-6">
+                            <input type="button" value="发 帖" name="btnSubmit" class="btn btn-default" />
+                            <span id="msgbox" style="color:red">@ViewData["msgbox"]</span>
+                            @if(ViewData["TopicId"]!=null)
+                            {
+                            <span style="color:cornflowerblue"><a href="/topic/@ViewData["TopicId"]"> 点击查看</a></span>
+                            }
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <!--搜索框-->
+        <ul id="myTab" class="nav nav-tabs">
+            <li class="active"><a href="#search_topic" data-toggle="tab">搜帖子</a></li>
+            <li><a href="#search_content" data-toggle="tab">搜内容</a></li>
+            <li><a href="#search_user" data-toggle="tab">搜用户</a></li>
+        </ul>
+        <div id="myTabContent" class="tab-content">
+            <div class="tab-pane fade in active" id="search_topic">
+                <form method="post" action="/home/search/">
+                    <p class="input-group">
+                        <input type="hidden" name="searchtype" value="1" />
+                        <input id="search_topic_input" type="text" class="form-control" placeholder="请输入帖子名称" />
+                        <span class="input-group-btn">
+                            <button class="btn btn-info btn-search">查找</button>
+                        </span>
+                    </p>
+                </form>
+            </div>
+            <div class="tab-pane fade" id="search_content">
+                <form method="post" action="/home/search/">
+                    <p class="input-group">
+                        <input type="hidden" name="searchtype" value="2" />
+                        <input id="search_content_input" type="text" class="form-control" placeholder="请输入内容关键字" />
+                        <span class="input-group-btn">
+                            <button class="btn btn-info btn-search">查找</button>
+                        </span>
+                    </p>
+                </form>
+            </div>
+            <div class="tab-pane fade" id="search_user">
+                <form method="post" action="/home/search/">
+                    <p class="input-group">
+                        <input type="hidden" name="searchtype" value="3" />
+                        <input id="search_user_input" type="text" class="form-control" placeholder="请输入用户名称" />
+                        <span class="input-group-btn">
+                            <button class="btn btn-info btn-search">查找</button>
+                        </span>
+                    </p>
+                </form>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <!--热点推荐-->
+            <div class="col-md-12">
+                <h4>一周热点<span id="recommendCount" class="text-info">0</span></h4>
+            </div>
+            <hr style="color:chocolate;" />
+            <div id="recommends" class="col-md-12">
+                <!--推荐项-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../../wwwroot/bower_components/paging/paging.min.js"></script>
+<script src="../../wwwroot/bower_components/jquery-validate/jquery.validate.min.js"></script>
+<script src="../../wwwroot/bower_components/jquery-validate/messages_zh.js"></script>
+<script>
+    $().ready(function () {
+        $("#editTxt").click(function () {
+            var txt = $('#editTxt');
+            if (!txt.hasClass("active")) {
+                txt.addClass("active");
+            }
+
+            var pic = $("#editPic");
+            if (pic.hasClass("active")) {
+                pic.removeClass("active");
+            }
+
+            if ($('#topicDes2').length > 0) {
+                //var filebtn = $('#filebtn');
+                //if (filebtn) {
+                //    filebtn.value = '';
+                //    filebtn.outerHTML = filebtn.outerHTML;
+                //}
+                $('#topicDes2').remove();
+            }
+
+            $('#replyType').val('Text');
+            if ($('#topicDes1').length > 0) {
+                return null;
+            }
+
+            var tag = '<textarea class="col-md-12 form-control" name="comment" id="topicDes1" cols="55" rows="10"></textarea>';
+            $("#topic_box").prepend(tag);
+            $('form[name="form_submit"]').attr('enctype', "application/x-www-form-urlencoded");
+        });
+
+        $("#editPic").click(function () {
+            var pic = $('#editPic');
+            if (!pic.hasClass("active")) {
+                pic.addClass("active");
+            }
+
+            var txt = $("#editTxt");
+            if (txt.hasClass("active")) {
+                txt.removeClass("active");
+            }
+
+            if ($('#topicDes1').length > 0) {
+                $('#topicDes1').remove();
+            }
+
+            $('#replyType').val('Image');
+            if ($('#topicDes2').length > 0) {
+                return null;
+            }
+            
+            var tag = '<div id="topicDes2" ><img src="../../wwwroot/images/planet_univearse_telestial_space_pluto_sm.png" id="img_Photo" style="max-width:80%" required="required" class="img-thumbnail" />'+
+                '<div class="filebtnDiv">'+
+                '<div class="filebtnDiv-txt">点击上传</div>'+
+                '<input type="file" id="filebtn" name="my_picture" class="file_input" />'+
+                '</div ></div>';
+            $("#topic_box").prepend(tag);
+            $('form[name="form_submit"]').attr('enctype', "multipart/form-data");
+
+            var filebtn = $("#filebtn");
+            //filebtn.unbind();
+            filebtn.bind('change', function () {
+                var file = this.files[0];
+                if (file != null) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) { // 该事件在file加载完毕后被触发
+                        $("#img_Photo").attr("src", e.target.result); // e.target.result 为加载的文件
+                    }
+
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+
+
+        bbs.getRecommends('recommends', 'recommendCount');
+        $('form[name="form_submit"]').validate({
+            rules: {
+                topicName: {
+                    required: true,
+                    minlength: 1,
+                    maxlength: 50
+                },
+                topicDes1: {
+                    required: true,
+                    minlength: 1,
+                    maxlength: 500
+                }
+            },
+            message: {
+                topicName: {
+                    required: "请输入帖子名称",
+                    minlength: "名称不能小于1个字符",
+                    maxlength: "名称过长"
+                },
+                topicDes1: {
+                    required: "请输入帖子内容",
+                    minlength: "内容不能小于1个字符",
+                    maxlength: "内容不能超过500个字符"
+                }
+            }
+        });
+    });
+</script>

@@ -1,0 +1,143 @@
+﻿
+<link rel="stylesheet" href="../../wwwroot/bower_components/site/topic.css" />
+<link rel="stylesheet" href="../../wwwroot/bower_components/paging/paging.css" />
+<div class="col-md-12">
+    <div class="col-md-9">
+        <div class="row">
+            <div class="col-md-12 main-listing">
+                <div id="paging">
+                    <!--帖子-->
+                </div>
+                <div id="pagination" class="box">
+                    <!--分页-->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <ul id="myTab" class="nav nav-tabs">
+            <li class="active"><a href="#search_topic" data-toggle="tab">搜帖子</a></li>
+            <li><a href="#search_content" data-toggle="tab">搜内容</a></li>
+            <li><a href="#search_user" data-toggle="tab">搜用户</a></li>
+        </ul>
+        <div id="myTabContent" class="tab-content">
+            <div class="tab-pane fade in active" id="search_topic">
+                <form method="post" action="/home/search/">
+                    <p class="input-group">
+                        <input type="hidden" name="searchtype" value="1" />
+                        <input id="search_topic_input" name="query" type="text" list="topic_historyList" class="form-control" placeholder="请输入帖子名称" />
+                        <span class="input-group-btn">
+                            <button class="btn btn-info btn-search">查找</button>
+                        </span>
+                        <datalist id="topic_historyList" name="historyList">
+                        </datalist>
+                    </p>
+                </form>
+            </div>
+            <div class="tab-pane fade" id="search_content">
+                <form method="post" action="/home/search/">
+                    <p class="input-group">
+                        <input type="hidden" name="searchtype" value="2" />
+                        <input id="search_content_input" name="query" type="text" list="content_historyList" class="form-control" placeholder="请输入内容关键字" />
+                        <span class="input-group-btn">
+                            <button class="btn btn-info btn-search">查找</button>
+                        </span>
+                        <datalist id="content_historyList" name="historyList">
+                        </datalist>
+                    </p>
+                </form>
+            </div>
+            <div class="tab-pane fade" id="search_user">
+                <form method="post" action="/home/search/">
+                    <p class="input-group">
+                        <input type="hidden" name="searchtype" value="3" />
+                        <input id="search_user_input" name="query" type="text" class="form-control" list="user_historyList" placeholder="请输入用户名称" />
+                        <span class="input-group-btn">
+                            <button class="btn btn-info btn-search">查找</button>
+                        </span>
+                        <datalist id="user_historyList" name="historyList">
+                        </datalist>
+                    </p>
+                </form>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <!--热点推荐-->
+            <div class="col-md-12">
+                <h4>一周热点<span id="recommendCount" class="text-info">0</span></h4>
+            </div>
+            <hr style="color:chocolate;" />
+            <div id="recommends" class="col-md-12">
+                <!--推荐项-->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="../../wwwroot/bower_components/paging/paging.min.js"></script>
+<script>
+    $('#pagination').paging({
+        initPageNo: 1, // 初始页码
+        totalPages: @((Model.Total + Model.PageSize - 1) / Model.PageSize), //总页数
+        totalCount: '合计' + @Model.Total + '条数据', // 条目总数
+        slideSpeed: 600, // 缓动速度，单位毫秒
+            jump: true, //是否支持跳转
+            callback: function (page) { // 回调函数
+                getPaging(page);
+            }
+    });
+
+    function getPaging(page) {
+        $.get("/home/gettopics/", { page: page }, function (data) {
+            if (data != null && data.IsOk && data.Data != null) {
+                var arr = [];
+                $.each(data.Data.Topics, function (i, item) {
+                    if (item.DesType == 0) {
+                        arr.push('<article class="type-post hentry clearfix">' +
+                            '<header class="clearfix">' +
+                            '<h3 class="post-title"><a href="/bbs/topic/' + item.TopicId + '">' + item.TopicName + '</a></h3>' +
+                            '<div class="post-meta clearfix">' +
+                            '<span class="date">' + item.CreateTime + '</span>' +
+                            '<span class="category"><a href="/bbs/index/'+ item.BBSId +'">' + item.BBSName + '</a></span>' +
+                            '<span class="comments">' + item.ReplyCount + ' Comments</span>' +
+                            '<span class="like-count">' + item.StarCount + '</span>' +
+                            '</div>' +
+                            '</header>' +
+                            '<p>' + item.TopicDes + '</p>' +
+                            '</article>');
+                    } else if (item.DesType == 1) {
+                        console.log(item.DesType);
+                        arr.push('<article class="type-post hentry clearfix">' +
+                            '<header class="clearfix">' +
+                            '<h3 class="post-title"><a href="/bbs/topic/' + item.TopicId + '">' + item.TopicName + '</a></h3>' +
+                            '<div class="post-meta clearfix">' +
+                            '<span class="date">' + item.CreateTime + '</span>' +
+                            '<span class="category"><a href="/bbs/index/' + item.BBSId + '">' + item.BBSName + '</a></span>' +
+                            '<span class="comments">' + item.ReplyCount + ' Comments</span>' +
+                            '<span class="like-count">' + item.StarCount + '</span>' +
+                            '</div>' +
+                            '</header>' +
+                            '<img src="' + item.TopicDes + '" class="attachment-std-thumbnail wp-post-image" style="max-width:90%;" />' +
+                            '</article>');
+                    }
+                });
+
+                if (arr.length > 0) {
+                    $("#paging").html(arr.join(''));
+                } else {
+                    $("#paging").html("<h2>暂无帖子</h2>");
+                }
+
+            } else {
+                $("#paging").html("<h2>暂无帖子</h2>");
+            }
+        })
+    };
+
+    $(function () {
+        //getPaging(1);
+        bbs.bindSearchHistory("historyList");
+        bbs.getRecommends('recommends', 'recommendCount');
+    });
+</script>

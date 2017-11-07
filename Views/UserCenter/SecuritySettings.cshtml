@@ -1,0 +1,42 @@
+﻿@{
+    ViewData["Title"] = "安全设置";
+}
+@using System;
+<div class="row">
+    <div class="col-md-2">
+        <div class="text-center">
+            <img class="img-thumbnail" src="@ViewData["HeadPhoto"]" style="width:140px; height:140px;" alt="@ViewData["UserName"]" />
+            <a href="/usercenter/index" alt="@ViewData["UserName"]">
+                <h4>@ViewData["UserName"]</h4>
+            </a>
+            <a href="/usercenter/AccountSettings" class="btn btn-default">
+                <span>个人信息</span>
+            </a>
+            <a href="/usercenter/upheadphoto" class="btn btn-default">
+                <span>换头像</span>
+            </a>
+        </div>
+        <hr />
+        <div class="list-group">
+            <a href="/usercenter/index/" class="list-group-item"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> 个人主页</a>
+            <a href="/usercenter/accountsettings" class="list-group-item"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> 账户设置</a>
+            <a href="/usercenter/securitysettings" class="list-group-item active"><span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> 安全设置</a>
+            <a href="/user/index/" class="list-group-item"><span class="glyphicon glyphicon-grain" aria-hidden="true"></span> 个人主页</a>
+            @if (ViewData["Role"].ToString() == "superadmin")
+            {
+                <a href="/superadmin/index/" class="list-group-item"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> 后台管理</a>
+            }
+            @if (ViewData["Role"].ToString() == "admin")
+            {
+                <a href="/admin/index/" class="list-group-item"><span class="glyphicon glyphicon-tasks" aria-hidden="true"></span> 管理员中心</a>
+            }
+        </div>
+    </div>
+    <div class="col-md-10">
+        <h3><span class="glyphicon glyphicon-lock" aria-hidden="true"></span> @ViewData["Title"]</h3>
+        <hr />
+        1. 绑定邮箱：保证您的<b>账号安全</b>，能够快捷的<b>找回密码</b>以及方便登录。<a href="/usercenter/SettingEmail" class="btn btn-primary">@(String.IsNullOrWhiteSpace(ViewData["Email"].ToString()) ? "绑定邮箱" : "重新绑定")</a>
+        <hr />
+        2. 绑定手机：快速掌握“GutsMvcBBS”的<b>最新动态</b>，以及快捷的找回密码。<span>程序猿哥哥跑路啦(oﾟvﾟ)ノ，此坑不填哦~~</span>
+    </div>
+</div>

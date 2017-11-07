@@ -1,0 +1,93 @@
+﻿@{
+    ViewData["Title"] = "安全设置 - 绑定邮箱";
+}
+
+<div class="row">
+    <div class="col-md-2">
+        <div class="text-center">
+            <img class="img-thumbnail" src="@ViewData["HeadPhoto"]" style="width:140px; height:140px;" alt="@ViewData["UserName"]" />
+            <a href="/usercenter/index" alt="@ViewData["UserName"]">
+                <h4>@ViewData["UserName"]</h4>
+            </a>
+            <a href="/usercenter/AccountSettings" class="btn btn-default">
+                <span>个人信息</span>
+            </a>
+            <a href="/usercenter/upheadphoto" class="btn btn-default">
+                <span>换头像</span>
+            </a>
+        </div>
+        <hr />
+        <div class="list-group">
+            <a href="/usercenter/index/" class="list-group-item"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> 个人主页</a>
+            <a href="/usercenter/accountsettings" class="list-group-item"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> 账户设置</a>
+            <a href="/usercenter/securitysettings" class="list-group-item active"><span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> 安全设置</a>
+            @if (ViewData["Role"].ToString() == "superadmin")
+            {
+                <a href="/superadmin/index/" class="list-group-item"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> 后台管理</a>
+            }
+            @if (ViewData["Role"].ToString() == "admin")
+            {
+                <a href="/admin/index/" class="list-group-item"><span class="glyphicon glyphicon-tasks" aria-hidden="true"></span> 管理员中心</a>
+            }
+        </div>
+    </div>
+    <div class="col-md-10">
+        <h3><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>@ViewData["Title"]</h3>
+        <hr />
+        <form method="post" name="form_submit">
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <label class="control-label col-md-2">邮箱</label>
+                    <div class="col-md-3">
+                        <input id="email" name="email" required="required" class="form-control" placeholder="格式：xxxxxx@qq.com" maxlength="30" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2">密码</label>
+                    <div class="col-md-3">
+                        <input id="password" name="password" type="password" required="required" class="form-control col-md-3" maxlength="20" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3 col-md-offset-2">
+                        <input type="button" name="btnSubmit" class="btn btn-success" value="提交" />
+                    </div>
+                    <span id="msgbox" style="color:red">@ViewData["msgbox"]</span>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="../../wwwroot/bower_components/jquery-validate/jquery.validate.min.js"></script>
+<script src="../../wwwroot/bower_components/jquery-validate/messages_zh.js"></script>
+<script>
+    $().ready(function () {
+        $("form[name='form_submit']").validate({
+            rules: {
+                email: {
+                    required: true,
+                    minlength: 3,
+                    maxlength: 50
+                },
+                password: {
+                    required: true,
+                    minlength: 6,
+                    maxlength: 20
+                }
+            },
+            message: {
+                email: {
+                    required: "请输入账号",
+                    minlength: "账号不能小于3个字符",
+                    maxlength: "账号过长"
+                },
+                password: {
+                    required: "请输入密码",
+                    minlength: "密码不能小于6个字符",
+                    maxlength: "密码不能超过20个字符"
+                }
+            }
+        });
+    });
+</script>

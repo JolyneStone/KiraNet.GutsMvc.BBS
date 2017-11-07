@@ -1,0 +1,232 @@
+﻿@{
+    ViewData["Title"] = $"主页 - {Model.UserName}";
+}
+
+<!--用户主页-->
+<div class="col-md-12">
+    <div class="col-md-12">
+        <div class="text-center">
+            <input type="hidden" id="userInfoId" value="@ViewData["Id"]" />
+            <input type="hidden" id="userId" value="@Model.UserId" />
+            <div>
+                <div class="text-center">
+                    <img class="img img-circle" src="@Model.HeadPhoto" style="width:180px; height:180px;" alt="@Model.UserName" />
+                </div>
+                <div style="margin-top:10px;">
+                    @if ((bool)ViewData["IsStar"] == true)
+                    {
+                        <button type="button" id="btnStar" data-isstar="1" class="btn btn-info active">取消关注</button>
+                    }
+                    else
+                    {
+                        <button type="button" id="btnStar" data-isstar="0" class="btn btn-info">关注</button>
+                    }
+
+                    @if (ViewData["Role"].ToString() == "SuperAdmin")
+                    {
+                        if ((bool)ViewData["Disabled"] == true)
+                        {
+                            <button type="button" id="btnDisabled" data-isdisable="1" class="btn btn-warning active">取消禁用</button>
+                        }
+                        else
+                        {
+                            <button type="button" id="btnDisabled" data-isdisable="0" class="btn btn-warning">禁用</button>
+                        }
+                    }
+                </div>
+            </div>
+            <div class="col-md-offset-1 col-md-10" style="margin-top:20px;">
+                <!--用户信息-->
+                <div class="col-md-12" style="color:burlywood;text-align:left">
+                    <div class="col-md-12" style="text-align:center">
+                        @Model.UserName
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-offset-2 col-md-4">账号：<span>@Model.Email</span></div>
+                        <div class="col-md-offset-2 col-md-4">积分：<span>@Model.Grade</span></div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-offset-2 col-md-4">地址：<span>@Model.Address</span></div>
+                        <di6v class="col-md-offset-2 col-md-4">性别：<span>@(Model.Sex ? "男" : "女")</span></di6v>
+                    </div>
+                    <div class="col-md-offset-2 col-md-10">
+                        简介：@Model.Introduce
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr style="width:100%;" />
+    </div>
+</div>
+
+<!--用户记录-->
+<div class="col-md-12">
+    <div class="col-md-6">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">发帖记录&nbsp;&nbsp;<span id="tabUserTopicNum">0</span></div>
+                <div class="panel-body" style="padding-bottom:2px;">
+                    <table id="tabUserTopic" class="table col-md-12" style="margin-bottom:1px;">
+                        <tbody>
+                            <tr>
+                                <td colspan="2">
+                                    <div class="fa fa-fw fa-spinner fa-spin"></div>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">关注的人&nbsp;&nbsp;<span id="tabUserStarNum">0</span></div>
+                <div class="panel-body" style="padding-bottom:2px;">
+                    <table id="tabUserStar" class="table col-md-12" style="margin-bottom:1px;">
+                        <tbody>
+                            <tr>
+                                <td colspan="2">
+                                    <div class="fa fa-fw fa-spinner fa-spin"></div>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">回帖记录&nbsp;&nbsp;<span id="tabReplyLogNum">0</span></div>
+                <div class="panel-body" style="padding-bottom:2px;">
+                    <table id="tabReplyLog" class="table col-md-12" style="margin-bottom:1px;">
+                        <tbody>
+                            <tr>
+                                <td colspan="2">
+                                    <div class="fa fa-fw fa-spinner fa-spin"></div>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">你的粉丝&nbsp;&nbsp;<span id="tabByUserStarNum">0</span></div>
+                <div class="panel-body" style="padding-bottom:2px;">
+                    <table id="tabByUserStar" class="table col-md-12" style="margin-bottom:1px;">
+                        <tbody>
+                            <tr>
+                                <td colspan="2">
+                                    <div class="fa fa-fw fa-spinner fa-spin"></div>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+
+        $("#btnStar").click(function () {
+            var id = $('#userInfoId').val();
+            if (id == undefined && id == null) {
+                alert("请先登陆！");
+            }
+
+            var isStar = $(this).data("isstar");
+            if (isStar == null) {
+                return;
+            }
+            alert(1);
+            var star = !(isStar == 1);
+            var userId = $('#userId').val();
+            $.get('/user/gouserstar/', { id: userId, isStar: star }, function (data) {
+                if (data != null) {
+                    if (data.IsOk) {
+                        var btnStar = $('#btnStar');
+                        if (star) {
+                            btnStar.html("取消关注");
+                            btnStar.data("isstar", '1');
+                            if (!btnStar.hasClass('active')) {
+                                btnStar.addClass('active');
+                            }
+                        } else {
+                            btnStar.html("关注");
+                            btnStar.data("isstar", '0');
+                            if (btnStar.hasClass('active')) {
+                                btnStar.removeClass('active');
+                            }
+                        }
+                    } else {
+                        alert(data.Msg);
+                    }
+                }
+            });
+        });
+
+        $('#btnDisabled').click(function () {
+            var id = $('#userInfoId').val();
+            if (id == undefined && id == null) {
+                alert("请先登陆！");
+            }
+
+            var isDisable = $(this).data("isdisable");
+            if (isDisable == null) {
+                return;
+            }
+
+            var disable = !(isDisable == 1);
+            var userId = $('#userId').val();
+            $.get('/superadmin/gouserdisable/', { id: userId, isDisable: disable }, function (data) {
+                if (data != null) {
+                    if (data.IsOk) {
+                        var btnDisable = $('#btnDisabled');
+                        if (disable) {
+                            btnDisable.html("取消禁用");
+                            btnDisable.data("isdisable", '1');
+                            if (!btnDisable.hasClass('active')) {
+                                btnDisable.addClass('active');
+                            }
+                        } else {
+                            btnDisable.html("禁用");
+                            btnDisable.data("isdisable", '0');
+                            if (btnDisable.hasClass('active')) {
+                                btnDisable.removeClass('active');
+                            }
+                        }
+                    } else {
+                        alert(data.Msg);
+                    }
+                }
+            });
+
+        });
+
+        var userId = $("#userId").val();
+        if (userId != null && userId != "") {
+            bbs.getLogCount("tabUserTopicNum", userId, "/usercenter/getusertopiccount/");
+            bbs.getLogCount("tabReplyLogNum", userId, "/usercenter/getuserreplycount/");
+            bbs.getLogCount("tabUserStarNum", userId, "/usercenter/getuserstarcount/");
+            bbs.getLogCount("tabByUserStarNum", userId, "/usercenter/getbyuserstarcount/");
+            bbs.getUserTopicLog("tabUserTopic", userId, 1);
+            bbs.getUserReplyLog("tabReplyLog", userId, 1);
+            bbs.getUserStarLog("tabUserStar", userId, 1);
+            bbs.getByUserStarLog("tabByUserStar", userId, 1);
+        }
+    });
+</script>

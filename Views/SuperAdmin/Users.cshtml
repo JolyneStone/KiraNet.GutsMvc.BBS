@@ -1,0 +1,128 @@
+﻿@{
+    ViewData["Title"] = "后台管理";
+}
+<link rel="stylesheet" href="../../wwwroot/bower_components/paging/paging.css" />
+<div class="row">
+    <div class="col-md-2">
+        <div class="text-center">
+            <img class="img-thumbnail" src="@ViewData["HeadPhoto"]" style="width:140px; height:140px;" alt="@ViewData["UserName"]" />
+            <a href="/usercenter/index" alt="@ViewData["UserName"]">
+                <h4>@ViewData["UserName"]</h4>
+            </a>
+            <a href="/usercenter/AccountSettings" class="btn btn-default">
+                <span>个人信息</span>
+            </a>
+            <a href="/usercenter/upheadphoto" class="btn btn-default">
+                <span>换头像</span>
+            </a>
+        </div>
+        <hr />
+        <div class="list-group">
+            <a href="/usercenter/index" class="list-group-item"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> 个人中心</a>
+            <a href="/usercenter/accountsettings" class="list-group-item"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> 账户设置</a>
+            <a href="/usercenter/securitysettings" class="list-group-item"><span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> 安全设置</a>
+            @if (ViewData["Role"].ToString() == "superadmin")
+            {
+            <a href="/superadmin/index/" class="list-group-item active"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> 后台管理</a>
+            }
+            @if (ViewData["Role"].ToString() == "admin")
+            {
+            <a href="/admin/index/" class="list-group-item"><span class="glyphicon glyphicon-tasks" aria-hidden="true"></span> 管理员中心</a>
+            }
+        </div>
+    </div>
+    <div class="col-md-10">
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/superadmin/index">后台管理</a>
+                </div>
+                <div>
+                    <ul class="nav navbar-nav">
+                        <li><a href="/superadmin/admins/">版主管理</a></li>
+                        <li class="active"><a href="/superadmin/users/">用户管理</a></li>
+                        <li><a href="/superadmin/createbbs/">创建论坛</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="page-container col-md-11">
+            <div class="row">
+                <div class="col-md-10 main-listing">
+                    <table class="table table-responsive table-striped">
+                        <tbody id="paging" class="text text-left text-justify text-info"></tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3" id="pagination" class="box center"></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    <!--<div id="pagination" class="box center">
+
+                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../../wwwroot/bower_components/paging/paging.min.js"></script>
+<script>
+    $('#pagination').paging({
+        initPageNo: 1, // 初始页码
+        totalPages: @((Model + 50 - 1) / 50), //总页数
+        totalCount: '合计<span id="total_count">' + @Model + '</span>条数据', // 条目总数
+        slideSpeed: 600, // 缓动速度，单位毫秒
+            jump: true, //是否支持跳转
+                callback: function (page) { // 回调函数
+                    getPaging(page);
+                }
+    });
+
+    function getPaging(page) {
+        $.get("/superadmin/getuserdisable/", { page: page }, function (data) {
+            if (data != null && data.IsOk && data.Data != null) {
+                var arr = [];
+                $.each(data.Data, function (i, item) {
+                    arr.push('<tr id="userdes' + item.Id + '">' +
+                        '<td><a href="/user/index/' + item.Id + '">账号：' + item.Email + '</a></td>' +
+                        '<td><a href="/user/index/' + item.Id + '">昵称：' + item.UserName + '</a></td>' +
+                        '<td class="col-md-2"><button name="btnRid" class="btn btn-danger" type="button" data-userid="' + item.Id + '">解禁</td>' +
+                        '</tr>');
+                });
+
+                if (arr.length > 0) {
+                    $("#paging").html(arr.join(''));
+
+                    $('button[name="btnRid"]').unbind();
+                    $('button[name="btnRid"]').bind("click", function () {
+                        var userId = $(this).data("userid");
+
+                        $.get('/superadmin/gouserdisable/', { id: userId, isDisable: false }, function (data) {
+                            if (data) {
+                                if (data.IsOk) {
+                                    $('#userdes' + userId).remove();
+                                    var total = $('#total_count')
+                                    total.html(Number(total.html()) - 1);
+                                } else {
+                                    alert(data.Msg);
+                                }
+                            } else {
+                                alert("解禁用户失败，请稍后重试");
+                            }
+                        });
+                    })
+                } else {
+                    $("#paging").html('<tr><td colspan="3"><h2>暂无禁用用户</h2></td></tr>');
+                }
+
+            } else {
+                $("#paging").html('<tr><td colspan="3"><h2>暂无禁用用户</h2></td></tr>');
+            }
+        })
+    };
+
+    //$(function () {
+    //    //getPaging(1);
+    //});
+</script>

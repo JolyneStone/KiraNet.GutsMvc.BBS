@@ -1,0 +1,89 @@
+﻿
+@{
+    ViewData["Title"] = "注册";
+}
+<style>
+    .error{
+        color:red;
+    }
+</style>
+<h3><span class="glyphicon glyphicon-flag"></span>注册</h3>
+<form id="form_submit" name="form_submit" method="post">
+    <div class="form-horizontal">
+        <h4>  GutsMvcBBS：欢迎您成为我们的一份子。</h4>
+        <hr />
+        <div class="form-group">
+            <label class="col-md-2 control-label">账号</label>
+            <div class="col-md-4">
+                <input id="userName" name="userName" required="required" type="email" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">密码</label>
+            <div class="col-md-4">
+                <input id="userPwd" name="userPwd" required="required" type="password" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">确认密码</label>
+            <div class="col-md-4">
+                <input id="comfirmPwd" name="comfirmPwd" required="required" type="password" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="button" value="注 册" name="btnSubmit" class="btn btn-default" />
+                <span id="msgbox" style="color:red">@ViewData["msgbox"]</span>
+            </div>
+        </div>
+    </div>
+</form>
+<br />
+<div>
+    <a href="/member/login">有账号去登录</a> | <a href="/member/ForgetPassword">忘记密码？</a>
+</div>
+
+<script>
+    $().ready(function () {
+        $("#form_submit").validate({
+            rules: {
+                userName: {
+                    required: true,
+                    minlength: 3,
+                    maxlength: 50
+                },
+                userPwd: {
+                    required: true,
+                    minlength: 6,
+                    maxlength: 20
+                },
+                comfirmPwd: {
+                    required: true,
+                    minlength: 6,
+                    maxlength: 20,
+                    equalTo: "#userPwd"
+                }
+            },
+            message: {
+                userName: {
+                    required: "请输入账号",
+                    minlength: "账号不能小于3个字符",
+                    maxlength: "账号过长"
+                },
+                userPwd: {
+                    required: "请输入密码",
+                    minlength: "密码不能小于6个字符",
+                    maxlength: "密码不能超过20个字符"
+                },
+                confirmPwd: {
+                    required: "请输入密码",
+                    minlength: "密码不能小于6个字符",
+                    maxlength: "密码不能超过20个字符",
+                    equalTo: "两次密码输入不一致"
+                }
+            }
+        });
+    });
+</script>
+<script src="../../wwwroot/bower_components/jquery-validate/jquery.validate.min.js"></script>
+<script src="../../wwwroot/bower_components/jquery-validate/messages_zh.js"></script>

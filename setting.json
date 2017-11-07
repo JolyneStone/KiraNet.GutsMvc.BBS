@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "noImplicitAny": false,
+    "noEmitOnError": true,
+    "removeComments": false,
+    "sourceMap": true,
+    "target": "es5"
+  },
+  "exclude": [
+    "node_modules",
+    "wwwroot"
+  ],
+  "Logging": {
+    "IncludeScopes": false,
+    "LogLevel": {
+      "Default": "Warning"
+    }
+  },
+  "MapSetting": {
+    //Í·ÏñÄÚÈÝÂ·¾¶
+    "UpHeadPhotoPath": "wwwroot\\upfile\\headphoto",
+    "ViewHeadPhotoPath": "/upfile/headphoto",
+    //Í¼Æ¬Â·¾¶
+    "UpContentPhotoPath": "wwwroot\\upfile\\contentphoto",
+    "ViewContentPhotoPath": "/upfile/contentphoto",
+    //ÓÊÏäÄ£°å
+    "EmailTplPath": "wwwroot\\tpl",
+    //Á´½Ó×Ö·û´®
+    "DbLink": "Integrated Security=SSPI;Persist Security Info=False;User ID=sa;Initial Catalog=BBS;Data Source=localhost;MultipleActiveResultSets=true;"
+  }
+}

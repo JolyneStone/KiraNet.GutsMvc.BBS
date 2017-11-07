@@ -1,0 +1,146 @@
+﻿@{
+    ViewData["Title"] = "账户设置 - 修改基本信息";
+}
+@using System;
+
+<div class="row">
+    <div class="col-md-2">
+        <div class="text-center">
+            <img class="img-thumbnail" src="@ViewData["HeadPhoto"]" style="width:140px; height:140px;" alt="@Model.UserName" />
+            <a href="/usercenter/index" alt="@Model.UserName">
+                <h4>@Model.UserName</h4>
+            </a>
+            <a href="/usercenter/AccountSettings" class="btn btn-default">
+                <span>个人信息</span>
+            </a>
+            <a href="/usercenter/upheadphoto" class="btn btn-default">
+                <span>换头像</span>
+            </a>
+        </div>
+        <hr />
+        <div class="list-group">
+            <a href="/usercenter/index/" class="list-group-item"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> 个人主页</a>
+            <a href="/usercenter/accountsettings" class="list-group-item active"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> 账户设置</a>
+            <a href="/usercenter/securitysettings" class="list-group-item"><span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> 安全设置</a>
+            @if (ViewData["Role"].ToString() == "superadmin")
+            {
+                <a href="/superadmin/index/" class="list-group-item"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> 后台管理</a>
+            }
+            @if (ViewData["Role"].ToString() == "admin")
+            {
+                <a href="/admin/index/" class="list-group-item"><span class="glyphicon glyphicon-tasks" aria-hidden="true"></span> 管理员中心</a>
+            }
+        </div>
+    </div>
+    <div class="col-md-10">
+        <div class="form-horizontal">
+
+            <h3><span class="glyphicon glyphicon-user" aria-hidden="true"></span>@ViewData["Title"]</h3>
+            <hr />
+            <div class="col-md-offset-2">
+                <div class="media-left text-center">
+                    <img class="media-object img-thumbnail" src="@ViewData["HeadPhoto"]" style="width:140px;height:140px;" alt="@Model.UserName" />
+                    <div style="padding-top:0.5%;">
+                        <a href="/usercenter/upheadphoto">换一换</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="media">
+                <div class="media-body">
+                    <form method="post" name="form_submit">
+                        <input type="hidden" name="Id" id="Id" value="@Model.Id" />
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">昵称</label>
+                            <div class="col-md-3">
+                                <input id="userName" name="userName" class="form-control" value="@Model.UserName" required="required" maxlength="20" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">真实姓名</label>
+                            <div class="col-md-3">
+                                <input id="realName" name="realName" class="form-control" value="@Model.RealName" required="required" maxlength="20" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">邮箱</label>
+                            <input type="hidden" id="email" name="email" value="@Model.Email" />
+                            &nbsp;&nbsp; @Model.Email <a href="/usercenter/SettingEmail" class="btn btn-primary">
+                                @(string.IsNullOrWhiteSpace(Model.Email) ? "绑定邮箱" : "重新绑定")
+                            </a>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">手机</label>
+                            <div class="col-md-3">
+                                <input id="tel" name="tel" value="@Model.Tel" class="form-control" maxlength="15" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">性别</label>
+                            <div class="col-md-10">
+                                <label class="radio radio-inline">
+                                    <input type="radio" name="sex" @(Model.Sex ? "checked=\"checked\"" : "" ) value="True" /> 男
+                                </label>
+                                <label class="radio radio-inline">
+                                    <input type="radio" name="sex" @(!Model.Sex ? "checked=\"checked\"" : "" ) value="False" /> 女
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">自我介绍</label>
+                            <div class="col-md-10">
+                                <textarea name="introduce" id="introduce" class="form-control" rows="3" maxlength="200" placeholder="用简短的一串字介绍下自己吧！">@Model.Introduce</textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label"></label>
+                            <div class="col-md-10">
+                                <input type="button" value="保 存" name="btnSubmit" class="btn btn-default" /> <a href="/usercenter/AccountSettings" class="btn btn-default">返 回</a>
+                                <span id="msgbox" style="color:red">@ViewData["msgbox"]</span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="../../wwwroot/bower_components/jquery-validate/jquery.validate.min.js"></script>
+<script src="../../wwwroot/bower_components/jquery-validate/messages_zh.js"></script>
+<script>
+    $().ready(function () {
+        $("form[name='form_submit']").validate({
+            rules: {
+                id: {
+                    required: true
+                },
+                userName: {
+                    required: true,
+                    minlength: 6,
+                    maxlength: 20
+                },
+                realName: {
+                    maxlength: 20
+                },
+                sex: {
+                    required: true
+                }
+            },
+            message: {
+                userName: {
+                    required: "请输入账号",
+                    minlength: "用户名不能小于3个字符",
+                    maxlength: "用户名过长"
+                },
+                realName: {
+                    maxlength: "姓名不能超过20个字符"
+                }
+            },
+            sex: {
+                required: "性别不可为空"
+            }
+        });
+    });
+</script>

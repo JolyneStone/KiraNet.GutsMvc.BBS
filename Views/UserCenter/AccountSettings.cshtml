@@ -1,0 +1,68 @@
+﻿
+@{
+    ViewData["Title"] = "账户设置";
+}
+
+<style type="text/css">
+    h5 {
+        padding-top: 10px;
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-2">
+        <div class="text-center">
+            <img class="img-thumbnail" src="@ViewData["HeadPhoto"]" style="width:140px; height:140px;" alt="@Model.UserName" />
+            <a href="/usercenter/index" alt="@Model.UserName">
+                <h4>@Model.UserName</h4>
+            </a>
+            <a href="/usercenter/AccountSettings" class="btn btn-default">
+                <span>个人信息</span>
+            </a>
+            <a href="/usercenter/upheadphoto" class="btn btn-default">
+                <span>换头像</span>
+            </a>
+        </div>
+        <hr />
+        <div class="list-group">
+            <a href="/usercenter/index/" class="list-group-item"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> 个人主页</a>
+            <a href="/usercenter/accountsettings" class="list-group-item active"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> 账户设置</a>
+            <a href="/usercenter/securitysettings" class="list-group-item"><span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> 安全设置</a>
+            @if (ViewData["Role"].ToString() == "superadmin")
+            {
+                <a href="/superadmin/index/" class="list-group-item"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> 后台管理</a>
+            }
+            @if (ViewData["Role"].ToString() == "admin")
+            {
+                <a href="/admin/index/" class="list-group-item"><span class="glyphicon glyphicon-tasks" aria-hidden="true"></span> 管理员中心</a>
+            }
+        </div>
+    </div>
+    <div class="col-md-10">
+        <h3><span class="glyphicon glyphicon-user" aria-hidden="true"></span>@ViewData["Title"]</h3>
+        <hr />
+        <div class="col-md-12">
+            <div class="col-md-7">
+                <h5 class="">
+                    <span>昵称：@Model.UserName</span>&nbsp;
+                    <a href="/usercenter/modifyuser" class="btn btn-default">修改信息</a>
+                    <a href="/usercenter/modifypwd" class="btn btn-danger">修改密码</a>
+                </h5>
+                <h5>积分：@ViewData["Grade"]</h5>
+                <h5>真实姓名：@Model.RealName</h5>
+                <h5>性别：@(Model.Sex ? "男" : "女")</h5>
+                <h5>邮箱：@Model.Email</h5>
+                <div>
+                    <span>自我介绍：@(Model.Introduce??"未填")</span>
+                </div>
+            </div>
+            <div class="text-center col-md-4">
+                <img class="img-thumbnail" src="@ViewData["HeadPhoto"]" />
+                <div style="padding-top:10px;">
+                    <a href="/usercenter/upheadphoto">换一换</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
