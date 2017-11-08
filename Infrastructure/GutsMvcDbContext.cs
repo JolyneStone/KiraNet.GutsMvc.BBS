@@ -61,7 +61,7 @@ namespace KiraNet.GutsMvc.BBS.Infrastructure
             modelBuilder.Entity<Log>(entity =>
             {
                 entity.Property(e => e.Message)
-                    .HasMaxLength(50)
+                    .HasMaxLength(200)
                     .IsUnicode(false);
             });
 

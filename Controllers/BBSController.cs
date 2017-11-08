@@ -36,7 +36,7 @@ namespace KiraNet.GutsMvc.BBS.Controllers
                 return Redirect("http://localhost:17758/home/error");
             }
 
-            var topics = await _uf.TopicRepository.GetAllAsync(x => x.Bbsid == id);
+            var topics = await _uf.TopicRepository.GetAllAsync(x => x.Bbsid == id && x.TopicStatus != TopicStatus.Disabled);
             var paging = new MoPaging
             {
                 Total = topics.Count(),

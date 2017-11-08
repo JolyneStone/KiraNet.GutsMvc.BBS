@@ -1,6 +1,7 @@
 ﻿@{
-    ViewData["Title"] = "后台管理";
+    ViewData["Title"] = "管理员中心";
 }
+
 <link rel="stylesheet" href="../../wwwroot/bower_components/paging/paging.css" />
 <div class="row">
     <div class="col-md-2">
@@ -35,14 +36,11 @@
         <nav class="navbar navbar-default" role="navigation">
             <div class="container-fluid">
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="/superadmin/index">后台管理</a>
+                    <a class="navbar-brand" href="/admin/index">版块管理</a>
                 </div>
                 <div>
                     <ul class="nav navbar-nav">
-                        <li><a href="/superadmin/admins/">版主管理</a></li>
-                        <li class="active"><a href="/superadmin/users/">用户管理</a></li>
-                        <li><a href="/superadmin/topicmanagement/">帖子管理</a></li>
-                        <li><a href="/superadmin/createbbs/">创建论坛</a></li>
+                        <li><a href="/admin/topicmanagement/">帖子管理</a></li>
                     </ul>
                 </div>
             </div>
@@ -50,7 +48,7 @@
         <div class="page-container col-md-11">
             <div class="row">
                 <div class="col-md-10 main-listing">
-                    <table class="table table-responsive table-striped">
+                    <table class="table table-responsive">
                         <tbody id="paging" class="text text-left text-justify text-info"></tbody>
                         <tfoot>
                             <tr>
@@ -58,9 +56,6 @@
                             </tr>
                         </tfoot>
                     </table>
-                    <!--<div id="pagination" class="box center">
-
-                    </div>-->
                 </div>
             </div>
         </div>
@@ -69,6 +64,8 @@
 
 <script src="../../wwwroot/bower_components/paging/paging.min.js"></script>
 <script>
+    var bbsId = @ViewData["BBSId"];
+
     $('#pagination').paging({
         initPageNo: 1, // 初始页码
         totalPages: @((Model + 50 - 1) / 50), //总页数
@@ -81,44 +78,44 @@
     });
 
     function getPaging(page) {
-        $.get("/superadmin/getuserdisable/", { page: page }, function (data) {
+        $.get("/admin/gettopicsdisabled/", { id: bbsId, page: page }, function (data) {
             if (data != null && data.IsOk && data.Data != null) {
                 var arr = [];
                 $.each(data.Data, function (i, item) {
-                    arr.push('<tr id="userdes' + item.Id + '">' +
-                        '<td><a href="/user/index/' + item.Id + '">账号：' + item.Email + '</a></td>' +
-                        '<td><a href="/user/index/' + item.Id + '">昵称：' + item.UserName + '</a></td>' +
-                        '<td class="col-md-2"><button name="btnRid" class="btn btn-danger" type="button" data-userid="' + item.Id + '">解禁</td>' +
+                    arr.push('<tr id="topic' + item.TopicId + '">' +
+                        '<td>帖子：' + item.TopicName + '</td>' +
+                        '<td><a href="/user/index/' + item.UserId + '">昵称：' + item.UserName + '</a></td>' +
+                        '<td class="col-md-2"><button name="btnDisabled" class="btn btn-danger" type="button" data-topicid="' + item.TopicId + '">取消屏蔽</td>' +
                         '</tr>');
                 });
 
                 if (arr.length > 0) {
                     $("#paging").html(arr.join(''));
 
-                    $('button[name="btnRid"]').unbind();
-                    $('button[name="btnRid"]').bind("click", function () {
-                        var userId = $(this).data("userid");
+                    $('button[name="btnDisabled"]').unbind();
+                    $('button[name="btnDisabled"]').bind("click", function () {
+                        var topicId = $(this).data("topicid");
 
-                        $.get('/superadmin/gouserdisable/', { id: userId, isDisable: false }, function (data) {
+                        $.get('/admin/gotopicdisable/', { id: topicId, isDisable: false }, function (data) {
                             if (data) {
                                 if (data.IsOk) {
-                                    $('#userdes' + userId).remove();
+                                    $('#topic' + topicId).remove();
                                     var total = $('#total_count')
                                     total.html(Number(total.html()) - 1);
                                 } else {
                                     alert(data.Msg);
                                 }
                             } else {
-                                alert("解禁用户失败，请稍后重试");
+                                alert("取消屏蔽失败，请稍后重试");
                             }
                         });
                     })
                 } else {
-                    $("#paging").html('<tr><td colspan="3"><h2>暂无禁用用户</h2></td></tr>');
+                    $("#paging").html('<tr><td colspan="3"><h2>暂无屏蔽的帖子</h2></td></tr>');
                 }
 
             } else {
-                $("#paging").html('<tr><td colspan="3"><h2>暂无禁用用户</h2></td></tr>');
+                $("#paging").html('<tr><td colspan="3"><h2>暂无屏蔽的帖子</h2></td></tr>');
             }
         })
     };

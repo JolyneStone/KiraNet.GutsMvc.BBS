@@ -31,6 +31,12 @@
                                         <a id="btnTop" href="#" class="navbar-default pointer" data-istop="0">置顶</a>
                                     }
                                 </li>
+                                @if(ViewData["TopicStatus"].ToString() != TopicStatus.Disabled.ToString())
+                                {
+                                    <li>
+                                        <a id="btnDisable" href="#" class="navbar-default pointer">屏蔽</a>
+                                    </li>
+                                }
                                 <li>
                                     <a id="btnDelTopic" href="#" class="navbar-default pointer" style="color:crimson;">删除</a>
                                 </li>
@@ -345,6 +351,20 @@
 
         bbs.getRecommends('recommends', 'recommendCount');
 
+        $('#btnDisable').click(function () {
+            $.get("/admin/gotopicdisable/", { id: topicId, isDisable: true }, function (data) {
+                if (data) {
+                    if (data.IsOk) {
+                        window.location = "/bbs/index/" + bbsId;
+                    } else {
+                        alert(data.Msg);
+                    }
+                } else {
+                    alert("屏蔽此贴失败，请稍后再试");
+                }
+            });
+        });
+
         $("#btnDelTopic").click(function () {
             $.get("/bbs/deletetopic/", { id: topicId }, function (data) {
                 if (data) {
@@ -356,7 +376,6 @@
                 } else {
                     alert("删除此贴失败，请稍后再试");
                 }
-
             });
         });
 

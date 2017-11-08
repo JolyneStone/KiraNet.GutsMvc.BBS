@@ -81,6 +81,22 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return View(userCount);
         }
 
+
+        [HttpGet]
+        [ModelType(typeof(Int32))]
+        public async Task<IActionResult> TopicManagement()
+        {
+            HttpContext.TryGetUserInfo(out var userInfo);
+
+            var count = await _uf.TopicRepository.CountAsync(x => x.TopicStatus == TopicStatus.Disabled);
+            ViewData["Id"] = userInfo.Id;
+            ViewData["UserName"] = userInfo.UserName;
+            ViewData["HeadPhoto"] = userInfo.HeadPhoto;
+            ViewData["Role"] = userInfo.Roles.ToLower();
+
+            return View(count);
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetUserDisable(int page)
         {

@@ -56,6 +56,107 @@ namespace KiraNet.GutsMvc.BBS.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> GoTopicDisable(int id, bool isDisable)
+        {
+            var data = new MoData();
+            HttpContext.TryGetUserInfo(out var userInfo);
+            var topic = await _uf.TopicRepository.GetByIdAsync(id);
+            if (topic == null)
+            {
+                data.IsOk = false;
+                data.Msg = "找不到指定的帖子";
+                return Json(data);
+            }
+
+            if (!userInfo.Roles.Equals("SuperAdmin", StringComparison.OrdinalIgnoreCase))
+            {
+                if (!userInfo.Roles.Equals("Admin", StringComparison.OrdinalIgnoreCase) ||
+                    !await _uf.BBSRepository.IsExistAsync(x => x.Id == topic.Bbsid && x.UserId == userInfo.Id))
+                {
+                    data.IsOk = false;
+                    data.Msg = "您没有屏蔽此贴的权限";
+                    return Json(data);
+                }
+            }
+
+            topic.TopicStatus = isDisable ? TopicStatus.Disabled : TopicStatus.Normal;
+            _uf.TopicRepository.Update(topic);
+            await _uf.SaveChangesAsync();
+            data.IsOk = true;
+            return Json(data);
+        }
+
+        [HttpGet]
+        [ModelType(typeof(Int32))]
+        public async Task<IActionResult> TopicManagement()
+        {
+            HttpContext.TryGetUserInfo(out var userInfo);
+
+            var bbs = await _uf.BBSRepository.GetAsync(x => x.UserId == userInfo.Id);
+            if (bbs == null)
+            {
+                return RedirectToAction("home", "error", new Dictionary<string, object>() { { "msg", "您没有版块管理的权限" } });
+            }
+
+            var count = await _uf.TopicRepository.CountAsync(x => x.Bbsid == bbs.Id && x.TopicStatus == TopicStatus.Disabled);
+            ViewData["BBSId"] = bbs.Id;
+            ViewData["Id"] = userInfo.Id;
+            ViewData["UserName"] = userInfo.UserName;
+            ViewData["HeadPhoto"] = userInfo.HeadPhoto;
+            ViewData["Role"] = userInfo.Roles.ToLower();
+
+            return View(count);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetTopicsDisabled(int page, int? id = null)
+        {
+            var data = new MoData();
+            HttpContext.TryGetUserInfo(out var userInfo);
+            if (id == null)
+            {
+                if (!userInfo.Roles.Equals("SuperAdmin", StringComparison.OrdinalIgnoreCase))
+                {
+                    data.IsOk = false;
+                    data.Msg = "您不是超级管理员";
+                    return Json(data);
+                }
+
+                data.Data = (await _uf.TopicRepository.GetAllAsync(x => x.TopicStatus == TopicStatus.Disabled))
+                    .Join(await _uf.UserRepository.GetAllAsync(), t => t.UserId, u => u.Id, (t, u) => new MoTopicDisabled
+                    {
+                        TopicId = t.Id,
+                        TopicName = t.TopicName,
+                        UserId = u.Id,
+                        UserName = u.UserName,
+                        CreateTime = t.CreateTime.ToStandardFormatString()
+                    });
+            }
+            else
+            {
+                if (!userInfo.Roles.Equals("Admin") || !await _uf.BBSRepository.IsExistAsync(x => x.Id == id))
+                {
+                    data.IsOk = false;
+                    data.Msg = "您没有对该版块的管理权限";
+                    return Json(data);
+                }
+
+                data.Data = (await _uf.TopicRepository.GetAllAsync(x => x.Bbsid == id && x.TopicStatus == TopicStatus.Disabled))
+                    .Join(await _uf.UserRepository.GetAllAsync(), t => t.UserId, u => u.Id, (t, u) => new MoTopicDisabled
+                    {
+                        TopicId = t.Id,
+                        TopicName = t.TopicName,
+                        UserId = u.Id,
+                        UserName = u.UserName,
+                        CreateTime = t.CreateTime.ToStandardFormatString()
+                    });
+            }
+
+            data.IsOk = true;
+            return Json(data);
+        }
+
+        [HttpGet]
         public async Task<IActionResult> GoTopicTop(int id, bool isTop)
         {
             var data = new MoData();

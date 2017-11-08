@@ -29,7 +29,7 @@ namespace KiraNet.GutsMvc.BBS
         [ModelType(typeof(MoPaging))]
         public async Task<IActionResult> Index()
         {
-            var topics = await _uf.TopicRepository.GetAllAsync();
+            var topics = await _uf.TopicRepository.GetAllAsync(x=>x.TopicStatus != TopicStatus.Disabled);
             var paging = new MoPaging
             {
                 Total = topics.Count(),

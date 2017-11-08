@@ -2,7 +2,7 @@
 
 namespace KiraNet.GutsMvc.BBS.Commom
 {
-    public class BBSAuthorizeAttribute:AuthorizeAttribute
+    public class BBSAuthorizeAttribute : AuthorizeAttribute
     {
         public BBSAuthorizeAttribute()
         {
@@ -24,7 +24,7 @@ namespace KiraNet.GutsMvc.BBS.Commom
 
     public class UserAuthorizeAttribute : BBSAuthorizeAttribute
     {
-        public UserAuthorizeAttribute():base()
+        public UserAuthorizeAttribute() : base()
         {
             Roles = new string[] { RoleType.User.ToString(), RoleType.Admin.ToString(), RoleType.SuperAdmin.ToString() };
         }
@@ -32,7 +32,7 @@ namespace KiraNet.GutsMvc.BBS.Commom
 
     public class AdminAuthorizeAttribute : BBSAuthorizeAttribute
     {
-        public AdminAuthorizeAttribute():base()
+        public AdminAuthorizeAttribute() : base()
         {
             Roles = new string[] { RoleType.Admin.ToString(), RoleType.SuperAdmin.ToString() };
         }
@@ -40,7 +40,7 @@ namespace KiraNet.GutsMvc.BBS.Commom
 
     public class SuperAdminAuthorizeAttribute : BBSAuthorizeAttribute
     {
-        public SuperAdminAuthorizeAttribute():base()
+        public SuperAdminAuthorizeAttribute() : base()
         {
             Roles = new string[] { RoleType.SuperAdmin.ToString() };
         }
