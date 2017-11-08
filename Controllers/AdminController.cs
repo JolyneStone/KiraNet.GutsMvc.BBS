@@ -109,7 +109,7 @@ namespace KiraNet.GutsMvc.BBS.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetTopicsDisabled(int page, int? id = null)
+        public async Task<IActionResult> GetTopicsDisabled(int page, int? id)
         {
             var data = new MoData();
             HttpContext.TryGetUserInfo(out var userInfo);
