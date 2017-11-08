@@ -8,6 +8,7 @@ using Lucene.Net.Search;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace KiraNet.GutsMvc.BBS.Commom
@@ -204,7 +205,7 @@ namespace KiraNet.GutsMvc.BBS.Commom
                                                          //Stopwatch st = new Stopwatch();
                                                          //st.Start();
             QueryParser parser = null;// new QueryParser(Lucene.Net.Util.Version.LUCENE_30, field, analyzer);//一个字段查询
-            parser = new MultiFieldQueryParser(Version, fileds, Analyzer);//多个字段查询
+            parser = new MultiFieldQueryParser(Version, fileds, GetAnalyzer(keyword));//多个字段查询
             Query query = parser.Parse(keyword);
             int n = 1000;
             IndexSearcher searcher = new IndexSearcher(Directory_luce, true);//true-表示只读
@@ -281,11 +282,19 @@ namespace KiraNet.GutsMvc.BBS.Commom
             //}
             if (keyword != "")
             {
-                string[] fileds = { "topicname", "content" };//查询字段
-                QueryParser parser = null;// new QueryParser(version, field, analyzer);//一个字段查询
-                parser = new MultiFieldQueryParser(Version, fileds, Analyzer);//多个字段查询
-                Query queryKeyword = parser.Parse(keyword);
-                bq.Add(queryKeyword, Occur.MUST);//与运算
+                try
+                {
+                    string[] fileds = { "topicname", "content" };//查询字段
+                    QueryParser parser = null;// new QueryParser(version, field, analyzer);//一个字段查询
+                    parser = new MultiFieldQueryParser(Version, fileds, GetAnalyzer(keyword));//多个字段查询
+                    Query queryKeyword = parser.Parse(keyword);
+                    bq.Add(queryKeyword, Occur.MUST);//与运算
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine("Exit...");
+                    Environment.Exit(1);
+                }
             }
 
             TopScoreDocCollector collector = TopScoreDocCollector.Create(PageIndex * PageSize, false);
@@ -447,9 +456,53 @@ namespace KiraNet.GutsMvc.BBS.Commom
                 {
                     _analyzer = new KiraNet.GutsMvc.BBS.Infrastructure.JiebaAnalyzer();//jieba分词分析器
                 }
+                else if (_analyzer is Lucene.Net.Analysis.Standard.StandardAnalyzer)
+                {
+                    _analyzer.Close();
+                    _analyzer = new KiraNet.GutsMvc.BBS.Infrastructure.JiebaAnalyzer();
+                }
 
                 return _analyzer;
             }
+        }
+        #endregion
+
+        #region 根据特定的中英文语句选择分析器
+        public Analyzer GetAnalyzer(string keyword)
+        {
+            if (keyword == null)
+            {
+                if (_analyzer == null)
+                {
+                    _analyzer = new KiraNet.GutsMvc.BBS.Infrastructure.JiebaAnalyzer();//jieba分词分析器
+                }
+
+                return _analyzer;
+            }
+
+            Match mInfo = Regex.Match(keyword, @"[\u4e00-\u9fa5]"); // 判断中英文
+            if (mInfo.Success) //成功
+            {
+                if (_analyzer == null)
+                    _analyzer = new KiraNet.GutsMvc.BBS.Infrastructure.JiebaAnalyzer();//jieba分词分析器
+                else if (!(_analyzer is JiebaAnalyzer))
+                {
+                    _analyzer.Close();
+                    _analyzer = new KiraNet.GutsMvc.BBS.Infrastructure.JiebaAnalyzer();
+                }
+            }
+            else
+            {
+                if (_analyzer == null)
+                    _analyzer = new Lucene.Net.Analysis.Standard.StandardAnalyzer(Version);// 标准分析器
+                else if (!(_analyzer is Lucene.Net.Analysis.Standard.StandardAnalyzer))
+                {
+                    _analyzer.Close();
+                    _analyzer = new Lucene.Net.Analysis.Standard.StandardAnalyzer(Version);
+                }
+            }
+
+            return _analyzer;
         }
         #endregion
 

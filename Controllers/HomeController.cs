@@ -59,7 +59,6 @@ namespace KiraNet.GutsMvc.BBS
         [HttpGet]
         public async Task<IActionResult> GetSearchResult(string query, int searchType, int page = 1)
         {
-            // TODO: Lucene.net and 盘古分词 reseaching
             var data = new MoData();
             // int转枚举型失败不会抛出异常，用default捕获
             switch ((SearchType)searchType)

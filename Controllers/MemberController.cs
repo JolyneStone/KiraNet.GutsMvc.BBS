@@ -311,7 +311,7 @@ namespace KiraNet.GutsMvc.BBS.Controllers
                 "GutsMvcBBS - 重置密码",
                 tpl);
 
-            this.MsgBox(isOk ? "已给您邮箱发送了重置密码邮件，请收件后点击充值密码链接地址。" : "发送绑定邮件失败，请稍后重试！");
+            this.MsgBox(isOk ? "已给您邮箱发送了重置密码邮件，请收件后点击重置密码链接地址。" : "发送绑定邮件失败，请稍后重试！");
             return View();
         }
 

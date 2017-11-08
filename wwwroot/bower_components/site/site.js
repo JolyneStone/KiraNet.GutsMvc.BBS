@@ -214,8 +214,8 @@ var gutsmvc = function () {
                             var user = data.Data;
                             loginArr.push('<li class="loginli"><a href="/usercenter/index" style="padding-top:10px;"><img id="userheadphoto" class="img img-circle" src="' + user.HeadPhoto + '" style="width:30px;height:30px;" /></a></li>');
                             loginArr.push('<li class="loginli"><a href="/usercenter/index"><span id="usernickname" style="color:red">' + user.UserName + '</span></a></li>');
-                            loginArr.push('<li class="loginli"><a href="/usercenter/index">个人中心</a></li>');
-                            loginArr.push('<li class="loginli"><a href="/member/loginout">注销</a></li>');
+                            loginArr.push('<li class="loginli"><a href="/usercenter/index">Personal Center</a></li>');
+                            loginArr.push('<li class="loginli"><a href="/member/loginout">Sign out</a></li>');
                         } else {
                             console.log(data.Msg);
                         }
@@ -224,7 +224,7 @@ var gutsmvc = function () {
                         $("#ul_login").html(loginArr.join(''));
                     }
                 });
-            }, 2000);
+            }, 1000);
         },
         /// 适用于本网站中所有表单的提交
         bindSubmitBtn: function () {
@@ -306,73 +306,6 @@ var gutsmvc = function () {
                 bindLogBtn(id, page, tableId, 'userStar', url, "/user/index/", get);
             };
         },
-        ///// 获取图片的赞数和阅读数
-        //picZanOrRead: function (btnName) {
-        //    if (btnName.length <= 0) { return; }
-        //    $("button[name='" + btnName + "']").on("click", function () {
-        //        var btn = $(this);
-        //        var id = btn.attr("data-id");
-        //        btn.addClass("disabled");
-        //        var msg = $("#msg_" + id); msg.html("请稍等...");
-
-        //        var tId = btn.attr("data-type");
-        //        var num = $("#num_" + id);
-        //        try {
-        //            $.post("/pictures/piczanorread", { id: id, tId: tId }, function (data) {
-        //                if (data) {
-        //                    if (!data.isOk) {
-        //                    } else { num.html(data.data); }
-        //                    msg.html(data.msg);
-        //                }
-        //                btn.removeClass("disabled");
-        //            });
-        //        } catch (ex) {
-        //            msg.html("操作失败");
-        //            btn.removeClass("disabled");
-        //        }
-        //    });
-        //},
-        /// 提交评论
-        //subComment: function (divId, btnId, textareaId, userId, moduleId) {
-        //    $('#' + btnId).on("click", function () {
-        //        if (btnId.length <= 0 || divId.length <= 0 || textareaId.length <= 0) {
-        //            alert("出现错误，请刷新后再试！");
-        //            return 0;
-        //        }
-        //        if (userId == null || userId == -1) {
-        //            alert("请先登录！");
-        //            return 0;
-        //        }
-        //        if (moduleId == null) {
-        //            alert("出现错误，请刷新后再试！");
-        //            return 0;
-        //        }
-        //        var coms = $('#' + divId).html();
-        //        var com = $('#' + textareaId).val();
-        //        if (com == null || com.length <= 0) {
-        //            alert("评论内容不可为空！");
-        //            return 0;
-        //        }
-        //        if (com.length >= 500) {
-        //            alert("评论内容不可超出字数限制！");
-        //            return 0;
-        //        }
-        //        $.post("/pictures/subcomment", { moduleId: moduleId, commentStr: com }, function (data) {
-        //            if (data != null && data.isOk) {
-        //                var headphoto = $("#userheadphoto").attr("src");
-        //                var nickname = $("#usernickname").html();
-        //                var comment = '<li><div class="div_left col-md-1"><a href="/pictures/index/' + userId + '"><img style="width:100%;" class="img img-circle" src="' + headphoto + '" title="' + nickname + '"></a></div>' +
-        //                    '<div class="div_right col-md-11 text-left"><a href="/pictures/index/' + userId + '" target="_blank">' + nickname + '</a>：' + com + '<div class="twit_item_time text-right"><i>刚刚</i></div></div></li>';
-        //                var precomlist = $('#' + divId).html();
-        //                $('#' + divId).html(comment + precomlist);
-        //            } else if (data != null && !data.isOk) {
-        //                alert(data);
-        //            } else {
-        //                alert("评论出错，请稍后再试！");
-        //            }
-        //        });
-        //    });
-        //},
         /// 生成分页链接
         initPagerOption: function (currentPage, total, pageSize, divId, aName, routeUrl, joinCode) {
             if (total <= 0) {

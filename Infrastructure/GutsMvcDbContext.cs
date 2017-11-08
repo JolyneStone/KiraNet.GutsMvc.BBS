@@ -77,7 +77,7 @@ namespace KiraNet.GutsMvc.BBS.Infrastructure
 
                 entity.Property(e => e.Message)
                     .IsRequired()
-                    .HasMaxLength(500);
+                    .HasMaxLength(1000);
 
                 entity.Property(e => e.UserName)
                     .IsRequired()
@@ -112,7 +112,7 @@ namespace KiraNet.GutsMvc.BBS.Infrastructure
 
                 entity.Property(e => e.Message)
                     .IsRequired()
-                    .HasMaxLength(200);
+                    .HasMaxLength(1000);
 
                 entity.Property(e => e.ReplyType)
                    .IsRequired()
