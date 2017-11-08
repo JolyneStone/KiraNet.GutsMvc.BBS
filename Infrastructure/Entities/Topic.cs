@@ -23,7 +23,6 @@ namespace KiraNet.GutsMvc.BBS.Infrastructure.Entities
         public int StarCount { get; set; }
         public DateTime LastReplyTime { get; set; }
         public TopicStatus TopicStatus{ get; set; }
-
         public virtual Bbs Bbs { get; set; }
         public virtual User User { get; set; }
         public virtual ICollection<Reply> Reply { get; set; }

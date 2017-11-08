@@ -16,7 +16,6 @@ namespace KiraNet.GutsMvc.BBS.Infrastructure.Entities
             Topic = new HashSet<Topic>();
             UserToRole = new HashSet<UserToRole>();
         }
-
         public int Id { get; set; }
         public string RealName { get; set; }
         public string UserName { get; set; }
@@ -31,7 +30,6 @@ namespace KiraNet.GutsMvc.BBS.Infrastructure.Entities
         public int Integrate { get; set; }
         public string Password { get; set; }
         public UserStatus UserStatus { get; set; }
-
         public virtual ICollection<TopicStar> TopicStar { get; set; }
         public virtual ICollection<UserStar> UserStarUser { get; set; }
         public virtual ICollection<UserStar> UserStarUserStar { get; set; }

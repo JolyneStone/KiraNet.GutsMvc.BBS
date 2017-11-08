@@ -213,7 +213,6 @@ namespace KiraNet.GutsMvc.BBS.Infrastructure
                     .IsUnique();
 
                 entity.Property(e => e.City).HasMaxLength(50);
-
                 entity.Property(e => e.CreateTime)
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
@@ -224,13 +223,9 @@ namespace KiraNet.GutsMvc.BBS.Infrastructure
                     .IsUnicode(false);
 
                 entity.Property(e => e.HeadPhoto).HasMaxLength(200);
-
                 entity.Property(e => e.Integrate).HasDefaultValueSql("((0))");
-
                 entity.Property(e => e.Introduce).HasMaxLength(200);
-
                 entity.Property(e => e.Nation).HasMaxLength(50);
-
                 entity.Property(e => e.Password)
                     .IsRequired()
                     .HasMaxLength(50)
@@ -241,7 +236,6 @@ namespace KiraNet.GutsMvc.BBS.Infrastructure
                 entity.Property(e => e.Tel)
                     .HasMaxLength(11)
                     .IsUnicode(false);
-
                 entity.Property(e => e.UserName)
                     .IsRequired()
                     .HasMaxLength(20);

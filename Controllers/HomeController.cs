@@ -44,7 +44,7 @@ namespace KiraNet.GutsMvc.BBS
         {
             if (String.IsNullOrWhiteSpace(query))
             {
-                return RedirectToAction("error", new Dictionary<string, object>() { { "msg", "搜索关键词为空" } });
+                return RedirectToAction("home", "error", new Dictionary<string, object>() { { "msg", "搜索关键词为空" } });
             }
             //if(!Enum.IsDefined(typeof(SearchType), searchType))
             //{

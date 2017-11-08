@@ -21,7 +21,6 @@
             <a href="/usercenter/index/" class="list-group-item"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> 个人主页</a>
             <a href="/usercenter/accountsettings" class="list-group-item"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> 账户设置</a>
             <a href="/usercenter/securitysettings" class="list-group-item active"><span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> 安全设置</a>
-            <a href="/user/index/" class="list-group-item"><span class="glyphicon glyphicon-grain" aria-hidden="true"></span> 个人主页</a>
             @if (ViewData["Role"].ToString() == "superadmin")
             {
                 <a href="/superadmin/index/" class="list-group-item"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> 后台管理</a>
