@@ -11,8 +11,7 @@ namespace KiraNet.GutsMvc.BBS
 {
     public class Startup : IStartup
     {
-        public IConfigurationRoot Configuration
-        { get; }
+        public IConfigurationRoot Configuration { get; }
 
         public Startup()
         {

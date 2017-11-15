@@ -15,9 +15,11 @@ namespace KiraNet.GutsMvc.BBS.Commom
 {
     public class JiebaLuceneHelper
     {
-        private static JiebaLuceneHelper _instance;
         private static object _sync = new object();
 
+        #region 单例
+
+        private static JiebaLuceneHelper _instance;
         private JiebaLuceneHelper() { }
         public static JiebaLuceneHelper Instance
         {
@@ -37,6 +39,8 @@ namespace KiraNet.GutsMvc.BBS.Commom
                 return _instance;
             }
         }
+
+        #endregion
 
         #region 初始化索引
 
@@ -273,13 +277,15 @@ namespace KiraNet.GutsMvc.BBS.Commom
             if (PageIndex < 1) PageIndex = 1;
             //Stopwatch st = new Stopwatch();
             //st.Start();
-            BooleanQuery bq = new BooleanQuery();
+
             //if (!String.IsNullOrWhiteSpace(flag))
             //{
             //    QueryParser qpflag = new QueryParser(Version, "flag", Analyzer);
             //    Query qflag = qpflag.Parse(flag);
             //    bq.Add(qflag, Occur.MUST);//与运算
             //}
+            BooleanQuery bq = new BooleanQuery();
+
             if (keyword != "")
             {
                 try
@@ -290,7 +296,7 @@ namespace KiraNet.GutsMvc.BBS.Commom
                     Query queryKeyword = parser.Parse(keyword);
                     bq.Add(queryKeyword, Occur.MUST);//与运算
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     Console.WriteLine("Exit...");
                     Environment.Exit(1);

@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="../../wwwroot/bower_components/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="../../wwwroot/bower_components/font-awesome/css/font-awesome.min.css" />
     <link rel="stylesheet" href="../../wwwroot/bower_components/site/navsite.css" />
+    <link rel="stylesheet" href="../../wwwroot/bower_components/site/service.css" />
     <link rel="stylesheet" href="../../wwwroot/bower_components/site/site.css" />
     <script src="../../wwwroot/bower_components/jquery/dist/jquery.min.js"></script>
     <script src="../../wwwroot/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
@@ -92,12 +93,61 @@
                     <div class="col-lg-12 col-md-12" style="padding-right:0; padding-left:0;">
                         @IncludeBody()
                     </div>
+                    <!-- 客服部分 -->
+                    <div style="right:-230px;" class="contactusdiyou">
+                        <div class="hoverbtn">
+                            <span>联</span><span>系</span><span>我</span><span>们</span>
+                            <img class="hoverimg" src="../../wwwroot/images/hoverbtnbg.gif" height="9" width="13">
+                        </div>
+                        <div class="conter">
+                            <div class="con1">
+                                <dl class="fn_cle">
+                                    <dt><img src="../../wwwroot/images/tel.png" height="31" width="31"></dt>
+                                    <dd class="f1">咨询热线：</dd>
+                                    <dd class="f2"><span class="ph_num">123-4567-1111</span></dd>
+                                </dl>
+                            </div>
+                            <div class="blank0"></div>
+                            <div class="qqcall">
+                                <dl class="fn_cle">
+                                    <dt><img src="../../wwwroot/images/zxkfqq.png" height="31" width="31"></dt>
+                                    <dd class="f1 f_s14">在线客服：</dd>
+                                    <dd class="f2 kefuQQ">
+                                        <span>机器客服</span>
+                                        <a target="_blank" href="/home/service"></a><br />
+                                        <span>人工客服</span>
+                                        <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&amp;uin=997525106&amp;site=qq&amp;menu=yes"></a>
+                                    </dd>
+                                </dl>
+                                <div class="blank0"></div>
+                            </div>
+                            <div class="blank0"></div>
+                            <div class="weixincall">
+                                <dl class="fn_cle">
+                                    <dt><img src="../../wwwroot/images/weixin.png" height="31" width="31"></dt>
+                                    <dd class="f1">官方微信站：</dd>
+                                    <dd class="f3"><img src="../../wwwroot/images/wechat.png" height="73" width="73"></dd>
+                                </dl>
+                            </div>
+                            <div class="blank0"></div>
+                            <div class="con1">
+                                <dl class="fn_cle">
+                                    <dt><span class="fa fa-fw fa-2x fa-github"></span></dt>
+                                    <dd class="f1">GitHub：</dd>
+                                    <dd class="f2"><span class="ph_num"><a style="color:#fff;" href="https://github.com/zzq424/KiraNet.GutsMvc.BBS">Star</a></span></dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="diyoumask" style="height: 2000px;"></div>
                 </div>
                 <hr />
                 <footer class="text-center">
                     <p>
                         <a href="/home/about" target="_blank">关于我们</a>
                         <a href="/home/contact" target="_blank">联系我们</a>
+                        <a href="/home/service" target="_blank">在线客服</a>
                     </p>
                     <p>
                         &copy; 2017 - GutsMvcBBS &nbsp;&nbsp; 作者 - Kira Yoshikage
@@ -134,6 +184,20 @@
 
             $('[data-toggle="offcanvas"]').click(function () {
                 $('#wrapper').toggleClass('toggled');
+            });
+
+            $(".contactusdiyou").hover(function () {
+                $(".hoverimg").attr("src", "../../wwwroot/images/hoverbtnbg1.gif");
+                $('.diyoumask').fadeIn();
+                $('.contactusdiyou').animate({
+                    right: '0'
+                }, 300);
+            }, function () {
+                $(".hoverimg").attr("src", "../../wwwroot/images/hoverbtnbg.gif");
+                $('.contactusdiyou').animate({
+                    right: '-230px'
+                }, 300, function () { });
+                $('.diyoumask').fadeOut();
             });
         });
     </script>

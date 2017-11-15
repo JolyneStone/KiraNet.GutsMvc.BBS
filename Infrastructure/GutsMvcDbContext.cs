@@ -20,7 +20,7 @@ namespace KiraNet.GutsMvc.BBS.Infrastructure
         //{
         //    if (!optionsBuilder.IsConfigured)
         //    {
-        //        optionsBuilder.UseSqlServer(@"Integrated Security=SSPI;Persist Security Info=False;User ID=sa;Initial Catalog=BBS;Data Source=localhost ");
+        //        optionsBuilder.UseSqlServer(@"Integrated Security=SSPI;Persist Security Info=False;User ID=sa;Initial Catalog=BBS;Data Source=localhost");
         //    }
         //}
 
@@ -156,9 +156,9 @@ namespace KiraNet.GutsMvc.BBS.Infrastructure
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
 
-                entity.Property(e => e.TopicStatus)
-                    .IsRequired()
-                    .HasDefaultValueSql("((1))");
+                //entity.Property(e => e.TopicStatus)
+                //    .IsRequired()
+                //    .HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.LastReplyTime)
                     .HasColumnType("datetime")
@@ -222,6 +222,10 @@ namespace KiraNet.GutsMvc.BBS.Infrastructure
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
+                entity.Property(e => e.Sex)
+                    .IsRequired()
+                    .HasColumnType("bit")
+                    .HasDefaultValueSql("((0))");
                 entity.Property(e => e.HeadPhoto).HasMaxLength(200);
                 entity.Property(e => e.Integrate).HasDefaultValueSql("((0))");
                 entity.Property(e => e.Introduce).HasMaxLength(200);
@@ -280,6 +284,36 @@ namespace KiraNet.GutsMvc.BBS.Infrastructure
                     .HasForeignKey(d => d.StarUserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_User_UserStar_StarUserId");
+            });
+
+            modelBuilder.Entity<Chat>(entity =>
+            {
+                entity.ToTable("Chat");
+
+                entity.Property(e => e.CreateTime)
+                     .HasColumnType("datetime")
+                     .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.Message)
+                     .IsRequired()
+                     .HasMaxLength(500);
+
+                entity.Property(e => e.IsArrive)
+                     .IsRequired()
+                     .HasColumnType("bit")
+                     .HasDefaultValueSql("((0))");
+
+                entity.HasOne(d => d.User)
+                     .WithMany(p => p.UserChat)
+                     .HasForeignKey(d => d.UserId)
+                     .OnDelete(DeleteBehavior.ClientSetNull)
+                     .HasConstraintName("FK_Chat_User");
+
+                entity.HasOne(d => d.TargetUser)
+                    .WithMany(p => p.TargetUserChat)
+                    .HasForeignKey(d => d.TargetUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Chat_TargetUser");
             });
         }
     }

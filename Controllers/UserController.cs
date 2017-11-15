@@ -95,7 +95,7 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             var data = new MoData();
 
             var topic = await _uf.TopicRepository.GetByIdAsync(id);
-            if(topic == null)
+            if (topic == null)
             {
                 data.IsOk = false;
                 data.Msg = "找不到指定的帖子";
@@ -110,7 +110,7 @@ namespace KiraNet.GutsMvc.BBS.Controllers
                 return Json(data);
             }
 
-            if(isLike)
+            if (isLike)
             {
                 // 点赞
                 var isTemp = await _uf.TopicStarRepository.IsExistAsync(x => x.TopicId == id && x.UserId == userInfo.Id);
@@ -134,7 +134,7 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             else
             {
                 var topicStar = await _uf.TopicStarRepository.GetAsync(x => x.TopicId == id && x.UserId == userInfo.Id);
-                if(topicStar!=null)
+                if (topicStar != null)
                 {
                     topic.StarCount = topic.StarCount - 1;
                     _uf.TopicStarRepository.Delete(topicStar);

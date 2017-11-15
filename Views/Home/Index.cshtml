@@ -29,8 +29,7 @@
                         <span class="input-group-btn">
                             <button class="btn btn-info btn-search">查找</button>
                         </span>
-                        <datalist id="topic_historyList" name="historyList">
-                        </datalist>
+                        <datalist id="topic_historyList" name="historyList"></datalist>
                     </p>
                 </form>
             </div>
@@ -42,8 +41,7 @@
                         <span class="input-group-btn">
                             <button class="btn btn-info btn-search">查找</button>
                         </span>
-                        <datalist id="content_historyList" name="historyList">
-                        </datalist>
+                        <datalist id="content_historyList" name="historyList"></datalist>
                     </p>
                 </form>
             </div>
@@ -55,8 +53,7 @@
                         <span class="input-group-btn">
                             <button class="btn btn-info btn-search">查找</button>
                         </span>
-                        <datalist id="user_historyList" name="historyList">
-                        </datalist>
+                        <datalist id="user_historyList" name="historyList"></datalist>
                     </p>
                 </form>
             </div>
@@ -72,11 +69,18 @@
             </div>
         </div>
     </div>
+
+    @*<input type="text" id="usertextid" />
+    <button type="button" id="btnstock">测试</button>
+    <input type="text" id="message" />
+    <button type="button" id="btnsend">发送</button>
+    <span id="messageSpan"></span>*@
 </div>
 
 
 <script src="../../wwwroot/bower_components/paging/paging.min.js"></script>
 <script>
+    var ws;
     $('#pagination').paging({
         initPageNo: 1, // 初始页码
         totalPages: @((Model.Total + Model.PageSize - 1) / Model.PageSize), //总页数
@@ -87,6 +91,7 @@
                 getPaging(page);
             }
     });
+
 
     function getPaging(page) {
         $.get("/home/gettopics/", { page: page }, function (data) {
@@ -136,8 +141,35 @@
     };
 
     $(function () {
-        //getPaging(1);
+        //window.onbeforeunload = function () {
+        //    if (ws != null && ws.readyState == WebSocket.OPEN) {
+        //        ws.onclose();
+        //    }
+        //};
         bbs.bindSearchHistory("historyList");
         bbs.getRecommends('recommends', 'recommendCount');
+
+        //$('#btnstock').click(function () {
+        //    ws = new WebSocket("ws://" + window.location.hostname + ":" + window.location.port + "/user/chat/?targetUserId=" + $("#usertextid").val(), "gutsmvc");
+        //    //ws.protocol = "gutsmvc";
+        //    ws.onopen = function () {
+        //        $("#messageSpan").text("Connected!");
+        //    };
+        //    ws.onmessage = function (result) {
+        //        $("#messageSpan").text(result.data);
+        //    };
+        //    ws.onerror = function (error) {
+        //        $("#messageSpan").text(error.data);
+        //    };
+        //    ws.onclose = function () {
+        //        $("#messageSpan").text("Disconnected!");
+        //    };
+        //});
+
+        //$('#btnsend').click(function () {
+        //    if (ws.readyState == WebSocket.OPEN) {
+        //        ws.send($("#message").val());
+        //    }
+        //});
     });
 </script>

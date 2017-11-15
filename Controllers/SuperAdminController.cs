@@ -303,6 +303,11 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return View(bbsList);
         }
 
+        /// <summary>
+        /// 增加版主
+        /// </summary>
+        /// <param name="adminInfo"></param>
+        /// <returns></returns>
         [HttpPost]
         [ModelType(typeof(MoBBSItem[]))]
         public async Task<IActionResult> CreateAdmin(MoAdminInfo adminInfo)
@@ -371,6 +376,12 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return View(bbsList);
         }
 
+        /// <summary>
+        /// 修改版主-变换所管理版块
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="bbsId"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> ModifyAdmin(int id, int bbsId)
         {
@@ -425,6 +436,11 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return View();
         }
 
+        /// <summary>
+        /// 创建子论坛
+        /// </summary>
+        /// <param name="moBBS"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> CreateBBS(MoBBSInfo moBBS)
         {
@@ -476,6 +492,11 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return View();
         }
 
+        /// <summary>
+        /// 删除子论坛
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> RemoveBBS(int id)
         {

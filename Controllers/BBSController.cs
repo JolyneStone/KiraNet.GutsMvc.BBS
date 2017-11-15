@@ -81,6 +81,11 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return View();
         }
 
+        /// <summary>
+        /// 发帖
+        /// </summary>
+        /// <param name="topicDes"></param>
+        /// <returns></returns>
         [HttpPost]
         [UserAuthorize]
         public async Task<IActionResult> CreateTopic(MoTopicDes topicDes)

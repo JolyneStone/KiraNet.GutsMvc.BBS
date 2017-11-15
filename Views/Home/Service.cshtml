@@ -1,0 +1,29 @@
+﻿<div class="speak_window">
+    <div class="speak_box">
+        <div class="answer">
+            <div class="heard_img left"><img class="img img-circle" width="60" height="60" src="../../wwwroot/images/gutsmvc.png"></div>
+            <div class="answer_text">
+                <p>客服机器人正在为你服务...</p>
+                <i></i>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="wenwen-footer">
+    <div class="wenwen_text left">
+        <div class="write_box" style="display: block;">
+            <input class="left" type="text" placeholder="请输入关键字">
+        </div>
+    </div>
+    <div class="right">
+        <button id="btnSend" class="btn btn-primary col-md-offset-1" >发送</button>
+    </div>
+    <div class="clear" style="opacity:0;"></div>
+</div>
+
+<script>
+    $(function () {
+        bbs.sendServiceMessage();
+    });
+
+</script>

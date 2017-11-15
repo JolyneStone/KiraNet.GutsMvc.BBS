@@ -1,7 +1,6 @@
 ﻿using KiraNet.GutsMvc.BBS.Infrastructure.Entities;
 using KiraNet.GutsMvc.BBS.Infrastructure.Repositories;
 using KiraNet.UnitOfWorkModel;
-using Microsoft.EntityFrameworkCore;
 
 namespace KiraNet.GutsMvc.BBS.Infrastructure
 {
@@ -10,7 +9,6 @@ namespace KiraNet.GutsMvc.BBS.Infrastructure
         public GutsMvcUnitOfWork(GutsMvcDbContext context) : base(context)
         {
         }
-
 
         #region 仓储属性
 
@@ -24,6 +22,7 @@ namespace KiraNet.GutsMvc.BBS.Infrastructure
         private Repository<Log> _log;
         private ReplyUserRepository _replyUser;
         private UserStarRepository _userStar;
+        private ChatRepository _chat;
 
         public UserStarRepository UserStarRepository => _userStar ?? (_userStar = new UserStarRepository(_dbContext));
 
@@ -44,6 +43,8 @@ namespace KiraNet.GutsMvc.BBS.Infrastructure
         public Repository<Log> LogRepository => _log ?? (_log = new Repository<Log>(_dbContext));
 
         public ReplyUserRepository ReplyUserRepository => _replyUser ?? (_replyUser = new ReplyUserRepository(_dbContext));
+
+        public ChatRepository ChatRepository => _chat ?? (_chat = new ChatRepository(_dbContext));
 
         #endregion
     }

@@ -1,14 +1,18 @@
 ﻿using KiraNet.GutsMvc;
+using KiraNet.GutsMvc.BBS.Commom;
 using KiraNet.GutsMvc.BBS.Infrastructure;
 using KiraNet.GutsMvc.BBS.Models;
 using KiraNet.GutsMvc.BBS.Statics;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Text;
 using System.Threading.Tasks;
-using KiraNet.GutsMvc.BBS.Commom;
-using Microsoft.Extensions.Logging;
 
 namespace KiraNet.GutsMvc.BBS
 {
@@ -39,6 +43,61 @@ namespace KiraNet.GutsMvc.BBS
             return View(paging);
         }
 
+        [HttpGet]
+        [UserAuthorize]
+        public IActionResult Service()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// 调用图灵机器人接口，回复用户的问题
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [UserAuthorize]
+        public async Task<IActionResult> SendQuestion(string message)
+        {
+            var data = new MoData();
+            HttpContext.TryGetUserInfo(out var userInfo);
+            string url = $"http://www.tuling123.com/openapi/api?key=d62fe8c1764648d8a5b5633b816454a6&info={message}&userid={userInfo.Id}";
+
+            string responseResult = await RequestApi(url, Encoding.UTF8);
+            if(responseResult == String.Empty)
+            {
+                data.IsOk = false;
+                return Json(data);
+            }
+
+            data.Data = JsonConvert.DeserializeObject(responseResult);
+            data.IsOk = true;
+            return Json(data);
+
+            async Task<string> RequestApi(string apiUrl, Encoding encoding)
+            {
+                string result = String.Empty;
+                try
+                {
+                    WebRequest request = WebRequest.Create(url);
+                    request.Credentials = CredentialCache.DefaultCredentials; // 默认身份验证
+                    request.Timeout = 10000;
+                    request.Method = "POST";
+                    WebResponse response = await request.GetResponseAsync();
+                    using (var reader = new StreamReader(response.GetResponseStream(), encoding))
+                    {
+                        result = await reader.ReadToEndAsync();
+                    }
+                }
+                catch
+                {
+                    return String.Empty;
+                }
+
+                return result;
+            }
+        }
+
         [HttpPost]
         public IActionResult Search(string query, int searchType)
         {
@@ -46,10 +105,6 @@ namespace KiraNet.GutsMvc.BBS
             {
                 return RedirectToAction("home", "error", new Dictionary<string, object>() { { "msg", "搜索关键词为空" } });
             }
-            //if(!Enum.IsDefined(typeof(SearchType), searchType))
-            //{
-            //    return RedirectToAction("error", new Dictionary<string, object>() { { "msg", "为指定的搜索模式" } });
-            //}
 
             ViewData["Query"] = query;
             ViewData["SearchType"] = searchType;

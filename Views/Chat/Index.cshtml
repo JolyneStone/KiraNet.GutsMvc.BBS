@@ -1,0 +1,339 @@
+﻿@{
+    ViewData["Title"] = "私信";
+}
+
+<link rel="stylesheet" href="../../wwwroot/bower_components/site/chat.css" />
+<div class="row">
+    <div class="col-md-2">
+        <div class="text-center">
+            <img class="img-thumbnail" src="@ViewData["HeadPhoto"]" style="width:140px; height:140px;" alt="@ViewData["UserName"]" />
+            <a href="/usercenter/index" alt="@ViewData["UserName"]">
+                <h4>@ViewData["UserName"]</h4>
+            </a>
+            <a href="/usercenter/AccountSettings" class="btn btn-default">
+                <span>个人信息</span>
+            </a>
+            <a href="/usercenter/upheadphoto" class="btn btn-default">
+                <span>换头像</span>
+            </a>
+        </div>
+        <hr />
+        <div class="list-group">
+            <a href="/usercenter/index" class="list-group-item active"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> 个人中心</a>
+            <a href="/usercenter/accountsettings" class="list-group-item"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> 账户设置</a>
+            <a href="/usercenter/securitysettings" class="list-group-item"><span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> 安全设置</a>
+            @if (ViewData["Role"].ToString() == "superadmin")
+            {
+            <a href="/superadmin/index/" class="list-group-item"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> 后台管理</a>
+            }
+            @if (ViewData["Role"].ToString() == "admin")
+            {
+            <a href="/admin/index/" class="list-group-item"><span class="glyphicon glyphicon-tasks" aria-hidden="true"></span> 管理员中心</a>
+            }
+        </div>
+    </div>
+    <div class="col-md-10" style="height:650px;">
+        <input id="targetUserId" type="hidden" value="-1" />
+        <input id="targetUserHeadPhoto" type="hidden" />
+        <div id="chatbox">
+            <div id="friends">
+                <!--聊天列表-->
+            </div>
+            <div class="vhr"></div>
+            <div id="chatview" class="p1">
+                <div id="chat-messages">
+                    <label id="targetUserName"></label>
+                    <div id="chatMessageBody" style="height:500px;">
+                    </div>
+                </div>
+
+                <div id="sendmessage" class="hidden">
+                    <input type="text" style="width:75%;" value="Send message..." />
+                    <button id="send" type="button" class="btn btn-default">提交</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var ws;
+    var userId = @ViewData["Id"];
+    var userHeadPhoto = '@ViewData["HeadPhoto"]';
+    var isHistory;
+    var nowTime;
+    var hasNot;
+
+    function htmlDecodeByRegExp(str) {
+        var s = "";
+        if (str.length == 0) return "";
+        s = s.replace(/&quot;/g, "\"");
+        //s = s.replace(/&lt;/g, "<");
+        //s = s.replace(/&gt;/g, ">");
+        //s = s.replace(/&nbsp;/g, " ");
+        //s = s.replace(/&#39;/g, "\'");
+        //s = str.replace(/&amp;/g, "&");
+        return s;
+    };
+
+    /*1.用浏览器内部转换器实现html转码*/
+    function htmlEncode(html) {
+        //1.首先动态创建一个容器标签元素，如DIV
+        var temp = document.createElement("div");
+        //2.然后将要转换的字符串设置为这个元素的innerText(ie支持)或者textContent(火狐，google支持)
+        (temp.textContent != undefined) ? (temp.textContent = html) : (temp.innerText = html);
+        //3.最后返回这个元素的innerHTML，即得到经过HTML编码转换的字符串了
+        var output = temp.innerHTML;
+        temp = null;
+        return output;
+    };
+    /*2.用浏览器内部转换器实现html解码*/
+    function htmlDecode(text) {
+        //1.首先动态创建一个容器标签元素，如DIV
+        var temp = document.createElement("div");
+        //2.然后将要转换的字符串设置为这个元素的innerHTML(ie，火狐，google都支持)
+        temp.innerHTML = text;
+        //3.最后返回这个元素的innerText(ie支持)或者textContent(火狐，google支持)，即得到经过HTML解码的字符串了。
+        var output = temp.innerText || temp.textContent;
+        temp = null;
+        return output;
+    }
+
+    function getFriendList() {
+        //window.localStorage.removeItem("gutsmvc_chatlist");
+        var storage = window.localStorage.getItem("gutsmvc_chatlist_" + userId);
+        if (storage != null && storage != undefined) {
+            return JSON.parse(storage);
+        } else {
+            return new Array();
+        }
+    };
+
+    function fillFriends() {
+        var arr = [];
+        var friends = getFriendList();
+        var model = '@Model';
+        if (model != null && model != undefined && model != '') {
+            model = htmlDecode(model);
+            var objmodel = JSON.parse(model);
+            var i = 0;
+            for (; i < friends.length; i++) {
+                if (objmodel.TargetUserId == friends[i].TargetUserId)
+                    break;
+            }
+
+            if (i == friends.length && objmodel.TargetUserId != userId) {
+                friends.push(objmodel);
+                pushFriend(friends);
+            }
+        }
+
+        $.each(friends, function (i, item) {
+            pushArr(item);
+        });
+
+        $('#friends').html(arr.reverse().join(''));
+        rebindFriendDiv();
+
+        function pushArr(value) {
+            arr.push('<div class="friend" name="friend" data-targetuserid="' + value.TargetUserId + '" data-targetusername="' + value.UserName + '">' +
+                '<img src= "' + value.HeadPhoto + '" />' +
+                '<p>' +
+                '<strong>' + value.UserName + '</strong>' +
+                '</p>' +
+                '</div>');
+        };
+    };
+
+    function pushFriend(friends) {
+        window.localStorage.setItem("gutsmvc_chatlist_" + userId, JSON.stringify(friends));
+    };
+
+    function userMessage(message) {
+        //var targetUserHeadPhoto = $("#targetUserHeadPhoto").val();
+        return '<div class="message right">' +
+            '<img src="' + userHeadPhoto + '" />' +
+            '<div class="bubble">' + message +
+            '<div class="corner"></div>' +
+            '</div>' +
+            '</div>';
+    };
+
+    function targetMessage(message) {
+        var targetUserHeadPhoto = $("#targetUserHeadPhoto").val();
+        return '<div class="message">' +
+            '<img src="' + targetUserHeadPhoto + '" />' +
+            '<div class="bubble">' + message +
+            '<div class="corner"></div>' +
+            '</div>' +
+            '</div>';
+    };
+
+    function appendMessage(id, message) {
+        var chatMessageBody = $("#chatMessageBody");
+        if (id > 0 && id == userId) {
+            // 用户消息
+            chatMessageBody.append(userMessage(message));
+            //isHistory ? chatMessageBody.prepend(userMessage(message)) : chatMessageBody.after(userMessage(message));
+        } else {
+            // 对方消息
+            chatMessageBody.append(targetMessage(message));
+            //isHistory ? chatMessageBody.prepend(targetMessage(message)) : chatMessageBody.after(targetMessage(message));
+        }
+    };
+
+    function prependMessage(id, message) {
+        var chatMessageBody = $("#chatMessageBody");
+        if (id > 0 && id == userId) {
+            // 用户消息
+            chatMessageBody.prepend(userMessage(message));
+        } else {
+            // 对方消息
+            chatMessageBody.prepend(targetMessage(message));
+        }
+    };
+
+    function initWebSocket(targetUserId) {
+        if (ws == null || ws.readyState == WebSocket.CLOSED || ws.readyState == WebSocket.CLOSING) {
+
+            ws = new WebSocket("ws://" + window.location.hostname + ":" + window.location.port + "/chat/chathub/?targetUserId=" + targetUserId, "gutsmvc");
+            ws.onmessage = function (result) {
+                /// case1: 用户发送
+                /// case2: 对方发送
+                /// case3: 离线消息
+                /// case4: 历史记录
+                var data = result.data;
+                var message = '';
+                var id = 0;
+                var index = data.indexOf(':');
+                if (index >= 0) {
+                    id = data.substr(0, index);
+                    message = data.substr(index + 1);
+                    //var str = result.subStr(index + 1);
+                    //var tempIndex = str.indexOf(':');
+                    //if (tempIndex > -0) {
+                    //    lastChatId = Number(str.subStr(0, tempIndex));
+                    //    message = str.subStr(tempIndex + 1);
+                    //} else {
+                    //    message = result.subStr(index + 1);
+                    //}
+                } else {
+                    message = data;
+                }
+
+                appendMessage(id, message);
+            };
+            ws.onerror = function (error) {
+                alert("与服务器连接发生异常，请刷新重试！");
+            };
+            ws.onclose = function () {
+                console.log("disconnected");
+            };
+        }
+    }
+
+    function rebindFriendDiv() {
+        $('div[name="friend"]').each(function (i, item) {
+            $(item).unbind();
+            $(item).bind("click", function () {
+                var targetUserId = $(this).data('targetuserid');
+                var targetUserName = $(this).data('targetusername');
+                $("#targetUserId").val(targetUserId);
+                $("#targetUserHeadPhoto").val($(this).children(""))
+                $('#targetUserName').html(targetUserName);
+                $('#targetUserHeadPhoto').val($(this).find('img')[0].src);
+                //if (ws != null || ws.readyState == WebSocket.OPEN) {
+                //    ws.onclose();
+                //}
+                initWebSocket(targetUserId);
+                isHistory = true;
+                hasNot = false;
+
+                // js的时间默认为世界时，而我们中国采取的是东八区的时间，所以要加上8
+                var dt = new Date();
+                dt.setHours(dt.getHours() + 8);
+                nowTime = dt.toUTCString();
+                var sendMessageDiv = $("#sendmessage");
+                if (sendMessageDiv.hasClass("hidden")) {
+                    sendMessageDiv.removeClass("hidden");
+                }
+            });
+        });
+    }
+
+    $(function () {
+        //$('#searchfield').focusout(function () {
+        //    if ($(this).val() == '') {
+        //        $(this).val('Search contacts...');
+        //    }
+        //});
+
+        window.onbeforeunload = function () {
+            if (ws != null && ws.readyState == WebSocket.OPEN) {
+                ws.onclose();
+            }
+        };
+
+        $('#sendmessage input').focus(function () {
+            if ($(this).val() == 'Send message...') {
+                $(this).val('');
+            }
+        });
+        $('#sendmessage input').focusout(function () {
+            if ($(this).val() == '') {
+                $(this).val('Send message...');
+            }
+        });
+
+        $("#send").click(function () {
+            if (ws != null && ws.readyState == WebSocket.OPEN) {
+                var message = $('#sendmessage input').val();
+                var targetUserId = $("#targetUserId").val();
+                if (message != null && message != '' && targetUserId > -1) {
+                    appendMessage(userId, message);
+                    $('#sendmessage input').val('');
+                    $('#sendmessage input').focusout();
+                    ws.send(targetUserId + '-' + message);
+                    // 由于在jQuery中，并不存在scrollHeight属性或方法，所以在这里我们改用原生js
+                    var div = document.getElementById("chat-messages");
+                    div.scrollTop =div.scrollHeight;
+                }
+            }
+        });
+
+        $("#chat-messages").scroll(function () {
+            if ($(this).scrollTop() <= 0) {
+                // 获取历史消息
+                var targetUserId = $("#targetUserId").val();
+                if (targetUserId < 0)
+                    return;
+
+                $.get('/chat/getchathistory/', { targetUserId: targetUserId, isHistory: isHistory, nowTime: nowTime }, function (data) {
+                    if (data && data.IsOk) {
+                        var arr = [];
+                        JSON.stringify(new Date("123"));
+                        if (data.Data.Chats.length > 0) {
+                            $.each(data.Data.Chats, function (i, item) {
+                                //lastChatId = Number(item.LastChatId);
+                                prependMessage(item.Id, item.Message);
+                            });
+
+                            nowTime = data.Data.NowTime;
+                        }
+
+                        if (isHistory && data.Data.Chats.length < 5) {
+                            hasNot = true;
+                        }
+
+                        isHistory = false;
+                    } else {
+                        alert("出现异常，请稍后再试");
+                    }
+                });
+            }
+        });
+
+        fillFriends();
+    });
+</script>

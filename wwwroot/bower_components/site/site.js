@@ -86,6 +86,7 @@ var gutsmvc = function () {
     var now = new Date();
 
     return {
+        // 绑定搜索记录
         bindSearchHistory: function (tabName) {
             var his = this.getSearchHistory();
             var arr = [];
@@ -214,6 +215,7 @@ var gutsmvc = function () {
                             var user = data.Data;
                             loginArr.push('<li class="loginli"><a href="/usercenter/index" style="padding-top:10px;"><img id="userheadphoto" class="img img-circle" src="' + user.HeadPhoto + '" style="width:30px;height:30px;" /></a></li>');
                             loginArr.push('<li class="loginli"><a href="/usercenter/index"><span id="usernickname" style="color:red">' + user.UserName + '</span></a></li>');
+                            loginArr.push('<li class="loginli"><a href="/chat/index">私信</a></li>');
                             loginArr.push('<li class="loginli"><a href="/usercenter/index">Personal Center</a></li>');
                             loginArr.push('<li class="loginli"><a href="/member/loginout">Sign out</a></li>');
                         } else {
@@ -370,6 +372,119 @@ var gutsmvc = function () {
                 '<span>' + pageStr + '</span>' +
                     '</a></li>';
                 return code;
+            }
+        },
+        // 发送信息给客服
+        sendServiceMessage: function () {
+            //$('.write_list').remove();
+            //$('.wenwen_btn img').attr('src', '../../wwwroot/images/jp_btn.png');
+            //$('.wenwen_btn').attr('onclick', 'to_write()');
+            
+            $("#btnSend").click(function () {
+                var headPhotoUrl = $('#userheadphoto').attr('src');
+                $('.write_list').remove();
+                var text = $('.write_box input').val(),
+                    str = '<div class="question">';
+                str += '<div class="heard_img right"><img class="img img-circle" width="60" height="60" src="' + headPhotoUrl + '"></div>';
+                str += '<div class="question_text clear"><p>' + text + '</p><i></i>';
+                str += '</div></div>';
+
+                if (text == '') {
+                    alert('请输入提问！');
+                    $('.write_box input').focus();
+                } else {
+                    $('.speak_box').append(str);
+                    $('.write_box input').val('');
+                    $('.write_box input').focus();
+                    //autoWidth();
+
+                    getServiceMessage(text);
+                }
+            });
+
+            // 从客服接受信息
+            function getServiceMessage(message) {
+                $.post('/home/sendquestion', { message: message }, function (data) {
+                    var ans = '<div class="answer"><div class="heard_img left"><img width="60" height="60" src="../../wwwroot/images/gutsmvc.png"></div>';
+                    //ans += '<div class="answer_text"><p>' + text + '</p><i></i>';
+
+                    if (data && data.IsOk) {
+                        //var response = JSON.parse(data.Data);
+                        var response = data.Data;
+                        switch (Number(response.code)) {
+                            case 100000: {
+                                // 文本类
+                                ans += '<div class="answer_text"><p>' + response.text + '</p><i></i>';
+                                break;
+                            }
+                            case 200000: {
+                                // 链接类
+                                ans += '<div class="answer_text"><p>' + response.text + '<a href="' + response.url + '">click here</a></p><i></i>';
+                                break;
+                            }
+                            case 302000: {
+                                // 新闻类
+                                ans += '<div class="answer_text"><p>' + response.text + '</p><i></i>';
+                                ans += '</div></div>';
+
+                                if (response.list != null && response.list.length > 0) {
+                                    $.each(response.list, function (i, item) {
+                                        ans += '</div></div>';
+
+                                        var temp_ans = '<div class="answer"><div class="heard_img left"><img width="60" src="../../wwwroot/images/gutsmvc.png"></div>';
+                                        temp_ans += '<div class="answer_text"><p><a href="' + item.detailurl + '">';
+                                        if (item.icon != null && item.icon != "") {
+                                            temp_ans += '<img src="' + item.icon + '" alt="' + item.source + '" title="' + item.article + '" />';
+                                        } else {
+                                            temp_ans += item.article;
+                                        }
+
+                                        temp_ans += '</a></p><i></i>';
+
+                                        ans += temp_ans;
+                                    });
+                                }
+
+                                break;
+                            }
+                            case 308000: {
+                                // 菜谱类
+                                ans += '<div class="answer_text"><p>' + response.text + '</p><i></i>';
+                                ans += '</div></div>';
+
+                                if (response.list != null && response.list.length > 0) {
+                                    $.each(response.list, function (i, item) {
+                                        ans += '</div></div>';
+
+                                        var temp_ans = '<div class="answer"><div class="heard_img left"><img width="60" src="../../wwwroot/images/gutsmvc.png"></div>';
+                                        temp_ans += '<div class="answer_text"><p>' + item.name + ':<a href="' + item.detailurl + '">';
+                                        if (item.icon != null && item.icon != "") {
+                                            temp_ans += '<img src="' + item.icon + '" alt="' + item.name + '" title="' + item.info + '" />';
+                                        } else {
+                                            temp_ans += item.info;
+                                        }
+
+                                        temp_ans += '</a></p><i></i>';
+
+                                        ans += temp_ans;
+                                    });
+                                }
+
+                                break;
+                            }
+                            default: {
+                                ans += '<div class="answer_text"><p>' + response.text + '</p><i></i>';
+                                break;
+                            }
+                        }
+                    }
+                    else {
+                        ans += '<div class="answer_text"><p>请检查您的网络</p><i></i>';
+                    }
+
+                    ans += '</div></div>';
+                    $('.speak_box').append(ans);
+                });
             }
         }
     }

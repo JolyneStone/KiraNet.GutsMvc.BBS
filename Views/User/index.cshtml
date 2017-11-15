@@ -13,6 +13,7 @@
                     <img class="img img-circle" src="@Model.HeadPhoto" style="width:180px; height:180px;" alt="@Model.UserName" />
                 </div>
                 <div style="margin-top:10px;">
+                    <button type="button" id="btnChat" class="btn btn-info">私信</button>
                     @if ((bool)ViewData["IsStar"] == true)
                     {
                         <button type="button" id="btnStar" data-isstar="1" class="btn btn-info active">取消关注</button>
@@ -141,6 +142,15 @@
 
 <script>
     $(function () {
+
+        $("#btnChat").click(function () {
+            var id = $('#userId').val();
+            if (id == undefined && id == null) {
+                alert("请先登陆！");
+            }
+
+            window.location = "/chat/index/?targetUserId=" + id;
+        });
 
         $("#btnStar").click(function () {
             var id = $('#userInfoId').val();

@@ -15,6 +15,8 @@ namespace KiraNet.GutsMvc.BBS.Infrastructure.Entities
             ReplyUserUser = new HashSet<ReplyUser>();
             Topic = new HashSet<Topic>();
             UserToRole = new HashSet<UserToRole>();
+            UserChat = new HashSet<Chat>();
+            TargetUserChat = new HashSet<Chat>();
         }
         public int Id { get; set; }
         public string RealName { get; set; }
@@ -39,5 +41,7 @@ namespace KiraNet.GutsMvc.BBS.Infrastructure.Entities
         public virtual ICollection<ReplyUser> ReplyUserUser { get; set; }
         public virtual ICollection<Topic> Topic { get; set; }
         public virtual ICollection<UserToRole> UserToRole { get; set; }
+        public virtual ICollection<Chat> UserChat { get; set; }
+        public virtual ICollection<Chat> TargetUserChat { get; set; }
     }
 }
