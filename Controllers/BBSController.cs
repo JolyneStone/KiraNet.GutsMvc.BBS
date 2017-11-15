@@ -21,12 +21,17 @@ namespace KiraNet.GutsMvc.BBS.Controllers
         public BBSController(IOptions<MapSetting> options, GutsMvcUnitOfWork uf, ILogger<GutsMvcBBS> logger)
         {
             _mapSetting = options.Value;
-            _uf = uf;       
+            _uf = uf;
             _logger = new GutsMvcLogger(logger, _uf);
 
             //JiebaLuceneHelper.Instance.InitIndex(_uf);
         }
 
+        /// <summary>
+        /// 版块主页
+        /// </summary>
+        /// <param name="id">版块Id</param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> Index(int id)
         {
@@ -48,6 +53,12 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return View(typeof(MoPaging), paging);
         }
 
+        /// <summary>
+        /// 获取版块帖子
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="page"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> GetTopics(int id, int page = 1)
         {
@@ -66,6 +77,11 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return Json(data);
         }
 
+        /// <summary>
+        /// 发帖
+        /// </summary>
+        /// <param name="bbsId"></param>
+        /// <returns></returns>
         [HttpGet]
         [UserAuthorize]
         public IActionResult CreateTopic(int bbsId)
@@ -82,7 +98,7 @@ namespace KiraNet.GutsMvc.BBS.Controllers
         }
 
         /// <summary>
-        /// 发帖
+        /// 发帖提交
         /// </summary>
         /// <param name="topicDes"></param>
         /// <returns></returns>
@@ -213,7 +229,7 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             }
 
             this.MsgBox("创建帖子成功");
-            JiebaLuceneHelper.Instance.AddIndex( new MoContentSearchItem
+            JiebaLuceneHelper.Instance.AddIndex(new MoContentSearchItem
             {
                 Id = reply.Id,
                 TopicId = topic.Id,
@@ -228,6 +244,11 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return View();
         }
 
+        /// <summary>
+        /// 帖子内容
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> Topic(int id)
         {
@@ -254,11 +275,11 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             {
 
                 var user = await _uf.UserRepository.GetByIdAsync(userInfo.Id);
-                if(user == null)
+                if (user == null)
                 {
                     return RedirectToAction("home", "error", new Dictionary<string, object>() { { "msg", "请重新登录啦~~~~" } });
                 }
-              
+
                 var isLike = await _uf.TopicStarRepository.IsExistAsync(x => x.TopicId == topic.Id && x.UserId == user.Id);
                 ViewData["IsLike"] = isLike;
 
@@ -267,7 +288,7 @@ namespace KiraNet.GutsMvc.BBS.Controllers
                     ViewData["Role"] = "User";
                 }
 
-                if((userInfo.Roles.Equals("admin", StringComparison.OrdinalIgnoreCase) && bbs.UserId == userInfo.Id) || 
+                if ((userInfo.Roles.Equals("admin", StringComparison.OrdinalIgnoreCase) && bbs.UserId == userInfo.Id) ||
                     userInfo.Roles.Equals("superadmin", StringComparison.OrdinalIgnoreCase))
                 {
                     ViewData["Role"] = "Admin";
@@ -286,9 +307,15 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             ViewData["BBSName"] = bbs.Bbsname;
             ViewData["StarCount"] = topic.StarCount;
 
-             return View(typeof(MoPaging), paging);
+            return View(typeof(MoPaging), paging);
         }
 
+        /// <summary>
+        /// 获取帖子内容
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="page"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> GetTopicContent(int id, int page)
         {
@@ -315,6 +342,14 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return Json(data);
         }
 
+        /// <summary>
+        /// 获取帖子评论子回复
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="index"></param>
+        /// <param name="page"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> GetChildReply(int id, int index, int page, int pageSize)
         {
@@ -334,6 +369,11 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return Json(data);
         }
 
+        /// <summary>
+        /// 提交评论
+        /// </summary>
+        /// <param name="subComment"></param>
+        /// <returns></returns>
         [HttpPost]
         [UserAuthorize]
         public async Task<IActionResult> SubmitReply(MoSubComment subComment)
@@ -483,7 +523,7 @@ namespace KiraNet.GutsMvc.BBS.Controllers
                     await _uf.SaveChangesAsync();
 
                     // 我们只记录帖子的评论
-                    if(subComment.ReplyObject == ReplyObject.Topic)
+                    if (subComment.ReplyObject == ReplyObject.Topic)
                     {
                         JiebaLuceneHelper.Instance.AddIndex(new MoContentSearchItem
                         {
@@ -511,20 +551,25 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             }
         }
 
+        /// <summary>
+        /// 删除评论
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet]
         [UserAuthorize]
         public async Task<IActionResult> DeleteReply(int id)
         {
             var data = new MoData();
             var reply = await _uf.ReplyRepository.GetByIdAsync(id);
-            if(reply == null)
+            if (reply == null)
             {
                 data.IsOk = false;
                 data.Msg = "找不到指定的评论";
                 return Json(data);
             }
 
-            if(reply.ReplyType == ReplyType.Image)
+            if (reply.ReplyType == ReplyType.Image)
             {
                 //var path = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + reply.Message.Substring(6).Replace('/', Path.DirectorySeparatorChar);
                 //if(System.IO.File.Exists(path))
@@ -535,11 +580,11 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             }
 
             var childReplies = await _uf.ReplyUserRepository.GetAllAsync(x => x.TopicId == reply.TopicId && x.ReplyIndex == reply.ReplyIndex);
-            if(childReplies!=null && childReplies.Any())
+            if (childReplies != null && childReplies.Any())
             {
-                foreach(var childReply in childReplies)
+                foreach (var childReply in childReplies)
                 {
-                    if(childReply.ReplyType == ReplyType.Image)
+                    if (childReply.ReplyType == ReplyType.Image)
                     {
                         DeleteImg(childReply.Message);
                     }
@@ -558,6 +603,11 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return Json(data);
         }
 
+        /// <summary>
+        /// 删除子回复
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet]
         [UserAuthorize]
         public async Task<IActionResult> DeleteChildReply(int id)
@@ -588,6 +638,11 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return Json(data);
         }
 
+        /// <summary>
+        /// 删除帖子
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet]
         [UserAuthorize]
         public async Task<IActionResult> DeleteTopic(int id)
@@ -596,19 +651,19 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             HttpContext.TryGetUserInfo(out var userInfo);
 
             var topic = await _uf.TopicRepository.GetByIdAsync(id);
-            if(topic == null)
+            if (topic == null)
             {
                 data.IsOk = false;
                 data.Msg = "找不到指定的帖子";
                 return Json(data);
             }
 
-            if(userInfo.Id != topic.UserId)
+            if (userInfo.Id != topic.UserId)
             {
-                if(!userInfo.Roles.Equals("SuperAdmin", StringComparison.OrdinalIgnoreCase))
+                if (!userInfo.Roles.Equals("SuperAdmin", StringComparison.OrdinalIgnoreCase))
                 {
                     var bbs = await _uf.BBSRepository.GetByIdAsync(topic.Bbsid);
-                    if(bbs.UserId != userInfo.Id)
+                    if (bbs.UserId != userInfo.Id)
                     {
                         data.IsOk = false;
                         data.Msg = "您没有删除此贴的权限";
@@ -619,19 +674,19 @@ namespace KiraNet.GutsMvc.BBS.Controllers
 
             var separator = Path.DirectorySeparatorChar;
             var path = Directory.GetCurrentDirectory() + separator + _mapSetting.UpContentPhotoPath.Replace("\\", $"{separator}") + separator + topic.Id;
-            if(Directory.Exists(path))
+            if (Directory.Exists(path))
             {
                 Directory.Delete(path, true);
             }
 
             var replies = await _uf.ReplyRepository.GetAllAsync(x => x.TopicId == topic.Id);
-            foreach(var reply in replies)
+            foreach (var reply in replies)
             {
                 JiebaLuceneHelper.Instance.Delete(reply.Id.ToString());
             }
 
             _uf.TopicRepository.Delete(topic);
-            if(await _uf.SaveChangesAsync()>0)
+            if (await _uf.SaveChangesAsync() > 0)
             {
                 data.IsOk = true;
             }
@@ -644,6 +699,12 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return Json(data);
         }
 
+        #region 辅助方法
+
+        /// <summary>
+        /// 删除图片
+        /// </summary>
+        /// <param name="path"></param>
         private static void DeleteImg(string path)
         {
             path = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + path.Substring(6).Replace('/', Path.DirectorySeparatorChar);
@@ -652,5 +713,7 @@ namespace KiraNet.GutsMvc.BBS.Controllers
                 System.IO.File.Delete(path);
             }
         }
+
+        #endregion
     }
 }

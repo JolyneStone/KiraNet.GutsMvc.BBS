@@ -86,8 +86,8 @@
 
 <script src="../../wwwroot/bower_components/paging/paging.min.js"></script>
 <script>
-    var query = $("#str_query").val();
-    var searchType = $("#search_type").val();
+    var query;
+    var searchType;
 
     function hiddenTab(tabId) {
         var tab = $('#' + tabId);
@@ -173,7 +173,8 @@
     };
 
     $(function () {
-        //getPaging(1);
+        query = $("#str_query").val();
+        searchType = $("#search_type").val();
         bbs.bindSearchHistory("historyList");
         bbs.pushSearchHistory(query);
         bbs.getRecommends('recommends', 'recommendCount');

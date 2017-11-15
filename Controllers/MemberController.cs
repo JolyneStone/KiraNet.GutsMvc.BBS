@@ -24,6 +24,11 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             _cache = cache;
         }
 
+        /// <summary>
+        /// 登录页面
+        /// </summary>
+        /// <param name="returnUrl"></param>
+        /// <returns></returns>
         [HttpGet]
         public IActionResult Login(string returnUrl = null)
         {
@@ -43,6 +48,11 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return View();
         }
 
+        /// <summary>
+        /// 提交登录信息
+        /// </summary>
+        /// <param name="loginUser"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> Login(MoLoginUser loginUser)
         {
@@ -98,6 +108,10 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             }
         }
 
+        /// <summary>
+        /// 注销
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public IActionResult LoginOut()
         {
@@ -105,6 +119,10 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return Redirect("http://localhost:17758/home/index");
         }
 
+        /// <summary>
+        /// 获取登录信息
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public JsonResult GetLoginInfo()
         {
@@ -129,12 +147,21 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return Json(data);
         }
 
+        /// <summary>
+        /// 用户注册
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public IActionResult Register()
         {
             return View();
         }
 
+        /// <summary>
+        /// 提交注册信息
+        /// </summary>
+        /// <param name="registerUser"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> Register(MoUserInfoSimple registerUser)
         {
@@ -181,6 +208,13 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return View();
         }
 
+        /// <summary>
+        /// 激活邮箱，激活成功则跳转到主页，否则跳转到错误页
+        /// </summary>
+        /// <param name="expire"></param>
+        /// <param name="token"></param>
+        /// <param name="email"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> ActiveEmail(string expire, string token, string email)
         {
@@ -246,12 +280,21 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return RedirectToAction("home", "index");
         }
 
+        /// <summary>
+        /// 忘记密码
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public IActionResult ForgetPassword()
         {
             return View();
         }
 
+        /// <summary>
+        /// 提交邮箱信息，并发送修改密码邮件到用户邮箱
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> ForgetPassword(string email)
         {
@@ -315,6 +358,13 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return View();
         }
 
+        /// <summary>
+        /// 确认信息，成功则跳转到确认密码页面，否则跳转到错误页
+        /// </summary>
+        /// <param name="expire"></param>
+        /// <param name="token"></param>
+        /// <param name="email"></param>
+        /// <returns></returns>
         [HttpGet]
         [ModelType(typeof(MoUserInfoSimple))]
         public async Task<IActionResult> ConfirmPassword(string expire, string token, string email)
@@ -364,6 +414,11 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return View(new MoUserInfoSimple { UserName = email });
         }
 
+        /// <summary>
+        /// 提交密码修改信息
+        /// </summary>
+        /// <param name="registerUser"></param>
+        /// <returns></returns>
         [HttpPost]
         [ModelType(typeof(MoUserInfoSimple))]
         public async Task<IActionResult> ConfirmPassword(MoUserInfoSimple registerUser)
@@ -415,6 +470,14 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return View();
         }
 
+        #region 辅助方法
+
+        /// <summary>
+        /// 尝试创建用户，并发送注册邮件到用户邮箱
+        /// </summary>
+        /// <param name="registerUser"></param>
+        /// <param name="roleType"></param>
+        /// <returns></returns>
         private async Task<ValueTuple<bool, MoUserInfo>> TryCreateUser(MoUserInfoSimple registerUser, RoleType roleType)
         {
             if (registerUser == null)
@@ -467,5 +530,7 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             this.MsgBox("注册用户成功，请查看您的邮箱，确认激活！");
             return (true, userInfo);
         }
+
+        #endregion
     }
 }

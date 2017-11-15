@@ -25,6 +25,11 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             _logger = new GutsMvcLogger(logger, uf);
         }
 
+        /// <summary>
+        /// 用户中心页面
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet]
         [AllowAnonymous]
         [ModelType(typeof(MoUserDes))]
@@ -89,6 +94,12 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return View(userDes);
         }
 
+        /// <summary>
+        /// 关注或者取消关注帖子
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="isLike"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> GoTopicStar(int id, bool isLike)
         {
@@ -148,6 +159,12 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return Json(data);
         }
 
+        /// <summary>
+        /// 关注或者取消关注用户
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="isStar"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> GoUserStar(int id, bool isStar)
         {

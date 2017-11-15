@@ -26,6 +26,10 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             _logger = new GutsMvcLogger(logger, _uf);
         }
 
+        /// <summary>
+        /// 超级管理员（论坛主）页面
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [ModelType(typeof(MoBackgroundData))]
         public async Task<IActionResult> Index()
@@ -67,6 +71,10 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return View(moBackgroundData);
         }
 
+        /// <summary>
+        /// 用户管理页面
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [ModelType(typeof(Int32))]
         public async Task<IActionResult> Users()
@@ -81,7 +89,10 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return View(userCount);
         }
 
-
+        /// <summary>
+        /// 帖子管理页面
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [ModelType(typeof(Int32))]
         public async Task<IActionResult> TopicManagement()
@@ -96,7 +107,12 @@ namespace KiraNet.GutsMvc.BBS.Controllers
 
             return View(count);
         }
-
+        
+        /// <summary>
+        /// 被屏蔽用户页面
+        /// </summary>
+        /// <param name="page"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> GetUserDisable(int page)
         {
@@ -113,6 +129,12 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return Json(data);
         }
 
+        /// <summary>
+        /// 禁用或取消禁用指定用户
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="isDisable"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> GoUserDisable(int id, bool isDisable)
         {
@@ -172,6 +194,10 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return Json(data);
         }
 
+        /// <summary>
+        /// 管理员（版主）管理页面
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [ModelType(typeof(List<MoAdminDes>))]
         public async Task<IActionResult> Admins()
@@ -185,6 +211,11 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return View(admins);
         }
 
+        /// <summary>
+        /// 删除管理员（版主）
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> DeleteAdmin(int id)
         {
@@ -233,6 +264,11 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return Json(data);
         }
 
+        /// <summary>
+        /// 管理管理员（版主）页面
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet]
         [ModelType(typeof(MoAdminManagement))]
         public async Task<IActionResult> AdminManagement(int id)
@@ -283,6 +319,10 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return View(adminManagement);
         }
 
+        /// <summary>
+        /// 增加管理员（版主）
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [ModelType(typeof(MoBBSItem[]))]
         public async Task<IActionResult> CreateAdmin()
@@ -425,6 +465,10 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return Json(data);
         }
 
+        /// <summary>
+        /// 创建子论坛（版块）
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public IActionResult CreateBBS()
         {

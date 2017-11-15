@@ -21,6 +21,11 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             _logger = new GutsMvcLogger(logger, uf);
         }
 
+        /// <summary>
+        /// 聊天页面
+        /// </summary>
+        /// <param name="targetUserId"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> Index(int? targetUserId = null)
         {
@@ -49,6 +54,11 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return View(typeof(String), targetUserJson);
         }
 
+        /// <summary>
+        /// 聊天消息处理中心
+        /// </summary>
+        /// <param name="targetUserId"></param>
+        /// <returns></returns>
         [WebSocket]
         public async Task<IActionResult> ChatHub(int targetUserId)
         {
@@ -123,6 +133,13 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return WebSocket(System.Net.HttpStatusCode.OK);
         }
 
+        /// <summary>
+        /// 获取历史消息
+        /// </summary>
+        /// <param name="targetUserId"></param>
+        /// <param name="isHistory"></param>
+        /// <param name="nowTime"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> GetChatHistory(int targetUserId, bool isHistory, string nowTime = "")
         {
@@ -186,7 +203,7 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return Json(data);
         }
 
-        #region Chat 辅助方法
+        #region 辅助方法
 
         //private async Task HandleOffLineMessageAsync(int userId, int targetUserId, WebSocket webSocket)
         //{

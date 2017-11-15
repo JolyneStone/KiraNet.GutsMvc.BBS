@@ -24,6 +24,10 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             _logger = new GutsMvcLogger(logger, _uf);
         }
 
+        /// <summary>
+        /// 管理员（版主）主页
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [ModelType(typeof(MoBBSData))]
         public async Task<IActionResult> Index()
@@ -55,6 +59,12 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return View(moBBSData);
         }
 
+        /// <summary>
+        /// 禁用或启用指定用户
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="isDisable"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> GoTopicDisable(int id, bool isDisable)
         {
@@ -86,6 +96,10 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return Json(data);
         }
 
+        /// <summary>
+        /// 帖子管理页面
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [ModelType(typeof(Int32))]
         public async Task<IActionResult> TopicManagement()
@@ -108,6 +122,12 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return View(count);
         }
 
+        /// <summary>
+        /// 获取被禁用帖子
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> GetTopicsDisabled(int page, int? id)
         {
@@ -156,6 +176,12 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return Json(data);
         }
 
+        /// <summary>
+        /// 置顶或取消置顶指定的帖子
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="isTop"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> GoTopicTop(int id, bool isTop)
         {

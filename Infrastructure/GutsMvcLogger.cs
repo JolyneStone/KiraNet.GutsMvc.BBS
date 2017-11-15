@@ -5,7 +5,7 @@ using System;
 namespace KiraNet.GutsMvc.BBS.Infrastructure
 {
     /// <summary>
-    /// 针对Logger的简单封装
+    /// 针对Logger的封装
     /// </summary>
     public interface IGutsMvcLogger
     {

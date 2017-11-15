@@ -29,6 +29,10 @@ namespace KiraNet.GutsMvc.BBS
             _logger = new GutsMvcLogger(logger, uf);
         }
 
+        /// <summary>
+        /// 论坛首页
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [ModelType(typeof(MoPaging))]
         public async Task<IActionResult> Index()
@@ -43,6 +47,10 @@ namespace KiraNet.GutsMvc.BBS
             return View(paging);
         }
 
+        /// <summary>
+        /// 客服页面
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [UserAuthorize]
         public IActionResult Service()
@@ -53,7 +61,7 @@ namespace KiraNet.GutsMvc.BBS
         /// <summary>
         /// 调用图灵机器人接口，回复用户的问题
         /// </summary>
-        /// <param name="message"></param>
+        /// <param name="message">用户发送的消息</param>
         /// <returns></returns>
         [HttpPost]
         [UserAuthorize]
@@ -98,6 +106,12 @@ namespace KiraNet.GutsMvc.BBS
             }
         }
 
+        /// <summary>
+        /// 搜索页面
+        /// </summary>
+        /// <param name="query"></param>
+        /// <param name="searchType"></param>
+        /// <returns></returns>
         [HttpPost]
         public IActionResult Search(string query, int searchType)
         {
@@ -111,6 +125,13 @@ namespace KiraNet.GutsMvc.BBS
             return View();
         }
 
+        /// <summary>
+        /// 获取搜索结果
+        /// </summary>
+        /// <param name="query">关键词</param>
+        /// <param name="searchType">搜索类型</param>
+        /// <param name="page">页码</param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> GetSearchResult(string query, int searchType, int page = 1)
         {
@@ -150,24 +171,32 @@ namespace KiraNet.GutsMvc.BBS
                     }
                 case SearchType.Content:
                     {
-                        var (contents, totalCount) = await JiebaLuceneHelper.Instance.Search(query, page, 15);
-                        if (contents == null || totalCount == 0)
+                        try
+                        {
+                            var (contents, totalCount) = await JiebaLuceneHelper.Instance.Search(query, page, 15);
+                            if (contents == null || totalCount == 0)
+                            {
+                                data.IsOk = false;
+                            }
+                            else
+                            {
+                                data.Data = new MoPageData
+                                {
+                                    CurrentPage = page,
+                                    PreviousPage = page > 1 ? page - 1 : 0,
+                                    NextPage = page < ((totalCount + 14) / 15) ? page + 1 : 0,
+                                    PageTotal = totalCount,
+                                    PageData = contents
+                                };
+
+                                data.IsOk = true;
+                            }
+                        }
+                        catch(Exception ex)
                         {
                             data.IsOk = false;
                         }
-                        else
-                        {
-                            data.Data = new MoPageData
-                            {
-                                CurrentPage = page,
-                                PreviousPage = page > 1 ? page - 1 : 0,
-                                NextPage = page < ((totalCount + 14) / 15) ? page + 1 : 0,
-                                PageTotal = totalCount,
-                                PageData = contents
-                            };
 
-                            data.IsOk = true;
-                        }
 
                         break;
                     }
@@ -179,6 +208,11 @@ namespace KiraNet.GutsMvc.BBS
             return Json(data);
         }
 
+        /// <summary>
+        /// 获取首页的帖子
+        /// </summary>
+        /// <param name="page"页码></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> GetTopics(int page = 1)
         {
@@ -272,6 +306,12 @@ namespace KiraNet.GutsMvc.BBS
             return Json(data);
         }
 
+        /// <summary>
+        /// 帖子内容
+        /// </summary>
+        /// <param name="id">帖子Id</param>
+        /// <param name="page">页码</param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> Topic(int id, int page = 1)
         {
@@ -287,6 +327,13 @@ namespace KiraNet.GutsMvc.BBS
             }
         }
 
+        /// <summary>
+        /// 获取指定评论的子回复
+        /// </summary>
+        /// <param name="topicId">帖子Id</param>
+        /// <param name="replyUserId">对方用户Id</param>
+        /// <param name="replyIndex">楼层数</param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<JsonResult> GetReplies(int topicId, int replyUserId, int replyIndex)
         {
@@ -309,11 +356,19 @@ namespace KiraNet.GutsMvc.BBS
             }
         }
 
+        /// <summary>
+        /// 说明页
+        /// </summary>
+        /// <returns></returns>
         public IActionResult About()
         {
             return View();
         }
 
+        /// <summary>
+        /// 联系页
+        /// </summary>
+        /// <returns></returns>
         public IActionResult Contact()
         {
             ViewData["Contact"] = "997525106@qq.com";
@@ -321,6 +376,11 @@ namespace KiraNet.GutsMvc.BBS
             return View();
         }
 
+        /// <summary>
+        /// 错误页
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <returns></returns>
         public IActionResult Error(string msg = null)
         {
             this.MsgBox(msg ?? "访问出了问题，开发人员正从火星赶回来修复");

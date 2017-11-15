@@ -7,6 +7,9 @@ using System.Threading;
 
 namespace KiraNet.GutsMvc.BBS.Infrastructure
 {
+    /// <summary>
+    /// 认证
+    /// </summary>
     public class ClaimShema : IClaimSchema
     {
         public IPrincipal CreateSchema(HttpContext httpContext)

@@ -2,6 +2,15 @@
   "version": 3,
   "targets": {
     ".NETCoreApp,Version=v2.0": {
+      "GeoAPI/1.6.0": {
+        "type": "package",
+        "compile": {
+          "lib/net35/GeoAPI.dll": {}
+        },
+        "runtime": {
+          "lib/net35/GeoAPI.dll": {}
+        }
+      },
       "Lucene.Net/3.0.3": {
         "type": "package",
         "dependencies": {
@@ -57,6 +66,19 @@
           "lib/net40/Lucene.Net.Contrib.Spatial.dll": {}
         }
       },
+      "Lucene.Net.Contrib.Spatial.NTS/3.0.3": {
+        "type": "package",
+        "dependencies": {
+          "Lucene.Net": "3.0.3",
+          "Spatial4n.Core.NTS": "0.3.0"
+        },
+        "compile": {
+          "lib/net40/Lucene.Net.Contrib.Spatial.NTS.dll": {}
+        },
+        "runtime": {
+          "lib/net40/Lucene.Net.Contrib.Spatial.NTS.dll": {}
+        }
+      },
       "MailKit/1.20.0": {
         "type": "package",
         "dependencies": {
@@ -79,11 +101,11 @@
           "lib/netstandard1.3/MailKit.dll": {}
         }
       },
-      "Microsoft.AspNetCore.Mvc.Razor.Extensions/2.0.0": {
+      "Microsoft.AspNetCore.Mvc.Razor.Extensions/2.0.1": {
         "type": "package",
         "dependencies": {
-          "Microsoft.AspNetCore.Razor.Language": "2.0.0",
-          "Microsoft.CodeAnalysis.Razor": "2.0.0"
+          "Microsoft.AspNetCore.Razor.Language": "2.0.1",
+          "Microsoft.CodeAnalysis.Razor": "2.0.1"
         },
         "compile": {
           "lib/netstandard2.0/Microsoft.AspNetCore.Mvc.Razor.Extensions.dll": {}
@@ -92,7 +114,7 @@
           "lib/netstandard2.0/Microsoft.AspNetCore.Mvc.Razor.Extensions.dll": {}
         }
       },
-      "Microsoft.AspNetCore.Razor/2.0.0": {
+      "Microsoft.AspNetCore.Razor/2.0.1": {
         "type": "package",
         "compile": {
           "lib/netstandard2.0/Microsoft.AspNetCore.Razor.dll": {}
@@ -101,7 +123,7 @@
           "lib/netstandard2.0/Microsoft.AspNetCore.Razor.dll": {}
         }
       },
-      "Microsoft.AspNetCore.Razor.Language/2.0.0": {
+      "Microsoft.AspNetCore.Razor.Language/2.0.1": {
         "type": "package",
         "compile": {
           "lib/netstandard2.0/Microsoft.AspNetCore.Razor.Language.dll": {}
@@ -208,10 +230,10 @@
           "lib/netstandard1.3/Microsoft.CodeAnalysis.CSharp.Workspaces.dll": {}
         }
       },
-      "Microsoft.CodeAnalysis.Razor/2.0.0": {
+      "Microsoft.CodeAnalysis.Razor/2.0.1": {
         "type": "package",
         "dependencies": {
-          "Microsoft.AspNetCore.Razor.Language": "2.0.0",
+          "Microsoft.AspNetCore.Razor.Language": "2.0.1",
           "Microsoft.CodeAnalysis.CSharp": "2.3.1",
           "Microsoft.CodeAnalysis.Common": "2.3.1"
         },
@@ -305,7 +327,7 @@
           "lib/netcoreapp2.0/_._": {}
         }
       },
-      "Microsoft.DotNet.PlatformAbstractions/2.0.0": {
+      "Microsoft.DotNet.PlatformAbstractions/2.0.3": {
         "type": "package",
         "dependencies": {
           "System.AppContext": "4.1.0",
@@ -324,7 +346,7 @@
           "lib/netstandard1.3/Microsoft.DotNet.PlatformAbstractions.dll": {}
         }
       },
-      "Microsoft.EntityFrameworkCore/2.0.0": {
+      "Microsoft.EntityFrameworkCore/2.0.1": {
         "type": "package",
         "dependencies": {
           "Microsoft.Extensions.Caching.Memory": "2.0.0",
@@ -343,10 +365,10 @@
           "lib/netstandard2.0/Microsoft.EntityFrameworkCore.dll": {}
         }
       },
-      "Microsoft.EntityFrameworkCore.Design/2.0.0": {
+      "Microsoft.EntityFrameworkCore.Design/2.0.1": {
         "type": "package",
         "dependencies": {
-          "Microsoft.EntityFrameworkCore.Relational": "2.0.0"
+          "Microsoft.EntityFrameworkCore.Relational": "2.0.1"
         },
         "compile": {
           "lib/netstandard2.0/Microsoft.EntityFrameworkCore.Design.dll": {}
@@ -355,11 +377,11 @@
           "lib/netstandard2.0/Microsoft.EntityFrameworkCore.Design.dll": {}
         }
       },
-      "Microsoft.EntityFrameworkCore.Relational/2.0.0": {
+      "Microsoft.EntityFrameworkCore.Relational/2.0.1": {
         "type": "package",
         "dependencies": {
           "Microsoft.CSharp": "4.4.0",
-          "Microsoft.EntityFrameworkCore": "2.0.0",
+          "Microsoft.EntityFrameworkCore": "2.0.1",
           "Microsoft.Extensions.Configuration.Abstractions": "2.0.0"
         },
         "compile": {
@@ -382,10 +404,10 @@
           "lib/netstandard1.3/Microsoft.EntityFrameworkCore.Relational.Design.dll": {}
         }
       },
-      "Microsoft.EntityFrameworkCore.SqlServer/2.0.0": {
+      "Microsoft.EntityFrameworkCore.SqlServer/2.0.1": {
         "type": "package",
         "dependencies": {
-          "Microsoft.EntityFrameworkCore.Relational": "2.0.0",
+          "Microsoft.EntityFrameworkCore.Relational": "2.0.1",
           "System.Data.SqlClient": "4.4.0"
         },
         "compile": {
@@ -409,10 +431,10 @@
           "lib/netstandard1.3/Microsoft.EntityFrameworkCore.SqlServer.Design.dll": {}
         }
       },
-      "Microsoft.EntityFrameworkCore.Tools/2.0.0": {
+      "Microsoft.EntityFrameworkCore.Tools/2.0.1": {
         "type": "package",
         "dependencies": {
-          "Microsoft.EntityFrameworkCore.Design": "2.0.0"
+          "Microsoft.EntityFrameworkCore.Design": "2.0.1"
         },
         "compile": {
           "lib/netstandard2.0/_._": {}
@@ -543,10 +565,10 @@
           "lib/netstandard2.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {}
         }
       },
-      "Microsoft.Extensions.DependencyModel/2.0.0": {
+      "Microsoft.Extensions.DependencyModel/2.0.3": {
         "type": "package",
         "dependencies": {
-          "Microsoft.DotNet.PlatformAbstractions": "2.0.0",
+          "Microsoft.DotNet.PlatformAbstractions": "2.0.3",
           "Newtonsoft.Json": "9.0.1",
           "System.Diagnostics.Debug": "4.0.11",
           "System.Dynamic.Runtime": "4.0.11",
@@ -701,7 +723,7 @@
           "build/_._": {}
         }
       },
-      "Microsoft.Net.Http.Headers/2.0.0": {
+      "Microsoft.Net.Http.Headers/2.0.1": {
         "type": "package",
         "dependencies": {
           "Microsoft.Extensions.Primitives": "2.0.0",
@@ -903,11 +925,11 @@
           "lib/netstandard1.0/_._": {}
         }
       },
-      "Microsoft.VisualStudio.Web.CodeGeneration/2.0.0": {
+      "Microsoft.VisualStudio.Web.CodeGeneration/2.0.1": {
         "type": "package",
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection": "2.0.0",
-          "Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore": "2.0.0"
+          "Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore": "2.0.1"
         },
         "compile": {
           "lib/netstandard2.0/Microsoft.VisualStudio.Web.CodeGeneration.dll": {}
@@ -916,7 +938,7 @@
           "lib/netstandard2.0/Microsoft.VisualStudio.Web.CodeGeneration.dll": {}
         }
       },
-      "Microsoft.VisualStudio.Web.CodeGeneration.Contracts/2.0.0": {
+      "Microsoft.VisualStudio.Web.CodeGeneration.Contracts/2.0.1": {
         "type": "package",
         "dependencies": {
           "Newtonsoft.Json": "10.0.1"
@@ -928,11 +950,11 @@
           "lib/netstandard2.0/Microsoft.VisualStudio.Web.CodeGeneration.Contracts.dll": {}
         }
       },
-      "Microsoft.VisualStudio.Web.CodeGeneration.Core/2.0.0": {
+      "Microsoft.VisualStudio.Web.CodeGeneration.Core/2.0.1": {
         "type": "package",
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection": "2.0.0",
-          "Microsoft.VisualStudio.Web.CodeGeneration.Templating": "2.0.0",
+          "Microsoft.VisualStudio.Web.CodeGeneration.Templating": "2.0.1",
           "Newtonsoft.Json": "10.0.1"
         },
         "compile": {
@@ -942,10 +964,10 @@
           "lib/netstandard2.0/Microsoft.VisualStudio.Web.CodeGeneration.Core.dll": {}
         }
       },
-      "Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore/2.0.0": {
+      "Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore/2.0.1": {
         "type": "package",
         "dependencies": {
-          "Microsoft.VisualStudio.Web.CodeGeneration.Core": "2.0.0"
+          "Microsoft.VisualStudio.Web.CodeGeneration.Core": "2.0.1"
         },
         "compile": {
           "lib/netstandard2.0/Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore.dll": {}
@@ -954,12 +976,12 @@
           "lib/netstandard2.0/Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore.dll": {}
         }
       },
-      "Microsoft.VisualStudio.Web.CodeGeneration.Templating/2.0.0": {
+      "Microsoft.VisualStudio.Web.CodeGeneration.Templating/2.0.1": {
         "type": "package",
         "dependencies": {
-          "Microsoft.AspNetCore.Mvc.Razor.Extensions": "2.0.0",
+          "Microsoft.AspNetCore.Mvc.Razor.Extensions": "2.0.1",
           "Microsoft.CodeAnalysis.CSharp": "2.3.1",
-          "Microsoft.VisualStudio.Web.CodeGeneration.Utils": "2.0.0"
+          "Microsoft.VisualStudio.Web.CodeGeneration.Utils": "2.0.1"
         },
         "compile": {
           "lib/netstandard2.0/Microsoft.VisualStudio.Web.CodeGeneration.Templating.dll": {}
@@ -968,11 +990,11 @@
           "lib/netstandard2.0/Microsoft.VisualStudio.Web.CodeGeneration.Templating.dll": {}
         }
       },
-      "Microsoft.VisualStudio.Web.CodeGeneration.Utils/2.0.0": {
+      "Microsoft.VisualStudio.Web.CodeGeneration.Utils/2.0.1": {
         "type": "package",
         "dependencies": {
           "Microsoft.CodeAnalysis.CSharp.Workspaces": "2.3.1",
-          "Microsoft.VisualStudio.Web.CodeGeneration.Contracts": "2.0.0",
+          "Microsoft.VisualStudio.Web.CodeGeneration.Contracts": "2.0.1",
           "Newtonsoft.Json": "10.0.1",
           "NuGet.Frameworks": "4.0.0"
         },
@@ -983,10 +1005,10 @@
           "lib/netstandard2.0/Microsoft.VisualStudio.Web.CodeGeneration.Utils.dll": {}
         }
       },
-      "Microsoft.VisualStudio.Web.CodeGenerators.Mvc/2.0.0": {
+      "Microsoft.VisualStudio.Web.CodeGenerators.Mvc/2.0.1": {
         "type": "package",
         "dependencies": {
-          "Microsoft.VisualStudio.Web.CodeGeneration": "2.0.0"
+          "Microsoft.VisualStudio.Web.CodeGeneration": "2.0.1"
         },
         "compile": {
           "lib/netstandard2.0/Microsoft.VisualStudio.Web.CodeGenerators.Mvc.dll": {}
@@ -1063,6 +1085,20 @@
         },
         "build": {
           "build/netstandard2.0/NETStandard.Library.targets": {}
+        }
+      },
+      "NetTopologySuite/1.12.0": {
+        "type": "package",
+        "dependencies": {
+          "GeoAPI": "1.6.0"
+        },
+        "compile": {
+          "lib/net35/NetTopologySuite.dll": {},
+          "lib/net35/PowerCollections.dll": {}
+        },
+        "runtime": {
+          "lib/net35/NetTopologySuite.dll": {},
+          "lib/net35/PowerCollections.dll": {}
         }
       },
       "Newtonsoft.Json/10.0.3": {
@@ -1360,6 +1396,18 @@
         },
         "runtime": {
           "lib/net40/Spatial4n.Core.dll": {}
+        }
+      },
+      "Spatial4n.Core.NTS/0.3.0": {
+        "type": "package",
+        "dependencies": {
+          "NetTopologySuite": "1.12.0"
+        },
+        "compile": {
+          "lib/net40/Spatial4n.Core.NTS.dll": {}
+        },
+        "runtime": {
+          "lib/net40/Spatial4n.Core.NTS.dll": {}
         }
       },
       "System.AppContext/4.3.0": {
@@ -3079,20 +3127,20 @@
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
-          "Microsoft.AspNetCore.Razor": "2.0.0",
+          "Microsoft.AspNetCore.Razor": "2.0.1",
           "Microsoft.CodeAnalysis": "2.4.0",
           "Microsoft.CodeAnalysis.CSharp": "2.4.0",
           "Microsoft.CodeAnalysis.CSharp.Scripting": "2.4.0",
-          "Microsoft.CodeAnalysis.Razor": "2.0.0",
+          "Microsoft.CodeAnalysis.Razor": "2.0.1",
           "Microsoft.Extensions.Caching.Memory": "2.0.0",
           "Microsoft.Extensions.Configuration": "2.0.0",
           "Microsoft.Extensions.DependencyInjection": "2.0.0",
-          "Microsoft.Extensions.DependencyModel": "2.0.0",
+          "Microsoft.Extensions.DependencyModel": "2.0.3",
           "Microsoft.Extensions.Primitives": "2.0.0",
           "Microsoft.Extensions.WebEncoders": "2.0.0",
           "Microsoft.Net.Compilers": "2.4.0",
-          "Microsoft.Net.Http.Headers": "2.0.0",
-          "Microsoft.VisualStudio.Web.CodeGenerators.Mvc": "2.0.0",
+          "Microsoft.Net.Http.Headers": "2.0.1",
+          "Microsoft.VisualStudio.Web.CodeGenerators.Mvc": "2.0.1",
           "NVelocity": "1.0.0",
           "Newtonsoft.Json": "10.0.3",
           "System.Buffers": "4.4.0",
@@ -3114,7 +3162,7 @@
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
-          "Microsoft.EntityFrameworkCore": "2.0.0"
+          "Microsoft.EntityFrameworkCore": "2.0.1"
         },
         "compile": {
           "bin/placeholder/KiraNet.UnitOfWorkModel.dll": {}
@@ -3140,6 +3188,19 @@
     }
   },
   "libraries": {
+    "GeoAPI/1.6.0": {
+      "sha512": "SRpviaYF6GWooS9Fv+7zmn99XiWagvFTOjrr8hfd0CbsJIN8FjWsq2HKAffAhmv1aUE+wqGkBCR8QPHFPyEeiA==",
+      "type": "package",
+      "path": "geoapi/1.6.0",
+      "files": [
+        "geoapi.1.6.0.nupkg.sha512",
+        "geoapi.nuspec",
+        "lib/net20/GeoAPI.dll",
+        "lib/net35/GeoAPI.dll",
+        "lib/sl40-wp/GeoAPI.WindowsPhone.dll",
+        "lib/sl40/GeoAPI.Silverlight.dll"
+      ]
+    },
     "Lucene.Net/3.0.3": {
       "sha512": "A/70q4eDcuuafQeDB9eaiDP9FQG7X29T4VIYRphS7Wk8kAM9gNcfVqYyd0H8BJ1BTpA5C1ORm9RzFn4BiNavrw==",
       "type": "package",
@@ -3239,6 +3300,21 @@
         "lucene.net.contrib.spatial.nuspec"
       ]
     },
+    "Lucene.Net.Contrib.Spatial.NTS/3.0.3": {
+      "sha512": "eDatYuE+CfeFo9u+pjQfhTxJtA+JK17LxdMWxQFHfcIGNiCLJBOUzIY6quZEv9AiXO2MjHolHy/0oGWp0+5KOg==",
+      "type": "package",
+      "path": "lucene.net.contrib.spatial.nts/3.0.3",
+      "files": [
+        "lib/net35/Lucene.Net.Contrib.Spatial.NTS.dll",
+        "lib/net35/Lucene.Net.Contrib.Spatial.NTS.pdb",
+        "lib/net35/Lucene.Net.Contrib.Spatial.NTS.xml",
+        "lib/net40/Lucene.Net.Contrib.Spatial.NTS.dll",
+        "lib/net40/Lucene.Net.Contrib.Spatial.NTS.pdb",
+        "lib/net40/Lucene.Net.Contrib.Spatial.NTS.xml",
+        "lucene.net.contrib.spatial.nts.3.0.3.nupkg.sha512",
+        "lucene.net.contrib.spatial.nts.nuspec"
+      ]
+    },
     "MailKit/1.20.0": {
       "sha512": "5mxuTWrNA9bWJrBd7NwkO3mEkLgOphZI28sXvJVR+aNe+bFoqTEnN0DkCNrV97+9db7/WuG3ZS8i1KdVz63l5Q==",
       "type": "package",
@@ -3264,40 +3340,40 @@
         "mailkit.nuspec"
       ]
     },
-    "Microsoft.AspNetCore.Mvc.Razor.Extensions/2.0.0": {
-      "sha512": "QPGxE5tcyZK4AT46hiXJNWXF5CKzWe0E26mhox5fxIayqzbco9AjIlX68xdqGD6iKSLbJHXNPJjNe9CUFlIqwg==",
+    "Microsoft.AspNetCore.Mvc.Razor.Extensions/2.0.1": {
+      "sha512": "voxpNz4zq9RxOPnK5oYchyA1ggNVpnz34mFsqwH7G9RUJHFLhjlRaeaKXi8gGwWU3RomGF9ahhH9o8DHgdxmPA==",
       "type": "package",
-      "path": "microsoft.aspnetcore.mvc.razor.extensions/2.0.0",
+      "path": "microsoft.aspnetcore.mvc.razor.extensions/2.0.1",
       "files": [
         "lib/net46/Microsoft.AspNetCore.Mvc.Razor.Extensions.dll",
         "lib/net46/Microsoft.AspNetCore.Mvc.Razor.Extensions.xml",
         "lib/netstandard2.0/Microsoft.AspNetCore.Mvc.Razor.Extensions.dll",
         "lib/netstandard2.0/Microsoft.AspNetCore.Mvc.Razor.Extensions.xml",
-        "microsoft.aspnetcore.mvc.razor.extensions.2.0.0.nupkg.sha512",
+        "microsoft.aspnetcore.mvc.razor.extensions.2.0.1.nupkg.sha512",
         "microsoft.aspnetcore.mvc.razor.extensions.nuspec"
       ]
     },
-    "Microsoft.AspNetCore.Razor/2.0.0": {
-      "sha512": "U3G8KSdlV2q4v2yDHOUftv9+PfuNXVgJlKuIQtJ0KercQyGhBk5WF9ak9cRRR9JpMpWYPuwn/27DmqDQTphqfA==",
+    "Microsoft.AspNetCore.Razor/2.0.1": {
+      "sha512": "IGtreZEfTOSKndAZcAaMEGwTa7rLnuqSRbCS3l3Mn2D68Ba9c4enuVOMACivDowMAsfAUqZju3vhiuCUAMvGHg==",
       "type": "package",
-      "path": "microsoft.aspnetcore.razor/2.0.0",
+      "path": "microsoft.aspnetcore.razor/2.0.1",
       "files": [
         "lib/netstandard2.0/Microsoft.AspNetCore.Razor.dll",
         "lib/netstandard2.0/Microsoft.AspNetCore.Razor.xml",
-        "microsoft.aspnetcore.razor.2.0.0.nupkg.sha512",
+        "microsoft.aspnetcore.razor.2.0.1.nupkg.sha512",
         "microsoft.aspnetcore.razor.nuspec"
       ]
     },
-    "Microsoft.AspNetCore.Razor.Language/2.0.0": {
-      "sha512": "AucwYyWKOxhWl+o6uaRWNh/zuE6FXKeOqlNcKU3s+5mFr27cdTLA4Scc82zIAlFIN9ITJbe1c3pXlpakfKgk8w==",
+    "Microsoft.AspNetCore.Razor.Language/2.0.1": {
+      "sha512": "zzvx4EnZoOf/1rKUcn5lEY98GOt30KJiQGS3tVhc2HihBubcvMZZT6+oqNiFi7oJoM5bnYaEUNM8C7kA8Iu8RQ==",
       "type": "package",
-      "path": "microsoft.aspnetcore.razor.language/2.0.0",
+      "path": "microsoft.aspnetcore.razor.language/2.0.1",
       "files": [
         "lib/net46/Microsoft.AspNetCore.Razor.Language.dll",
         "lib/net46/Microsoft.AspNetCore.Razor.Language.xml",
         "lib/netstandard2.0/Microsoft.AspNetCore.Razor.Language.dll",
         "lib/netstandard2.0/Microsoft.AspNetCore.Razor.Language.xml",
-        "microsoft.aspnetcore.razor.language.2.0.0.nupkg.sha512",
+        "microsoft.aspnetcore.razor.language.2.0.1.nupkg.sha512",
         "microsoft.aspnetcore.razor.language.nuspec"
       ]
     },
@@ -3371,16 +3447,16 @@
         "microsoft.codeanalysis.csharp.workspaces.nuspec"
       ]
     },
-    "Microsoft.CodeAnalysis.Razor/2.0.0": {
-      "sha512": "wmm/+tZBA9AyAWSdQEdB13aHOJArx6biToRuLHpTLTleCMPyM3EWoQma87EtIBxcT4pz7B8o8f3d8oXQ6JIciw==",
+    "Microsoft.CodeAnalysis.Razor/2.0.1": {
+      "sha512": "Ncqt6UEh5s451dZHPwTK8YDbl5t4isn0q1Xs3I2JTjUs4xdCOSo2t0KPeb1PUeNDrTJ0vKDV6xMtQf1uqiTjoQ==",
       "type": "package",
-      "path": "microsoft.codeanalysis.razor/2.0.0",
+      "path": "microsoft.codeanalysis.razor/2.0.1",
       "files": [
         "lib/net46/Microsoft.CodeAnalysis.Razor.dll",
         "lib/net46/Microsoft.CodeAnalysis.Razor.xml",
         "lib/netstandard2.0/Microsoft.CodeAnalysis.Razor.dll",
         "lib/netstandard2.0/Microsoft.CodeAnalysis.Razor.xml",
-        "microsoft.codeanalysis.razor.2.0.0.nupkg.sha512",
+        "microsoft.codeanalysis.razor.2.0.1.nupkg.sha512",
         "microsoft.codeanalysis.razor.nuspec"
       ]
     },
@@ -3496,51 +3572,51 @@
         "version.txt"
       ]
     },
-    "Microsoft.DotNet.PlatformAbstractions/2.0.0": {
-      "sha512": "l5tDOSom+qpx4pDEoIcqMHnGC7jJ4Uq1DiJ6St/bn0rb5xIh/q4u7OQTIcE1k+1o7E0lYnJA4ZluzS6HGFr4zw==",
+    "Microsoft.DotNet.PlatformAbstractions/2.0.3": {
+      "sha512": "cXgVdJmW3fLwmSxsv0RlTe4BIKs6slVXV5xRvsO4CV4aUeY67GelaujxY/lP5yVlaMjMM22pXKbKtUY9x050Mw==",
       "type": "package",
-      "path": "microsoft.dotnet.platformabstractions/2.0.0",
+      "path": "microsoft.dotnet.platformabstractions/2.0.3",
       "files": [
         "LICENSE.TXT",
         "THIRD-PARTY-NOTICES.TXT",
         "lib/net45/Microsoft.DotNet.PlatformAbstractions.dll",
         "lib/netstandard1.3/Microsoft.DotNet.PlatformAbstractions.dll",
-        "microsoft.dotnet.platformabstractions.2.0.0.nupkg.sha512",
+        "microsoft.dotnet.platformabstractions.2.0.3.nupkg.sha512",
         "microsoft.dotnet.platformabstractions.nuspec"
       ]
     },
-    "Microsoft.EntityFrameworkCore/2.0.0": {
-      "sha512": "wmgBEpjoxd6ElVh13dlzmsl/9BtE5lky97vutJxLwFopP0IuWAyclCC2WHoXq4bYRmtzYSpmA4Q/kNugynswSA==",
+    "Microsoft.EntityFrameworkCore/2.0.1": {
+      "sha512": "RlwInZHfIUWwFgQJCpUMKrLeE8QJ64MA/GxD881oTMFa9j7iiGKCtI0xK4J1NNgRKvgVDPJbh9CIGJiu0KEdeA==",
       "type": "package",
-      "path": "microsoft.entityframeworkcore/2.0.0",
+      "path": "microsoft.entityframeworkcore/2.0.1",
       "files": [
         "lib/netstandard2.0/Microsoft.EntityFrameworkCore.dll",
         "lib/netstandard2.0/Microsoft.EntityFrameworkCore.xml",
-        "microsoft.entityframeworkcore.2.0.0.nupkg.sha512",
+        "microsoft.entityframeworkcore.2.0.1.nupkg.sha512",
         "microsoft.entityframeworkcore.nuspec"
       ]
     },
-    "Microsoft.EntityFrameworkCore.Design/2.0.0": {
-      "sha512": "v8e4OwmK+BIm7jINmGJaQz1+r6BiFl+bGJNVUF4JQZ9H40keeTIHEgKDxdEr+24EdllfLLKTisEziq1H089TYg==",
+    "Microsoft.EntityFrameworkCore.Design/2.0.1": {
+      "sha512": "gEdT/YSI/buO15X/UN+gQY6D7qeozRYU80WuesZCj33jJBw4wCHHn8SYcp38k2BPOBDC4I2AfsOFH6Vaf8CeLQ==",
       "type": "package",
-      "path": "microsoft.entityframeworkcore.design/2.0.0",
+      "path": "microsoft.entityframeworkcore.design/2.0.1",
       "files": [
         "lib/net461/Microsoft.EntityFrameworkCore.Design.dll",
         "lib/net461/Microsoft.EntityFrameworkCore.Design.xml",
         "lib/netstandard2.0/Microsoft.EntityFrameworkCore.Design.dll",
         "lib/netstandard2.0/Microsoft.EntityFrameworkCore.Design.xml",
-        "microsoft.entityframeworkcore.design.2.0.0.nupkg.sha512",
+        "microsoft.entityframeworkcore.design.2.0.1.nupkg.sha512",
         "microsoft.entityframeworkcore.design.nuspec"
       ]
     },
-    "Microsoft.EntityFrameworkCore.Relational/2.0.0": {
-      "sha512": "/Ay6EZXUZuPLCKdbLW59AuwCm+hqDgIxBzDTHIx6uEIvDFfC0Bs99CRL8Lgi1NgU9NOhFDmeRgE1goViru+Zgg==",
+    "Microsoft.EntityFrameworkCore.Relational/2.0.1": {
+      "sha512": "aZgfEDEzub+n9Kmsz/l4iiUHfB+R2iDDAFtW55OLpT7ANj7mS8k/bq8mqd60rVPgWKKy1l0+BK26ao4el/07lA==",
       "type": "package",
-      "path": "microsoft.entityframeworkcore.relational/2.0.0",
+      "path": "microsoft.entityframeworkcore.relational/2.0.1",
       "files": [
         "lib/netstandard2.0/Microsoft.EntityFrameworkCore.Relational.dll",
         "lib/netstandard2.0/Microsoft.EntityFrameworkCore.Relational.xml",
-        "microsoft.entityframeworkcore.relational.2.0.0.nupkg.sha512",
+        "microsoft.entityframeworkcore.relational.2.0.1.nupkg.sha512",
         "microsoft.entityframeworkcore.relational.nuspec"
       ]
     },
@@ -3555,14 +3631,14 @@
         "microsoft.entityframeworkcore.relational.design.nuspec"
       ]
     },
-    "Microsoft.EntityFrameworkCore.SqlServer/2.0.0": {
-      "sha512": "mr+S07kAKXsdu9207w1ek4O1/0+y5925kMYy7gCqu15QpvfVXOLdAR0b9RQfBxmtAJPrYx6/KtfvAg70jm5zUA==",
+    "Microsoft.EntityFrameworkCore.SqlServer/2.0.1": {
+      "sha512": "+UnKJpkVpuNWRjF3BWSzbkQLL7gxY18Hnh5uXmlagO4Ua8BstqWIJaIUV+Ps2rw/2n62UPTQQV9RQWggV7OH9Q==",
       "type": "package",
-      "path": "microsoft.entityframeworkcore.sqlserver/2.0.0",
+      "path": "microsoft.entityframeworkcore.sqlserver/2.0.1",
       "files": [
         "lib/netstandard2.0/Microsoft.EntityFrameworkCore.SqlServer.dll",
         "lib/netstandard2.0/Microsoft.EntityFrameworkCore.SqlServer.xml",
-        "microsoft.entityframeworkcore.sqlserver.2.0.0.nupkg.sha512",
+        "microsoft.entityframeworkcore.sqlserver.2.0.1.nupkg.sha512",
         "microsoft.entityframeworkcore.sqlserver.nuspec"
       ]
     },
@@ -3577,13 +3653,13 @@
         "microsoft.entityframeworkcore.sqlserver.design.nuspec"
       ]
     },
-    "Microsoft.EntityFrameworkCore.Tools/2.0.0": {
-      "sha512": "ILVI7sbnD0Pgf6B90AL3RiRdq+XRXEG4VnvuD75Fluv6p5PbYfU2tQP2VlL0oAFCVhihSgSWIQHtDjUFEE0+nw==",
+    "Microsoft.EntityFrameworkCore.Tools/2.0.1": {
+      "sha512": "/z1xawAD0oL5AyFd3vn9E7L6mE2UfEU91KwMDWEp8o0+AOrP4ZocJS5Kot5VYJMfDUeAzDBBZPmJs+r6/YUEiA==",
       "type": "package",
-      "path": "microsoft.entityframeworkcore.tools/2.0.0",
+      "path": "microsoft.entityframeworkcore.tools/2.0.1",
       "files": [
         "lib/netstandard2.0/_._",
-        "microsoft.entityframeworkcore.tools.2.0.0.nupkg.sha512",
+        "microsoft.entityframeworkcore.tools.2.0.1.nupkg.sha512",
         "microsoft.entityframeworkcore.tools.nuspec",
         "tools/EntityFrameworkCore.PowerShell2.psd1",
         "tools/EntityFrameworkCore.PowerShell2.psm1",
@@ -3710,17 +3786,17 @@
         "microsoft.extensions.dependencyinjection.abstractions.nuspec"
       ]
     },
-    "Microsoft.Extensions.DependencyModel/2.0.0": {
-      "sha512": "DyZ/Ibv/SZRMpYhaDCj0nlA+Qe52NyEL51onxAL94bUPauX0jxrK6jyxXN5DI8NVbzE5sOUWZYjTduNqUdbB+g==",
+    "Microsoft.Extensions.DependencyModel/2.0.3": {
+      "sha512": "OiNYN/QeZLuYcn4CvYrOmYgODPB1Jpqft+cT4F3Hkq5poj+1DLfbIBftMI/Pn8J7DyHhYeBMLxJUuugjvk/Fuw==",
       "type": "package",
-      "path": "microsoft.extensions.dependencymodel/2.0.0",
+      "path": "microsoft.extensions.dependencymodel/2.0.3",
       "files": [
         "LICENSE.TXT",
         "THIRD-PARTY-NOTICES.TXT",
         "lib/net451/Microsoft.Extensions.DependencyModel.dll",
         "lib/netstandard1.3/Microsoft.Extensions.DependencyModel.dll",
         "lib/netstandard1.6/Microsoft.Extensions.DependencyModel.dll",
-        "microsoft.extensions.dependencymodel.2.0.0.nupkg.sha512",
+        "microsoft.extensions.dependencymodel.2.0.3.nupkg.sha512",
         "microsoft.extensions.dependencymodel.nuspec"
       ]
     },
@@ -3904,14 +3980,14 @@
         "tools/vbc.rsp"
       ]
     },
-    "Microsoft.Net.Http.Headers/2.0.0": {
-      "sha512": "Rm9zeNCWyNrGnysHdRXJpNfeDVlPzzFuidSuRLRNvOrnw71vgNPlR4H9wHo2hG/oSaruukqNjK06MDQqb+eXhA==",
+    "Microsoft.Net.Http.Headers/2.0.1": {
+      "sha512": "A61ddihPbPy9764AtCysy73oj/PA/9hsv21mXLX5QJYp9lkeyygTufTSGUmh9hz/SiZKy5GBreSlgD2Tm2ab9w==",
       "type": "package",
-      "path": "microsoft.net.http.headers/2.0.0",
+      "path": "microsoft.net.http.headers/2.0.1",
       "files": [
         "lib/netstandard2.0/Microsoft.Net.Http.Headers.dll",
         "lib/netstandard2.0/Microsoft.Net.Http.Headers.xml",
-        "microsoft.net.http.headers.2.0.0.nupkg.sha512",
+        "microsoft.net.http.headers.2.0.1.nupkg.sha512",
         "microsoft.net.http.headers.nuspec"
       ]
     },
@@ -4257,77 +4333,77 @@
         "runtime.json"
       ]
     },
-    "Microsoft.VisualStudio.Web.CodeGeneration/2.0.0": {
-      "sha512": "tLLwy1BTo2IK6LR3lFnY/vMXptLc+5cL9z+jnWH9nB2CfzQ1R2nXvULK3zqMlUSOoSxZIpdIJPIDo5rXQhTifQ==",
+    "Microsoft.VisualStudio.Web.CodeGeneration/2.0.1": {
+      "sha512": "iM8qMuD5CTu3na9nG+PA+C1mZ3aqtju7yTyETKfKR4kW4b89Z+3g95NVuPkvFxPRQT66+LUrWnG/saS5akj6kQ==",
       "type": "package",
-      "path": "microsoft.visualstudio.web.codegeneration/2.0.0",
+      "path": "microsoft.visualstudio.web.codegeneration/2.0.1",
       "files": [
         "lib/netstandard2.0/Microsoft.VisualStudio.Web.CodeGeneration.dll",
         "lib/netstandard2.0/Microsoft.VisualStudio.Web.CodeGeneration.xml",
-        "microsoft.visualstudio.web.codegeneration.2.0.0.nupkg.sha512",
+        "microsoft.visualstudio.web.codegeneration.2.0.1.nupkg.sha512",
         "microsoft.visualstudio.web.codegeneration.nuspec"
       ]
     },
-    "Microsoft.VisualStudio.Web.CodeGeneration.Contracts/2.0.0": {
-      "sha512": "UIlELB0laoUrkGRcMLwUpek6sUXtlxToDsAg0xU4gQvDGYIfe7bBJjka54XBHq/TZEsZ0NipOaFiNQOfRTd2xA==",
+    "Microsoft.VisualStudio.Web.CodeGeneration.Contracts/2.0.1": {
+      "sha512": "3hgRYeeUumE0IU2tNFoWTHQsGmwnwv//La84X8aDnC3vYLTes1GzRxpi8I9Rs/VqhgDytb4agmdjVuztGrKutg==",
       "type": "package",
-      "path": "microsoft.visualstudio.web.codegeneration.contracts/2.0.0",
+      "path": "microsoft.visualstudio.web.codegeneration.contracts/2.0.1",
       "files": [
         "lib/netstandard2.0/Microsoft.VisualStudio.Web.CodeGeneration.Contracts.dll",
         "lib/netstandard2.0/Microsoft.VisualStudio.Web.CodeGeneration.Contracts.xml",
-        "microsoft.visualstudio.web.codegeneration.contracts.2.0.0.nupkg.sha512",
+        "microsoft.visualstudio.web.codegeneration.contracts.2.0.1.nupkg.sha512",
         "microsoft.visualstudio.web.codegeneration.contracts.nuspec"
       ]
     },
-    "Microsoft.VisualStudio.Web.CodeGeneration.Core/2.0.0": {
-      "sha512": "6KNE9zrJieCUB4C/7yPC6rM+RxMh7HK8i8IJ0/9yXkPekUMuXwK3KNTYJLW1Okp0AHbHuqyJfDvU3cd4+bA1MA==",
+    "Microsoft.VisualStudio.Web.CodeGeneration.Core/2.0.1": {
+      "sha512": "8jSY0BjVTCMygsTBNqQA7O6JkDihedCoE9hUNndS8aRl5NpRwj2InvjM/9OWVK9JW1yVFtcdG/+q1vRQEd/EBQ==",
       "type": "package",
-      "path": "microsoft.visualstudio.web.codegeneration.core/2.0.0",
+      "path": "microsoft.visualstudio.web.codegeneration.core/2.0.1",
       "files": [
         "lib/netstandard2.0/Microsoft.VisualStudio.Web.CodeGeneration.Core.dll",
         "lib/netstandard2.0/Microsoft.VisualStudio.Web.CodeGeneration.Core.xml",
-        "microsoft.visualstudio.web.codegeneration.core.2.0.0.nupkg.sha512",
+        "microsoft.visualstudio.web.codegeneration.core.2.0.1.nupkg.sha512",
         "microsoft.visualstudio.web.codegeneration.core.nuspec"
       ]
     },
-    "Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore/2.0.0": {
-      "sha512": "TO4MtSOwW4aelTTtL189NVIXRAPSIo9lkg/avwxtJQ716mzNrEE2zQWiquUqTqGKCrM0hGBDsD1B5mrTzFNR/Q==",
+    "Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore/2.0.1": {
+      "sha512": "EzqjNOvETCLYfC/D1m1ALW03X4XavzSz7gldSBqEK3lfZaEdPgKor7ZRdIAjO1RWqTaLzaL4nrtaA0yD06kS+Q==",
       "type": "package",
-      "path": "microsoft.visualstudio.web.codegeneration.entityframeworkcore/2.0.0",
+      "path": "microsoft.visualstudio.web.codegeneration.entityframeworkcore/2.0.1",
       "files": [
         "Templates/DbContext/NewLocalDbContext.cshtml",
         "lib/netstandard2.0/Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore.dll",
         "lib/netstandard2.0/Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore.xml",
-        "microsoft.visualstudio.web.codegeneration.entityframeworkcore.2.0.0.nupkg.sha512",
+        "microsoft.visualstudio.web.codegeneration.entityframeworkcore.2.0.1.nupkg.sha512",
         "microsoft.visualstudio.web.codegeneration.entityframeworkcore.nuspec"
       ]
     },
-    "Microsoft.VisualStudio.Web.CodeGeneration.Templating/2.0.0": {
-      "sha512": "xqWkF83O8pXtWoYJq+v5VIUssHC7axvcJA2z0MUczfnXUUmKXK73Rqmy6+Oilw0Q4iRwmCs/rzROBEznWzFh1A==",
+    "Microsoft.VisualStudio.Web.CodeGeneration.Templating/2.0.1": {
+      "sha512": "JQcSsX/50v9J+7F2C2QYRfmp/7HoRfbFY8y28OWj6Iz5RvvRlb5pqk2yzAxliTqvUijRxejgJMG4RjZzVj19QQ==",
       "type": "package",
-      "path": "microsoft.visualstudio.web.codegeneration.templating/2.0.0",
+      "path": "microsoft.visualstudio.web.codegeneration.templating/2.0.1",
       "files": [
         "lib/netstandard2.0/Microsoft.VisualStudio.Web.CodeGeneration.Templating.dll",
         "lib/netstandard2.0/Microsoft.VisualStudio.Web.CodeGeneration.Templating.xml",
-        "microsoft.visualstudio.web.codegeneration.templating.2.0.0.nupkg.sha512",
+        "microsoft.visualstudio.web.codegeneration.templating.2.0.1.nupkg.sha512",
         "microsoft.visualstudio.web.codegeneration.templating.nuspec"
       ]
     },
-    "Microsoft.VisualStudio.Web.CodeGeneration.Utils/2.0.0": {
-      "sha512": "zOgx7CO/uqtmTj67i39Y/NkcLqFr6wjdlDwSlWW6ZXxbaL/nCMH6DC5yz6kwbOh7ttC6E5hVYb927jvaHJIh+Q==",
+    "Microsoft.VisualStudio.Web.CodeGeneration.Utils/2.0.1": {
+      "sha512": "SuYL48IIgYkKfdKIwHVRP2OGGHNsPd8lDtt45N4Esp+FcBXF+wMgWQhjSsCnpX5wXvuDbSVWd2o6El6KUbqB7g==",
       "type": "package",
-      "path": "microsoft.visualstudio.web.codegeneration.utils/2.0.0",
+      "path": "microsoft.visualstudio.web.codegeneration.utils/2.0.1",
       "files": [
         "lib/netstandard2.0/Microsoft.VisualStudio.Web.CodeGeneration.Utils.dll",
         "lib/netstandard2.0/Microsoft.VisualStudio.Web.CodeGeneration.Utils.xml",
-        "microsoft.visualstudio.web.codegeneration.utils.2.0.0.nupkg.sha512",
+        "microsoft.visualstudio.web.codegeneration.utils.2.0.1.nupkg.sha512",
         "microsoft.visualstudio.web.codegeneration.utils.nuspec"
       ]
     },
-    "Microsoft.VisualStudio.Web.CodeGenerators.Mvc/2.0.0": {
-      "sha512": "pRNaVqgHcQoPQt2CLYDkImYKkmo7pcvJE1VudM4AMX9vRJNMkWzP82WcHlo2pDNrcG1Rhr7s2RSWPdwSwilYWw==",
+    "Microsoft.VisualStudio.Web.CodeGenerators.Mvc/2.0.1": {
+      "sha512": "BOZ2b9zIJT07hOYwEIJA8I23Ro4nXEM77xhtLj9HPUsVOAl3iPi+jmz1fCdq1w8LQoU5OhVAeFY+aZpmKxd16A==",
       "type": "package",
-      "path": "microsoft.visualstudio.web.codegenerators.mvc/2.0.0",
+      "path": "microsoft.visualstudio.web.codegenerators.mvc/2.0.1",
       "files": [
         "Generators/ParameterDefinitions/area.json",
         "Generators/ParameterDefinitions/controller.json",
@@ -4365,7 +4441,7 @@
         "Templates/ViewGenerator/_ValidationScriptsPartial.cshtml",
         "lib/netstandard2.0/Microsoft.VisualStudio.Web.CodeGenerators.Mvc.dll",
         "lib/netstandard2.0/Microsoft.VisualStudio.Web.CodeGenerators.Mvc.xml",
-        "microsoft.visualstudio.web.codegenerators.mvc.2.0.0.nupkg.sha512",
+        "microsoft.visualstudio.web.codegenerators.mvc.2.0.1.nupkg.sha512",
         "microsoft.visualstudio.web.codegenerators.mvc.nuspec"
       ]
     },
@@ -4600,6 +4676,23 @@
         "lib/netstandard1.0/_._",
         "netstandard.library.2.0.0.nupkg.sha512",
         "netstandard.library.nuspec"
+      ]
+    },
+    "NetTopologySuite/1.12.0": {
+      "sha512": "AzEuWKyfiahrqVcB8243S+EMMjxKDiezbn2hiKphQUpLrme7R3A3cRTyy7KIFIPY8YKlslBi+EaOR5BxSodRFw==",
+      "type": "package",
+      "path": "nettopologysuite/1.12.0",
+      "files": [
+        "lib/net35/NetTopologySuite.dll",
+        "lib/net35/PowerCollections.dll",
+        "lib/sl40-wp/NetTopologySuite.WindowsPhone.dll",
+        "lib/sl40-wp/PowerCollections.WindowsPhone.dll",
+        "lib/sl40/NetTopologySuite.Data.Silverlight.dll",
+        "lib/sl40/NetTopologySuite.Encodings.Silverlight.dll",
+        "lib/sl40/NetTopologySuite.Silverlight.dll",
+        "lib/sl40/PowerCollections.SilverLight.dll",
+        "nettopologysuite.1.12.0.nupkg.sha512",
+        "nettopologysuite.nuspec"
       ]
     },
     "Newtonsoft.Json/10.0.3": {
@@ -4967,6 +5060,21 @@
         "lib/net40/Spatial4n.Core.pdb",
         "spatial4n.core.0.3.0.nupkg.sha512",
         "spatial4n.core.nuspec"
+      ]
+    },
+    "Spatial4n.Core.NTS/0.3.0": {
+      "sha512": "XndzbUEo2cWhYm7oLNNv09vfHJNIoS828a0BI3fY9YafXDNRvLndoV+AXtPmPfNKf1eFQfIo6Yvz3sNPT0WSCw==",
+      "type": "package",
+      "path": "spatial4n.core.nts/0.3.0",
+      "files": [
+        "lib/net20/Spatial4n.Core.NTS.dll",
+        "lib/net20/Spatial4n.Core.NTS.pdb",
+        "lib/net20/Spatial4n.Core.NTS.xml",
+        "lib/net40/Spatial4n.Core.NTS.dll",
+        "lib/net40/Spatial4n.Core.NTS.pdb",
+        "lib/net40/Spatial4n.Core.NTS.xml",
+        "spatial4n.core.nts.0.3.0.nupkg.sha512",
+        "spatial4n.core.nts.nuspec"
       ]
     },
     "System.AppContext/4.3.0": {
@@ -9438,18 +9546,19 @@
       "Lucene.Net >= 3.0.3",
       "Lucene.Net.Contrib >= 3.0.3",
       "Lucene.Net.Contrib.Spatial >= 3.0.3",
+      "Lucene.Net.Contrib.Spatial.NTS >= 3.0.3",
       "MailKit >= 1.20.0",
-      "Microsoft.EntityFrameworkCore >= 2.0.0",
-      "Microsoft.EntityFrameworkCore.Design >= 2.0.0",
-      "Microsoft.EntityFrameworkCore.SqlServer >= 2.0.0",
+      "Microsoft.EntityFrameworkCore >= 2.0.1",
+      "Microsoft.EntityFrameworkCore.Design >= 2.0.1",
+      "Microsoft.EntityFrameworkCore.SqlServer >= 2.0.1",
       "Microsoft.EntityFrameworkCore.SqlServer.Design >= 2.0.0-preview1-final",
-      "Microsoft.EntityFrameworkCore.Tools >= 2.0.0",
+      "Microsoft.EntityFrameworkCore.Tools >= 2.0.1",
       "Microsoft.Extensions.Configuration >= 2.0.0",
       "Microsoft.Extensions.Configuration.EnvironmentVariables >= 2.0.0",
       "Microsoft.Extensions.Configuration.FileExtensions >= 2.0.0",
       "Microsoft.Extensions.Configuration.Json >= 2.0.0",
       "Microsoft.Extensions.DependencyInjection >= 2.0.0",
-      "Microsoft.Extensions.DependencyModel >= 2.0.0",
+      "Microsoft.Extensions.DependencyModel >= 2.0.3",
       "Microsoft.Extensions.Logging >= 2.0.0",
       "Microsoft.Extensions.Logging.Console >= 2.0.0",
       "Microsoft.Extensions.Logging.Debug >= 2.0.0",
@@ -9524,7 +9633,7 @@
           },
           "Microsoft.EntityFrameworkCore": {
             "target": "Package",
-            "version": "2.0.0"
+            "version": "2.0.1"
           },
           "Microsoft.Extensions.Configuration.FileExtensions": {
             "target": "Package",
@@ -9540,7 +9649,7 @@
           },
           "Microsoft.EntityFrameworkCore.Tools": {
             "target": "Package",
-            "version": "2.0.0"
+            "version": "2.0.1"
           },
           "Microsoft.Extensions.DependencyInjection": {
             "target": "Package",
@@ -9552,7 +9661,11 @@
           },
           "Microsoft.EntityFrameworkCore.Design": {
             "target": "Package",
-            "version": "2.0.0"
+            "version": "2.0.1"
+          },
+          "Lucene.Net.Contrib.Spatial.NTS": {
+            "target": "Package",
+            "version": "3.0.3"
           },
           "Microsoft.NETCore.App": {
             "target": "Package",
@@ -9569,7 +9682,7 @@
           },
           "Microsoft.EntityFrameworkCore.SqlServer": {
             "target": "Package",
-            "version": "2.0.0"
+            "version": "2.0.1"
           },
           "Microsoft.EntityFrameworkCore.SqlServer.Design": {
             "target": "Package",
@@ -9593,7 +9706,7 @@
           },
           "Microsoft.Extensions.DependencyModel": {
             "target": "Package",
-            "version": "2.0.0"
+            "version": "2.0.3"
           }
         },
         "imports": [
@@ -9605,6 +9718,16 @@
     }
   },
   "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'GeoAPI 1.6.0' was restored using '.NETFramework,Version=v4.6.1' instead of the project target framework '.NETCoreApp,Version=v2.0'. This package may not be fully compatible with your project.",
+      "libraryId": "GeoAPI",
+      "targetGraphs": [
+        ".NETCoreApp,Version=v2.0"
+      ]
+    },
     {
       "code": "NU1701",
       "level": "Warning",
@@ -9639,6 +9762,26 @@
       "code": "NU1701",
       "level": "Warning",
       "warningLevel": 1,
+      "message": "Package 'Lucene.Net.Contrib.Spatial.NTS 3.0.3' was restored using '.NETFramework,Version=v4.6.1' instead of the project target framework '.NETCoreApp,Version=v2.0'. This package may not be fully compatible with your project.",
+      "libraryId": "Lucene.Net.Contrib.Spatial.NTS",
+      "targetGraphs": [
+        ".NETCoreApp,Version=v2.0"
+      ]
+    },
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'NetTopologySuite 1.12.0' was restored using '.NETFramework,Version=v4.6.1' instead of the project target framework '.NETCoreApp,Version=v2.0'. This package may not be fully compatible with your project.",
+      "libraryId": "NetTopologySuite",
+      "targetGraphs": [
+        ".NETCoreApp,Version=v2.0"
+      ]
+    },
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
       "message": "Package 'SharpZipLib 0.86.0' was restored using '.NETFramework,Version=v4.6.1' instead of the project target framework '.NETCoreApp,Version=v2.0'. This package may not be fully compatible with your project.",
       "libraryId": "SharpZipLib",
       "targetGraphs": [
@@ -9651,6 +9794,16 @@
       "warningLevel": 1,
       "message": "Package 'Spatial4n.Core 0.3.0' was restored using '.NETFramework,Version=v4.6.1' instead of the project target framework '.NETCoreApp,Version=v2.0'. This package may not be fully compatible with your project.",
       "libraryId": "Spatial4n.Core",
+      "targetGraphs": [
+        ".NETCoreApp,Version=v2.0"
+      ]
+    },
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'Spatial4n.Core.NTS 0.3.0' was restored using '.NETFramework,Version=v4.6.1' instead of the project target framework '.NETCoreApp,Version=v2.0'. This package may not be fully compatible with your project.",
+      "libraryId": "Spatial4n.Core.NTS",
       "targetGraphs": [
         ".NETCoreApp,Version=v2.0"
       ]

@@ -26,6 +26,10 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             _logger = new GutsMvcLogger(logger, _uf);
         }
 
+        /// <summary>
+        /// 用户中心主页
+        /// </summary>
+        /// <returns></returns>
         public IActionResult Index()
         {
             HttpContext.TryGetUserInfo(out var userInfo);
@@ -36,13 +40,13 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return View();
         }
 
-        //[HttpGet]
-        //public async Task<IActionResult> Collect()
-        //{
-        //    // TODO: 收藏的所有帖子
-        //    throw new NotImplementedException();
-        //}
+        #region User count
 
+        /// <summary>
+        /// 获取用户关注数
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> GetUserStarCount(int userId)
@@ -57,6 +61,11 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return Json(data);
         }
 
+        /// <summary>
+        /// 获取关注该用户数
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> GetByUserStarCount(int userId)
@@ -71,6 +80,11 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return Json(data);
         }
 
+        /// <summary>
+        /// 获取用户发帖数
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> GetUserTopicCount(int userId)
@@ -85,6 +99,11 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return Json(data);
         }
 
+        /// <summary>
+        /// 获取用户评论数
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> GetUserReplyCount(int userId)
@@ -99,10 +118,17 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return Json(data);
         }
 
-
+        #endregion
 
         #region User logs
 
+        /// <summary>
+        /// 获取用户发帖记录
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="page"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> GetUserTopicLog(int id, int page, int pageSize = 5)
@@ -123,6 +149,13 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return Json(data);
         }
 
+        /// <summary>
+        /// 获取用户评论记录
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="page"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> GetUserReplyLog(int id, int page, int pageSize = 5)
@@ -143,6 +176,13 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return Json(data);
         }
 
+        /// <summary>
+        /// 获取用户关注记录
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="page"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> GetUserStarLog(int id, int page, int pageSize = 5)
@@ -163,6 +203,13 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return Json(data);
         }
 
+        /// <summary>
+        /// 获取关注该用户记录
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="page"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> GetByUserStarLog(int id, int page, int pageSize = 5)
@@ -183,6 +230,13 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return Json(data);
         }
 
+        /// <summary>
+        /// 获取关注帖子记录
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="page"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> GetTopicStarLog(int id, int page, int pageSize = 5)
@@ -241,7 +295,10 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return RedirectToAction("home", "error", new Dictionary<string, object>() { { "msg", "请登录" } });
         }
 
-
+        /// <summary>
+        /// 上传头像页面
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [ModelType(typeof(MoUserInfo))]
         public IActionResult UpHeadPhoto()
@@ -251,6 +308,11 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return View(userInfo);
         }
 
+        /// <summary>
+        /// 提交头像
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpPost]
         [ModelType(typeof(MoUserInfo))]
         public async Task<IActionResult> UpHeadPhoto(int id)
@@ -333,7 +395,10 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return View(userInfo);
         }
 
-
+        /// <summary>
+        /// 修改用户页面
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [ModelType(typeof(MoUserInfoEntire))]
         public async Task<IActionResult> ModifyUser()
@@ -353,6 +418,11 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return View(userInfoEntire);
         }
 
+        /// <summary>
+        /// 修改用户
+        /// </summary>
+        /// <param name="userInfoEntire"></param>
+        /// <returns></returns>
         [HttpPost]
         [ModelType(typeof(MoUserInfoEntire))]
         public async Task<IActionResult> ModifyUser(MoUserInfoEntire userInfoEntire)
@@ -417,7 +487,10 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return View(userInfoEntire);
         }
 
-
+        /// <summary>
+        /// 修改密码页面
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [ModelType(typeof(MoUserInfoSimple))]
         public IActionResult ModifyPwd()
@@ -429,6 +502,11 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return View(new MoUserInfoSimple { UserName = userInfo.Email });
         }
 
+        /// <summary>
+        /// 提交修改密码
+        /// </summary>
+        /// <param name="moUserInfoSimple"></param>
+        /// <returns></returns>
         [HttpPost]
         [ModelType(typeof(MoUserInfoSimple))]
         public async Task<IActionResult> ModifyPwd(MoUserInfoSimple moUserInfoSimple)
@@ -479,7 +557,10 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return View(moUserInfoSimple);
         }
 
-
+        /// <summary>
+        /// 安全设置页面
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public IActionResult SecuritySettings()
         {
@@ -491,6 +572,10 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return View();
         }
 
+        /// <summary>
+        /// 设置邮箱页面
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public IActionResult SettingEmail()
         {
@@ -501,6 +586,11 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return View();
         }
 
+        /// <summary>
+        /// 提交邮箱设置信息
+        /// </summary>
+        /// <param name="moEmail"></param>
+        /// <returns></returns>
         [HttpPost]
         [ModelType(typeof(MoSetEmail))]
         public async Task<IActionResult> SettingEmail(MoSetEmail moEmail)
@@ -580,7 +670,13 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             return View();
         }
 
-
+        /// <summary>
+        /// 确认新邮箱
+        /// </summary>
+        /// <param name="expire"></param>
+        /// <param name="token"></param>
+        /// <param name="email"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> ConfirmSettingEmail(string expire, string token, string email)
         {

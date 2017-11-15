@@ -4,6 +4,9 @@ using KiraNet.UnitOfWorkModel;
 
 namespace KiraNet.GutsMvc.BBS.Infrastructure
 {
+    /// <summary>
+    /// UnitOfWork模式实现
+    /// </summary>
     public class GutsMvcUnitOfWork : UnitOfWork<GutsMvcDbContext>
     {
         public GutsMvcUnitOfWork(GutsMvcDbContext context) : base(context)
