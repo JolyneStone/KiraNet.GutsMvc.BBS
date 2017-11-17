@@ -222,5 +222,109 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             data.IsOk = true;
             return Json(data);
         }
+
+        /// <summary>
+        /// 聊天页面
+        /// </summary>
+        /// <param name="targetUserId"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<IActionResult> Chat(int? targetUserId = null)
+        {
+            var targetUserJson = String.Empty;
+            if (targetUserId != null)
+            {
+                var targetUser = (await _uf.UserRepository.GetByIdAsync(targetUserId.Value));
+                if (targetUser == null)
+                {
+                    return RedirectToAction("home", "error", new Dictionary<string, object> { { "msg", "找不到指定的用户" } });
+                }
+
+                targetUserJson = Newtonsoft.Json.JsonConvert.SerializeObject(new
+                {
+                    TargetUserId = targetUser.Id,
+                    HeadPhoto = targetUser.HeadPhoto,
+                    UserName = targetUser.UserName
+                });
+            }
+
+            HttpContext.TryGetUserInfo(out var userInfo);
+            ViewData["Id"] = userInfo.Id;
+            ViewData["UserName"] = userInfo.UserName;
+            ViewData["HeadPhoto"] = userInfo.HeadPhoto;
+            ViewData["Role"] = userInfo.Roles.ToLower();
+            return View(typeof(String), targetUserJson);
+        }
+
+
+        /// <summary>
+        /// 获取历史消息
+        /// </summary>
+        /// <param name="targetUserId"></param>
+        /// <param name="isHistory"></param>
+        /// <param name="nowTime"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<IActionResult> GetChatHistory(int targetUserId, bool isHistory, string nowTime = "")
+        {
+            var data = new MoData();
+            HttpContext.TryGetUserInfo(out var userInfo);
+            if (targetUserId == userInfo.Id)
+            {
+                data.IsOk = false;
+                return Json(data);
+            }
+
+            DateTime dt;
+            if (String.IsNullOrWhiteSpace(nowTime))
+            {
+                dt = DateTime.Now;
+            }
+            else
+            {
+                dt = nowTime.ToCSharpDateTime();
+            }
+
+            IList<Chat> chats;
+            if (isHistory)
+            {
+                // 对方的离线消息
+                chats = (await _uf.ChatRepository.GetOffLineChatAsync(targetUserId, userInfo.Id, dt)).ToList();
+
+                data.Data = chats.Select(x => new
+                {
+                    Id = x.UserId,
+                    Message = x.Message
+                }).ToList();
+
+                foreach (var chat in chats)
+                {
+                    chat.IsArrive = true;
+                }
+
+                _uf.ChatRepository.UpdateRange(chats);
+                await _uf.SaveChangesAsync();
+            }
+            else
+            {
+                // 历史消息
+                chats = (await _uf.ChatRepository
+                    .GetOnLineChatAsync(userInfo.Id, targetUserId, dt))
+                    .ToList();
+            }
+
+            data.Data = new
+            {
+                Chats = chats.Select(x => new
+                {
+                    Id = x.UserId,
+                    Message = x.Message
+                }).ToList(),
+                NowTime = (chats.Count > 0 ? chats.Last().CreateTime : DateTime.Now).ToJSString()
+            };
+
+            data.IsOk = true;
+            return Json(data);
+        }
     }
 }

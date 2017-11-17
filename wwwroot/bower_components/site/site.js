@@ -186,9 +186,9 @@ var gutsmvc = function () {
                     if (data.IsOk && data.Data != null) {
                         var recommends = data.Data;
                         $.each(recommends, function (i, item) {
-                            recommendArr.push('<div class="col-md-12 caption" title="' + item.TopicName + '">' +
+                            recommendArr.push('<div class="caption recomment" title="' + item.TopicName + '">' +
                                 '<a href="/bbs/topic/' + item.TopicId + '" target="_blank">' +
-                                '<img src="' + item.UserPhoto + '" title="' + item.UserName + '" style="width: 30%;" />' +
+                                '<img src="' + item.UserPhoto + '" title="' + item.UserName + '" style="width:30%;" />' +
                                 '<span class="text-muted" style="margin-left:3px;">' + item.TopicName + '</span>' +
                                 '</a>' +
                                 '</div>');
@@ -215,7 +215,7 @@ var gutsmvc = function () {
                             var user = data.Data;
                             loginArr.push('<li class="loginli"><a href="/usercenter/index" style="padding-top:10px;"><img id="userheadphoto" class="img img-circle" src="' + user.HeadPhoto + '" style="width:30px;height:30px;" /></a></li>');
                             loginArr.push('<li class="loginli"><a href="/usercenter/index"><span id="usernickname" style="color:red">' + user.UserName + '</span></a></li>');
-                            loginArr.push('<li class="loginli"><a href="/chat/index">私信</a></li>');
+                            loginArr.push('<li class="loginli"><a href="/user/chat">Chat</a></li>');
                             loginArr.push('<li class="loginli"><a href="/usercenter/index">Personal Center</a></li>');
                             loginArr.push('<li class="loginli"><a href="/member/loginout">Sign out</a></li>');
                         } else {

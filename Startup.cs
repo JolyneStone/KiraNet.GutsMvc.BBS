@@ -1,4 +1,5 @@
-﻿using KiraNet.GutsMvc.BBS.Infrastructure;
+﻿using KiraNet.GutsMvc.BBS.Hub;
+using KiraNet.GutsMvc.BBS.Infrastructure;
 using KiraNet.GutsMvc.Filter;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -24,7 +25,13 @@ namespace KiraNet.GutsMvc.BBS
 
         public void Configure(IApplicationBuilder app)
         {
-            // 注册中间件
+            // 注册WebSocketHub中间件
+            app.UserWebSocketHub(hub =>
+            {
+                hub.AddHub<ChatHub>("/hub/chat/");
+            });
+
+            // 注册MVC中间件
             app.UseGutsMvc(route =>
                 route.AddRouteMap("default", "/{controller=home}/{action=index}/{id}"))
                 .ConfigureNotFoundView("NotFound");
@@ -32,6 +39,9 @@ namespace KiraNet.GutsMvc.BBS
 
         public void ConfigureServices(IServiceCollection services)
         {
+            // 增加对WebSocket的支持
+            services.AddWebSocketHub();
+
             // 增加对GutsMvc的支持
             services.AddGutsMvc();
 

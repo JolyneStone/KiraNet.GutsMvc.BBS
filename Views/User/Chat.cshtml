@@ -69,39 +69,26 @@
         var s = "";
         if (str.length == 0) return "";
         s = s.replace(/&quot;/g, "\"");
-        //s = s.replace(/&lt;/g, "<");
-        //s = s.replace(/&gt;/g, ">");
-        //s = s.replace(/&nbsp;/g, " ");
-        //s = s.replace(/&#39;/g, "\'");
-        //s = str.replace(/&amp;/g, "&");
         return s;
     };
 
-    /*1.用浏览器内部转换器实现html转码*/
     function htmlEncode(html) {
-        //1.首先动态创建一个容器标签元素，如DIV
         var temp = document.createElement("div");
-        //2.然后将要转换的字符串设置为这个元素的innerText(ie支持)或者textContent(火狐，google支持)
         (temp.textContent != undefined) ? (temp.textContent = html) : (temp.innerText = html);
-        //3.最后返回这个元素的innerHTML，即得到经过HTML编码转换的字符串了
         var output = temp.innerHTML;
         temp = null;
         return output;
     };
-    /*2.用浏览器内部转换器实现html解码*/
+
     function htmlDecode(text) {
-        //1.首先动态创建一个容器标签元素，如DIV
         var temp = document.createElement("div");
-        //2.然后将要转换的字符串设置为这个元素的innerHTML(ie，火狐，google都支持)
         temp.innerHTML = text;
-        //3.最后返回这个元素的innerText(ie支持)或者textContent(火狐，google支持)，即得到经过HTML解码的字符串了。
         var output = temp.innerText || temp.textContent;
         temp = null;
         return output;
     }
 
     function getFriendList() {
-        //window.localStorage.removeItem("gutsmvc_chatlist");
         var storage = window.localStorage.getItem("gutsmvc_chatlist_" + userId);
         if (storage != null && storage != undefined) {
             return JSON.parse(storage);
@@ -151,7 +138,6 @@
     };
 
     function userMessage(message) {
-        //var targetUserHeadPhoto = $("#targetUserHeadPhoto").val();
         return '<div class="message right">' +
             '<img src="' + userHeadPhoto + '" />' +
             '<div class="bubble">' + message +
@@ -175,11 +161,9 @@
         if (id > 0 && id == userId) {
             // 用户消息
             chatMessageBody.append(userMessage(message));
-            //isHistory ? chatMessageBody.prepend(userMessage(message)) : chatMessageBody.after(userMessage(message));
         } else {
             // 对方消息
             chatMessageBody.append(targetMessage(message));
-            //isHistory ? chatMessageBody.prepend(targetMessage(message)) : chatMessageBody.after(targetMessage(message));
         }
     };
 
@@ -197,12 +181,8 @@
     function initWebSocket(targetUserId) {
         if (ws == null || ws.readyState == WebSocket.CLOSED || ws.readyState == WebSocket.CLOSING) {
 
-            ws = new WebSocket("ws://" + window.location.hostname + ":" + window.location.port + "/chat/chathub/?targetUserId=" + targetUserId, "gutsmvc");
+            ws = new WebSocket("ws://" + window.location.hostname + ":" + window.location.port + "/hub/chat/?targetUserId=" + targetUserId, "gutsmvc_bbs");
             ws.onmessage = function (result) {
-                /// case1: 用户发送
-                /// case2: 对方发送
-                /// case3: 离线消息
-                /// case4: 历史记录
                 var data = result.data;
                 var message = '';
                 var id = 0;
@@ -210,14 +190,6 @@
                 if (index >= 0) {
                     id = data.substr(0, index);
                     message = data.substr(index + 1);
-                    //var str = result.subStr(index + 1);
-                    //var tempIndex = str.indexOf(':');
-                    //if (tempIndex > -0) {
-                    //    lastChatId = Number(str.subStr(0, tempIndex));
-                    //    message = str.subStr(tempIndex + 1);
-                    //} else {
-                    //    message = result.subStr(index + 1);
-                    //}
                 } else {
                     message = data;
                 }
@@ -243,9 +215,6 @@
                 $("#targetUserHeadPhoto").val($(this).children(""))
                 $('#targetUserName').html(targetUserName);
                 $('#targetUserHeadPhoto').val($(this).find('img')[0].src);
-                //if (ws != null || ws.readyState == WebSocket.OPEN) {
-                //    ws.onclose();
-                //}
                 initWebSocket(targetUserId);
                 isHistory = true;
                 hasNot = false;
@@ -254,6 +223,7 @@
                 var dt = new Date();
                 dt.setHours(dt.getHours() + 8);
                 nowTime = dt.toUTCString();
+                $('#chatMessageBody').html('');
                 var sendMessageDiv = $("#sendmessage");
                 if (sendMessageDiv.hasClass("hidden")) {
                     sendMessageDiv.removeClass("hidden");
@@ -263,12 +233,6 @@
     }
 
     $(function () {
-        //$('#searchfield').focusout(function () {
-        //    if ($(this).val() == '') {
-        //        $(this).val('Search contacts...');
-        //    }
-        //});
-
         window.onbeforeunload = function () {
             if (ws != null && ws.readyState == WebSocket.OPEN) {
                 ws.onclose();
@@ -309,13 +273,12 @@
                 if (targetUserId < 0)
                     return;
 
-                $.get('/chat/getchathistory/', { targetUserId: targetUserId, isHistory: isHistory, nowTime: nowTime }, function (data) {
+                $.get('/user/getchathistory/', { targetUserId: targetUserId, isHistory: isHistory, nowTime: nowTime }, function (data) {
                     if (data && data.IsOk) {
                         var arr = [];
                         JSON.stringify(new Date("123"));
                         if (data.Data.Chats.length > 0) {
                             $.each(data.Data.Chats, function (i, item) {
-                                //lastChatId = Number(item.LastChatId);
                                 prependMessage(item.Id, item.Message);
                             });
 

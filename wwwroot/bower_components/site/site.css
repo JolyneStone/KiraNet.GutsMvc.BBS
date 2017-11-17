@@ -1,7 +1,15 @@
-﻿alink {
+﻿.alink {
     text-decoration: none;
 }
 
+#recommends {
+    padding-left:2px;
+    padding-right:2px;
+}
+
+.recomment {
+    margin-bottom: 10px;
+}
 .upimgbtn {
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f9f9f9',endColorstr='#eeeeee');
     /*background: -webkit-gradient(linear, left top, left bottom, from(#f9f9f9),to(#eeeeee));
