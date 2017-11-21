@@ -150,7 +150,7 @@ namespace KiraNet.GutsMvc.BBS.Infrastructure
 
             modelBuilder.Entity<Topic>(entity =>
             {
-                entity.Property(e => e.Bbsid).HasColumnName("BBSId");
+                entity.Property(e => e.BbsId).HasColumnName("BBSId");
 
                 entity.Property(e => e.CreateTime)
                     .HasColumnType("datetime")
@@ -174,7 +174,7 @@ namespace KiraNet.GutsMvc.BBS.Infrastructure
 
                 entity.HasOne(d => d.Bbs)
                     .WithMany(p => p.Topic)
-                    .HasForeignKey(d => d.Bbsid)
+                    .HasForeignKey(d => d.BbsId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_BBS_Topic");
 

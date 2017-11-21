@@ -52,7 +52,7 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             //    });
 
             moBackgroundData.BBSDatas = (await _uf.BBSRepository.GetAllAsync())
-                .GroupJoin(await _uf.TopicRepository.GetAllAsync(), b => b.Id, t => t.Bbsid, (b, t) => new MoBBSData
+                .GroupJoin(await _uf.TopicRepository.GetAllAsync(), b => b.Id, t => t.BbsId, (b, t) => new MoBBSData
                 {
                     BBSName = b.Bbsname,
                     TotalCount = t.Count(),

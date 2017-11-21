@@ -6,9 +6,9 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Linq;
 
 namespace KiraNet.GutsMvc.BBS.Controllers
 {
@@ -227,16 +227,13 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             }
             else if (email.Length >= 50 || email.Length <= 4)
             {
-                //return Redirect("https://www.baidu.com");
-                //return Redirect("http://localhost:17758/home/error/?msg=邮箱长度不合法");
                 return RedirectToAction("home", "error", new Dictionary<string, object> { { "msg", "邮箱长度不合法" } });
             }
             else if (new Regex(@"^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$").IsMatch(email) == false)
             {
                 return RedirectToAction("home", "error", new Dictionary<string, object> { { "msg", "邮箱格式不合法，请仔细甄别您的邮箱是否正确" } });
             }
-
-            if (!long.TryParse(expire, out var longNum))
+            else if (!long.TryParse(expire, out var longNum))
             {
                 return RedirectToAction("home", "error", new Dictionary<string, object> { { "msg", "无效的请求" } });
             }
@@ -256,16 +253,10 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             }
 
             var key = $"activeEmail{email}";
-
             user.Email = email;
             user.UserStatus = (int)UserStatus.启用;
-
-            using (_uf)
-            {
-                _uf.UserRepository.Update(user);
-                await _uf.SaveChangesAsync();
-            }
-
+            _uf.UserRepository.Update(user);
+            await _uf.SaveChangesAsync();
             var userInfo = new MoUserInfo
             {
                 Id = user.Id,

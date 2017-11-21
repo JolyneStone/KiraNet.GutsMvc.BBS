@@ -141,7 +141,7 @@ namespace KiraNet.GutsMvc.BBS.Infrastructure.Repositories
 
             if (bbsId.HasValue)
             {
-                topics = Entities.Where(x => x.Bbsid == bbsId.Value).OrderByDescending(x => x.LastReplyTime);
+                topics = Entities.Where(x => x.BbsId == bbsId.Value).OrderByDescending(x => x.LastReplyTime);
             }
             else
             {
@@ -155,7 +155,7 @@ namespace KiraNet.GutsMvc.BBS.Infrastructure.Repositories
                                          from reply in _dbContext.Set<Reply>()
                                          where topic.Id == reply.TopicId &&
                                                reply.ReplyIndex == 1 &&
-                                               topic.Bbsid == bbs.Id &&
+                                               topic.BbsId == bbs.Id &&
                                                topic.TopicStatus != TopicStatus.Disabled
                                          select new MoTopic
                                          {
@@ -168,7 +168,7 @@ namespace KiraNet.GutsMvc.BBS.Infrastructure.Repositories
                                              DesType = reply.ReplyType,
                                              StarCount = topic.StarCount,
                                              ReplyCount = topic.ReplyCount,
-                                             BBSId = topic.Bbsid,
+                                             BBSId = topic.BbsId,
                                              BBSName = topic.Bbs.Bbsname,
                                              TopicStatus = topic.TopicStatus
                                          })
@@ -224,7 +224,7 @@ namespace KiraNet.GutsMvc.BBS.Infrastructure.Repositories
 
             if (bbsId.HasValue)
             {
-                topics = Entities.Where(x => x.Bbsid == bbsId.Value).OrderByDescending(x => x.LastReplyTime);
+                topics = Entities.Where(x => x.BbsId == bbsId.Value).OrderByDescending(x => x.LastReplyTime);
 
             }
             else
@@ -239,7 +239,7 @@ namespace KiraNet.GutsMvc.BBS.Infrastructure.Repositories
                                    from reply in _dbContext.Set<Reply>()
                                    where topic.Id == reply.TopicId &&
                                          reply.ReplyIndex == 1 &&
-                                         topic.Bbsid == bbs.Id &&
+                                         topic.BbsId == bbs.Id &&
                                          topic.TopicStatus != TopicStatus.Disabled
                                    //orderby topic.LastReplyTime descending
                                    select new MoTopic
@@ -253,7 +253,7 @@ namespace KiraNet.GutsMvc.BBS.Infrastructure.Repositories
                                        DesType = reply.ReplyType,
                                        StarCount = topic.StarCount,
                                        ReplyCount = topic.ReplyCount,
-                                       BBSId = topic.Bbsid,
+                                       BBSId = topic.BbsId,
                                        BBSName = topic.Bbs.Bbsname,
                                    })
                                 .OrderBy(x => x.TopicStatus)

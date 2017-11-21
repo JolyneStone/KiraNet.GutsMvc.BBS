@@ -39,7 +39,7 @@ namespace KiraNet.GutsMvc.BBS.Controllers
                 return RedirectToAction("home", "error", new Dictionary<string, object>() { { "msg", "找不到您负责的版块" } });
             }
 
-            var topics = await _uf.TopicRepository.GetAllAsync(x => x.Bbsid == bbs.Id);
+            var topics = await _uf.TopicRepository.GetAllAsync(x => x.BbsId == bbs.Id);
 
             var moBBSData = new MoBBSData
             {
@@ -81,7 +81,7 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             if (!userInfo.Roles.Equals("SuperAdmin", StringComparison.OrdinalIgnoreCase))
             {
                 if (!userInfo.Roles.Equals("Admin", StringComparison.OrdinalIgnoreCase) ||
-                    !await _uf.BBSRepository.IsExistAsync(x => x.Id == topic.Bbsid && x.UserId == userInfo.Id))
+                    !await _uf.BBSRepository.IsExistAsync(x => x.Id == topic.BbsId && x.UserId == userInfo.Id))
                 {
                     data.IsOk = false;
                     data.Msg = "您没有屏蔽此贴的权限";
@@ -112,7 +112,7 @@ namespace KiraNet.GutsMvc.BBS.Controllers
                 return RedirectToAction("home", "error", new Dictionary<string, object>() { { "msg", "您没有版块管理的权限" } });
             }
 
-            var count = await _uf.TopicRepository.CountAsync(x => x.Bbsid == bbs.Id && x.TopicStatus == TopicStatus.Disabled);
+            var count = await _uf.TopicRepository.CountAsync(x => x.BbsId == bbs.Id && x.TopicStatus == TopicStatus.Disabled);
             ViewData["BBSId"] = bbs.Id;
             ViewData["Id"] = userInfo.Id;
             ViewData["UserName"] = userInfo.UserName;
@@ -161,7 +161,7 @@ namespace KiraNet.GutsMvc.BBS.Controllers
                     return Json(data);
                 }
 
-                data.Data = (await _uf.TopicRepository.GetAllAsync(x => x.Bbsid == id && x.TopicStatus == TopicStatus.Disabled))
+                data.Data = (await _uf.TopicRepository.GetAllAsync(x => x.BbsId == id && x.TopicStatus == TopicStatus.Disabled))
                     .Join(await _uf.UserRepository.GetAllAsync(), t => t.UserId, u => u.Id, (t, u) => new MoTopicDisabled
                     {
                         TopicId = t.Id,
@@ -197,7 +197,7 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             HttpContext.TryGetUserInfo(out var userInfo);
             if (!userInfo.Roles.Equals("SuperAdmin", StringComparison.OrdinalIgnoreCase))
             {
-                if (!(await _uf.BBSRepository.IsExistAsync(x => x.Id == topic.Bbsid && x.UserId == userInfo.Id)))
+                if (!(await _uf.BBSRepository.IsExistAsync(x => x.Id == topic.BbsId && x.UserId == userInfo.Id)))
                 {
                     data.IsOk = false;
                     data.Msg = "您不是该版块的版主，无法进行此操作";

@@ -41,7 +41,7 @@ namespace KiraNet.GutsMvc.BBS.Controllers
                 return Redirect("http://localhost:17758/home/error");
             }
 
-            var topics = await _uf.TopicRepository.GetAllAsync(x => x.Bbsid == id && x.TopicStatus != TopicStatus.Disabled);
+            var topics = await _uf.TopicRepository.GetAllAsync(x => x.BbsId == id && x.TopicStatus != TopicStatus.Disabled);
             var paging = new MoPaging
             {
                 Total = topics.Count(),
@@ -106,95 +106,36 @@ namespace KiraNet.GutsMvc.BBS.Controllers
         [UserAuthorize]
         public async Task<IActionResult> CreateTopic(MoTopicDes topicDes)
         {
-            if (topicDes == null &&
-                topicDes.TopicDes == "" &&
-                topicDes.BBSId == 0)
-            {
-                return View();
-            }
-
-            ViewData["BBSId"] = topicDes.BBSId;
-            ViewData["BBSName"] = topicDes.BBSName;
             if (!ModelState.IsValid)
             {
-                this.MsgBox("发帖失败，请检查您的标题和内容是否为空");
-                return View();
+                return ReturnViewMsg("发帖失败，请检查您的标题和内容是否为空");
             }
 
-            if (!HttpContext.TryGetUserInfo(out var userInfo))
-            {
-                this.MsgBox("登录已过期，请重新登录");
-                return View();
-            }
-
-            var topic = new Topic
-            {
-                UserId = userInfo.Id,
-                Bbsid = topicDes.BBSId,
-                TopicName = topicDes.TopicName,
-                StarCount = 0,
-                ReplyCount = 0
-            };
-
+            HttpContext.TryGetUserInfo(out var userInfo);
+            var topic = new Topic(userInfo.Id, topicDes.BBSId, topicDes.TopicName);
             try
             {
                 await _uf.TopicRepository.InsertAsync(topic);
                 if (await _uf.SaveChangesAsync() == 0)
                 {
-                    this.MsgBox("创建新帖失败");
-                    return View();
+                    return ReturnViewMsg("发表新帖失败");
+                }
+                if (topicDes.ReplyType == ReplyType.Image)
+                {
+                    var (success, resultMsg) = SaveImg(topic.Id,
+                        HttpRequest.Form.Files.Where(x => x.ContentType.Contains("image")).SingleOrDefault());
+                    if (!success)
+                    {
+                        return ReturnViewMsg(resultMsg);
+                    }
+
+                    topicDes.TopicDes = resultMsg;
                 }
             }
             catch (Exception ex)
             {
-                this.MsgBox("发表新帖失败");
-                _logger.LogError(userInfo.Id, $"发表新帖失败-{ex.Message}-{DateTime.Now.ToStandardFormatString()}");
-                return View();
-            }
-
-            var des = String.Empty;
-            if (topicDes.ReplyType == ReplyType.Image)
-            {
-                try
-                {
-                    var file = HttpRequest.Form.Files.Where(x => x.ContentType.Contains("image"))
-                        .SingleOrDefault();
-                    if (file == null)
-                    {
-                        this.MsgBox("请选择上传的图片");
-                        return View();
-                    }
-
-                    var maxSize = 1024 * 1024 * 4; // 图片大小不超过4M
-                    if (file.Length > maxSize)
-                    {
-                        this.MsgBox("图片不能大于4M");
-                        return View();
-                    }
-
-                    var separator = Path.DirectorySeparatorChar;
-                    var directory = Directory.GetCurrentDirectory() + separator + _mapSetting.UpContentPhotoPath + separator + topic.Id;
-                    new DirectoryInfo(directory).CreateDirectory();
-
-                    var fileExtend = file.FileName.Substring(file.FileName.LastIndexOf('.'));
-                    var fileNewName = $"{DateTime.Now.Ticks}{fileExtend}";
-                    des = Path.Combine(directory, fileNewName);
-
-                    using (var stream = new FileStream(des, FileMode.OpenOrCreate, FileAccess.Write))
-                    {
-                        await file.CopyToAsync(stream); // 读取上传的图片并保存
-                    }
-
-                    des = $"{_mapSetting.ViewContentPhotoPath}/{topic.Id}/{fileNewName}";
-                }
-                catch
-                {
-                    this.MsgBox("保存图片失败");
-                    _uf.TopicRepository.Delete(topic);
-                    _uf.SaveChanges();
-                    return View();
-                }
-
+                _logger.LogError(userInfo.Id, $"发表新帖失败-{ex.Message.Substring(0, 50)}-{DateTime.Now.ToStandardFormatString()}");
+                return ReturnViewMsg("发表新帖失败");
             }
 
             var reply = new Reply
@@ -204,44 +145,22 @@ namespace KiraNet.GutsMvc.BBS.Controllers
                 UserName = userInfo.UserName,
                 TopicName = topic.TopicName,
                 ReplyType = topicDes.ReplyType,
-                Message = topicDes.ReplyType == ReplyType.Text ? topicDes.TopicDes : $"../../wwwroot{des}",
+                Message = topicDes.TopicDes,
                 ReplyIndex = 1
             };
 
-            var user = await _uf.UserRepository.GetByIdAsync(userInfo.Id);
-            if (user == null)
-            {
-                this.MsgBox("无法检测到您的账号状况");
-                ViewData["TopicId"] = topic.Id;
-                return View();
-            }
-
-            user.Integrate += (int)IntegrateType.CreateTopic;
-
             _uf.ReplyRepository.Insert(reply);
-            _uf.UserRepository.Update(user);
-            if (_uf.SaveChanges() == 0)
+            if (!UpdateIntegrate(userInfo.Id, (int)IntegrateType.CreateTopic) &&
+                _uf.SaveChanges() == 0)
             {
-                this.MsgBox("创建帖子失败");
                 _uf.TopicRepository.Delete(topic);
                 _uf.SaveChanges();
-                return View();
+                return ReturnViewMsg("发表新帖失败");
             }
 
-            this.MsgBox("创建帖子成功");
-            JiebaLuceneHelper.Instance.AddIndex(new MoContentSearchItem
-            {
-                Id = reply.Id,
-                TopicId = topic.Id,
-                TopicName = topic.TopicName,
-                Content = reply.Message,
-                ReplyIndex = reply.ReplyIndex,
-                ReplyType = reply.ReplyType,
-                CreateTime = reply.CreateTime.ToStandardFormatString()
-            });
-
+            AddIndex(topic, reply);
             ViewData["TopicId"] = topic.Id;
-            return View();
+            return ReturnViewMsg("发表新帖成功");
         }
 
         /// <summary>
@@ -258,7 +177,7 @@ namespace KiraNet.GutsMvc.BBS.Controllers
                 return RedirectToAction("home", "error", new Dictionary<string, object>() { { "msg", "帖子丢失啦~~~~" } });
             }
 
-            var bbs = await _uf.BBSRepository.GetByIdAsync(topic.Bbsid);
+            var bbs = await _uf.BBSRepository.GetByIdAsync(topic.BbsId);
             if (bbs == null)
             {
                 return RedirectToAction("home", "error", new Dictionary<string, object>() { { "msg", "帖子丢失啦~~~~" } });
@@ -303,7 +222,7 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             ViewData["TopicStatus"] = topic.TopicStatus.ToString();
             ViewData["Title"] = topic.TopicName;
             ViewData["TopicId"] = topic.Id;
-            ViewData["BBSId"] = topic.Bbsid;
+            ViewData["BBSId"] = topic.BbsId;
             ViewData["BBSName"] = bbs.Bbsname;
             ViewData["StarCount"] = topic.StarCount;
 
@@ -378,176 +297,134 @@ namespace KiraNet.GutsMvc.BBS.Controllers
         [UserAuthorize]
         public async Task<IActionResult> SubmitReply(MoSubComment subComment)
         {
-            var data = new MoData() { IsOk = false };
             if (subComment == null &&
                 (subComment.ReplyType == ReplyType.Text &&
                 String.IsNullOrWhiteSpace(subComment.Message)))
             {
-                data.Msg = "评论内容不能为空";
-                return Json(data);
+                return ReturnJsonMsg(false, "评论内容不能为空");
             }
 
-            if (!HttpContext.TryGetUserInfo(out var userInfo))
-            {
-                data.Msg = "登录过期，请重新登录";
-                return Json(data);
-            }
-
+            HttpContext.TryGetUserInfo(out var userInfo);
             Topic topic = await _uf.TopicRepository.GetAsync(x => x.Id == subComment.TopicId &&
                                     x.TopicStatus != TopicStatus.Disabled);
             if (topic == null)
             {
-                data.Msg = "找不到帖子，该帖子已删除或被禁用";
-                return Json(data);
+                return ReturnJsonMsg(false, "找不到帖子，该帖子已删除或被禁用");
             }
 
             string message = String.Empty;
             if (subComment.ReplyType == ReplyType.Image)
             {
-                var file = HttpRequest.Form.Files.Where(x => x.ContentType.Contains("image"))
-                       .SingleOrDefault();
-                if (file == null)
+                var file = HttpRequest.Form.Files.Where(x => x.ContentType.Contains("image")).SingleOrDefault();
+                var (success, resultMsg) = SaveImg(topic.Id, file);
+                if (!success)
                 {
-                    data.Msg = "请选择上传的图片";
-                    return Json(data);
+                    ReturnJsonMsg(false, resultMsg);
                 }
 
-                var maxSize = 1024 * 1024 * 4; // 图片大小不超过4M
-                if (file.Length > maxSize)
-                {
-                    data.Msg = "图片不能大于4M";
-                    return Json(data);
-                }
-
-                var separator = Path.DirectorySeparatorChar;
-                var directory = Directory.GetCurrentDirectory() + separator + _mapSetting.UpContentPhotoPath + separator + topic.Id;
-                new DirectoryInfo(directory).CreateDirectory();
-
-                var fileExtend = file.FileName.Substring(file.FileName.LastIndexOf('.'));
-                var fileNewName = $"{DateTime.Now.Ticks}{fileExtend}";
-                var des = Path.Combine(directory, fileNewName);
-
-                using (var stream = new FileStream(des, FileMode.OpenOrCreate, FileAccess.Write))
-                {
-                    await file.CopyToAsync(stream); // 读取上传的图片并保存
-                }
-
-                message = $"../../wwwroot{_mapSetting.ViewContentPhotoPath}/{topic.Id}/{fileNewName}";
-
+                message = resultMsg;
             }
             else
             {
                 message = subComment.Message;
             }
 
+            var user = await _uf.UserRepository.GetByIdAsync(userInfo.Id);
+            if (user == null)
+            {
+                return ReturnJsonMsg(false, "找不到您的用户信息");
+            }
+
             using (var trans = _uf.BeginTransaction())
             {
                 try
                 {
-                    Reply reply = null;
                     if (subComment.ReplyObject == ReplyObject.User)
                     {
                         // 楼中楼
-                        if (subComment.ReplyIndex == null ||
-                                subComment.ReplyUserId == null)
+                        if (!(await AddChildReply()))
                         {
-                            data.Msg = "提交评论失败，请稍后再试";
-                            return Json(data);
+                            return ReturnJsonMsg(false, "提交评论失败，请稍后再试");
                         }
-
-                        var replyUser = new ReplyUser
-                        {
-                            Message = message,
-                            ReplyIndex = subComment.ReplyIndex.Value,
-                            ReplyUserId = subComment.ReplyUserId.Value,
-                            TopicId = subComment.TopicId,
-                            UserId = userInfo.Id,
-                            ReplyType = subComment.ReplyType
-                        };
-
-
-                        reply = await _uf.ReplyRepository.GetAsync(x => x.ReplyIndex == subComment.ReplyIndex &&
-                        x.UserId == subComment.ReplyUserId &&
-                        x.TopicId == subComment.TopicId);
-
-                        if (reply == null)
-                        {
-                            data.Msg = "找不到该评论，可能已被删除";
-                            return Json(data);
-                        }
-
-                        var user = await _uf.UserRepository.GetByIdAsync(userInfo.Id);
-                        if (user == null)
-                        {
-                            data.Msg = "找不到您的用户信息";
-                            return Json(data);
-                        }
-
-                        await _uf.ReplyUserRepository.InsertAsync(replyUser);
-                        var replyCount = reply.ReplyCount + 1;
-                        reply.ReplyCount = replyCount;
-                        _uf.ReplyRepository.Update(reply);
-                        user.Integrate += (int)IntegrateType.Reply;
-                        _uf.UserRepository.Update(user);
                     }
                     else
                     {
                         // 评论
-                        var user = await _uf.UserRepository.GetByIdAsync(userInfo.Id);
-                        if (user == null)
+                        if (!(await AddReply()))
                         {
-                            data.Msg = "找不到您的用户信息";
-                            return Json(data);
+                            return ReturnJsonMsg(false, "提交评论失败，请稍后再试");
                         }
-
-                        reply = new Reply
-                        {
-                            Message = message,
-                            TopicId = subComment.TopicId,
-                            UserId = userInfo.Id,
-                            ReplyType = subComment.ReplyType,
-                            TopicName = topic.TopicName,
-                            UserName = user.UserName
-                        };
-
-                        user.Integrate += (int)IntegrateType.Reply;
-                        _uf.UserRepository.Update(user);
-                        var replyCount = topic.ReplyCount + 1;
-                        topic.ReplyCount = replyCount;
-                        reply.ReplyIndex = replyCount + 1; // 除去楼主
-
-                        _uf.TopicRepository.Update(topic);
-                        await _uf.ReplyRepository.InsertAsync(reply);
                     }
 
                     await _uf.SaveChangesAsync();
-
-                    // 我们只记录帖子的评论
-                    if (subComment.ReplyObject == ReplyObject.Topic)
-                    {
-                        JiebaLuceneHelper.Instance.AddIndex(new MoContentSearchItem
-                        {
-                            Id = reply.Id,
-                            TopicId = topic.Id,
-                            TopicName = topic.TopicName,
-                            Content = reply.Message,
-                            ReplyIndex = reply.ReplyIndex,
-                            ReplyType = reply.ReplyType,
-                            CreateTime = reply.CreateTime.ToStandardFormatString()
-                        });
-                    }
-
                     trans.Commit();
-                    data.IsOk = true;
-                    return Json(data);
+                    return Json(new MoData { IsOk = true });
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError(userInfo.Id, $"提交评论：{ex.Message}-{DateTime.Now.ToStandardFormatString()}");
                     trans.Rollback();
-                    data.Msg = "系统出错啦~~~，请稍后重试";
-                    return Json(data);
+                    return ReturnJsonMsg(false, "系统出错啦~~~，请稍后重试");
                 }
+            }
+
+            /// 提交评论
+            async Task<bool> AddReply()
+            {
+                var reply = new Reply
+                {
+                    Message = message,
+                    TopicId = subComment.TopicId,
+                    UserId = userInfo.Id,
+                    ReplyType = subComment.ReplyType,
+                    TopicName = topic.TopicName,
+                    UserName = user.UserName
+                };
+
+                UpdateIntegrate(user, (int)IntegrateType.Reply);
+                var replyCount = topic.ReplyCount + 1;
+                topic.ReplyCount = replyCount;
+                reply.ReplyIndex = replyCount + 1; // 除去楼主
+                _uf.TopicRepository.Update(topic);
+                await _uf.ReplyRepository.InsertAsync(reply);
+                AddIndex(topic, reply);
+                return true;
+            }
+
+            /// 提交子评论
+            async Task<bool> AddChildReply()
+            {
+                if (subComment.ReplyIndex == null ||
+                               subComment.ReplyUserId == null)
+                {
+                    return false;
+                }
+
+                var replyUser = new ReplyUser
+                {
+                    Message = message,
+                    ReplyIndex = subComment.ReplyIndex.Value,
+                    ReplyUserId = subComment.ReplyUserId.Value,
+                    TopicId = subComment.TopicId,
+                    UserId = userInfo.Id,
+                    ReplyType = subComment.ReplyType
+                };
+
+
+                var reply = await _uf.ReplyRepository.GetAsync(x => x.ReplyIndex == subComment.ReplyIndex &&
+                                                                        x.UserId == subComment.ReplyUserId &&
+                                                                        x.TopicId == subComment.TopicId);
+                if (reply == null)
+                {
+                    return false;
+                }
+
+                await _uf.ReplyUserRepository.InsertAsync(replyUser);
+                var replyCount = reply.ReplyCount + 1;
+                reply.ReplyCount = replyCount;
+                _uf.ReplyRepository.Update(reply);
+                UpdateIntegrate(user, (int)IntegrateType.Reply);
+                return true;
             }
         }
 
@@ -662,7 +539,7 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             {
                 if (!userInfo.Roles.Equals("SuperAdmin", StringComparison.OrdinalIgnoreCase))
                 {
-                    var bbs = await _uf.BBSRepository.GetByIdAsync(topic.Bbsid);
+                    var bbs = await _uf.BBSRepository.GetByIdAsync(topic.BbsId);
                     if (bbs.UserId != userInfo.Id)
                     {
                         data.IsOk = false;
@@ -701,17 +578,116 @@ namespace KiraNet.GutsMvc.BBS.Controllers
 
         #region 辅助方法
 
+        private IActionResult ReturnJsonMsg(bool isOk, string msg, object data=null)
+        {
+            return Json(new MoData { IsOk = isOk, Msg = msg, Data = data });
+        }
+
+        private IActionResult ReturnViewMsg(string msg)
+        {
+            this.MsgBox(msg);
+            return View();
+        }
+
+        /// <summary>
+        /// 更新积分
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="intergrate"></param>
+        /// <returns></returns>
+        private bool UpdateIntegrate(int userId, int integrate)
+        {
+            return UpdateIntegrate(_uf.UserRepository.GetById(userId), integrate);
+        }
+
+        /// <summary>
+        /// 更新积分
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="integrate"></param>
+        /// <returns></returns>
+        private bool UpdateIntegrate(User user, int integrate)
+        {
+            if (user == null)
+            {
+                return false;
+            }
+
+            user.Integrate += integrate;
+            _uf.UserRepository.Update(user);
+            return true;
+        }
+
+        /// <summary>
+        /// 保存图片
+        /// </summary>
+        /// <param name="topicId"></param>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        private (bool, string) SaveImg(int topicId, IFormFile file)
+        {
+            var result = String.Empty;
+            if (file == null)
+            {
+                result = "请选择上传的图片";
+                return (false, result);
+            }
+
+            var maxSize = 1024 * 1024 * 4; // 图片大小不超过4M
+            if (file.Length > maxSize)
+            {
+                result = "图片不能大于4M";
+                return (false, result);
+            }
+
+            var separator = Path.DirectorySeparatorChar;
+            var directory = Directory.GetCurrentDirectory() + separator + _mapSetting.UpContentPhotoPath + separator + topicId;
+            new DirectoryInfo(directory).CreateDirectory();
+
+            var fileExtend = file.FileName.Substring(file.FileName.LastIndexOf('.'));
+            var fileNewName = $"{DateTime.Now.Ticks}{fileExtend}";
+            var des = Path.Combine(directory, fileNewName);
+
+            using (var stream = new FileStream(des, FileMode.OpenOrCreate, FileAccess.Write))
+            {
+                file.CopyTo(stream); // 读取上传的图片并保存
+            }
+
+            result = $"../../wwwroot{_mapSetting.ViewContentPhotoPath}/{topicId}/{fileNewName}";
+            return (true, result);
+        }
+
+
         /// <summary>
         /// 删除图片
         /// </summary>
         /// <param name="path"></param>
-        private static void DeleteImg(string path)
+        private void DeleteImg(string path)
         {
             path = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + path.Substring(6).Replace('/', Path.DirectorySeparatorChar);
             if (System.IO.File.Exists(path))
             {
                 System.IO.File.Delete(path);
             }
+        }
+
+        /// <summary>
+        /// 添加索引
+        /// </summary>
+        /// <param name="topic"></param>
+        /// <param name="reply"></param>
+        private void AddIndex(Topic topic, Reply reply)
+        {
+            JiebaLuceneHelper.Instance.AddIndex(new MoContentSearchItem
+            {
+                Id = reply.Id,
+                TopicId = topic.Id,
+                TopicName = topic.TopicName,
+                Content = reply.Message,
+                ReplyIndex = reply.ReplyIndex,
+                ReplyType = reply.ReplyType,
+                CreateTime = reply.CreateTime.ToStandardFormatString()
+            });
         }
 
         #endregion

@@ -7,6 +7,12 @@ namespace KiraNet.GutsMvc.BBS.Infrastructure.Entities
 {
     public class Topic : IEntity
     {
+        public Topic(int userId, int bbsId, string topicName):this()
+        {
+            UserId = userId;
+            BbsId = bbsId;
+            TopicName = topicName;
+        }
         public Topic()
         {
             Reply = new HashSet<Reply>();
@@ -16,7 +22,7 @@ namespace KiraNet.GutsMvc.BBS.Infrastructure.Entities
 
         public int Id { get; set; }
         public int UserId { get; set; }
-        public int Bbsid { get; set; }
+        public int BbsId { get; set; }
         public string TopicName { get; set; }
         public DateTime CreateTime { get; set; }
         public int ReplyCount { get; set; }
