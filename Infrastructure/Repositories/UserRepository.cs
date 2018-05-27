@@ -18,7 +18,7 @@ namespace KiraNet.GutsMvc.BBS.Infrastructure.Repositories
         public async Task<MoPageData> GetUserSearchAsync(string query, int page, int pageSize = 15)
         {
             query = query.Trim();
-            page = page > 1 ? page : page;
+            page = page > 1 ? page : 1;
             pageSize = pageSize > 5 ? pageSize : 15;
 
             var data = new MoPageData

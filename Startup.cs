@@ -1,6 +1,7 @@
 ﻿using KiraNet.GutsMvc.BBS.Hub;
 using KiraNet.GutsMvc.BBS.Infrastructure;
 using KiraNet.GutsMvc.Filter;
+using KiraNet.GutsMvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,7 +18,7 @@ namespace KiraNet.GutsMvc.BBS
         public Startup()
         {
             var builder = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
+                .SetBasePath(RootConfiguration.Root)
                 .AddJsonFile("setting.json", optional: false, reloadOnChange: true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
@@ -70,7 +71,8 @@ namespace KiraNet.GutsMvc.BBS
                 builder.UseSqlServer(dbLink);
             });
 
-            // 改用EF 2.0 新增的API来注入DbContext，同时配置最大数据库连接数
+            //// 用下面的方法注入会出现问题，还是改为原来的方法
+            ////改用EF 2.0 新增的API来注入DbContext，同时配置最大数据库连接数
             //services.AddDbContextPool<GutsMvcDbContext>(option =>
             //{
             //    var dbLink = Configuration.GetSection("MapSetting:DbLink").Value;

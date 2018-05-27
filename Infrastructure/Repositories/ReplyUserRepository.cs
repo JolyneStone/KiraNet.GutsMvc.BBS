@@ -17,15 +17,6 @@ namespace KiraNet.GutsMvc.BBS.Infrastructure.Repositories
         {
         }
 
-        public override IQueryable<ReplyUser> GetAll(Expression<Func<ReplyUser, bool>> predicate = null)
-        {
-            return base.GetAll(predicate).AsNoTracking();
-        }
-
-        public override async Task<IQueryable<ReplyUser>> GetAllAsync(Expression<Func<ReplyUser, bool>> predicate = null)
-        {
-            return (await base.GetAllAsync(predicate)).AsNoTracking();
-        }
 
         public async Task<List<MoReplyUser>> GetReplyUsers(int topicId, int replyUserId, int replyIndex)
         {

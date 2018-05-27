@@ -173,7 +173,7 @@ namespace KiraNet.GutsMvc.BBS
                     {
                         try
                         {
-                            var (contents, totalCount) = await JiebaLuceneHelper.Instance.Search(query, page, 15);
+                            var (contents, totalCount) = await JiebaLucene.Instance.Search(query, page, 15);
                             if (contents == null || totalCount == 0)
                             {
                                 data.IsOk = false;
@@ -196,7 +196,6 @@ namespace KiraNet.GutsMvc.BBS
                         {
                             data.IsOk = false;
                         }
-
 
                         break;
                     }
@@ -276,7 +275,7 @@ namespace KiraNet.GutsMvc.BBS
                 {
                     using (_uf)
                     {
-                        recommends = (await _uf.TopicRepository.GetRecommends(10));
+                        recommends = (await _uf.TopicRepository.GetRecommends(5));
 
                         if (recommends != null && recommends.Count > 0)
                         {
@@ -305,56 +304,6 @@ namespace KiraNet.GutsMvc.BBS
 
             return Json(data);
         }
-
-        ///// <summary>
-        ///// 帖子内容
-        ///// </summary>
-        ///// <param name="id">帖子Id</param>
-        ///// <param name="page">页码</param>
-        ///// <returns></returns>
-        //[HttpGet]
-        //public async Task<IActionResult> Topic(int id, int page = 1)
-        //{
-        //    using (_uf)
-        //    {
-        //        MoTopicDisplay topic = await _uf.TopicRepository.GetTopicDisplays(id, page, 20);
-        //        if (topic == null)
-        //        {
-        //            return View("找不到该帖子！", "Shared", "Error");
-        //        }
-
-        //        return View(typeof(MoTopicDisplay), topic);
-        //    }
-        //}
-
-        ///// <summary>
-        ///// 获取指定评论的子回复
-        ///// </summary>
-        ///// <param name="topicId">帖子Id</param>
-        ///// <param name="replyUserId">对方用户Id</param>
-        ///// <param name="replyIndex">楼层数</param>
-        ///// <returns></returns>
-        //[HttpGet]
-        //public async Task<JsonResult> GetReplies(int topicId, int replyUserId, int replyIndex)
-        //{
-        //    var data = new MoData();
-        //    using (_uf)
-        //    {
-        //        var replies = (await _uf.ReplyUserRepository.GetReplyUsers(topicId, replyUserId, replyIndex));
-
-        //        if (replies == null && replies.Any())
-        //        {
-        //            data.IsOk = false;
-        //        }
-        //        else
-        //        {
-        //            data.IsOk = true;
-        //            data.Data = replies;
-        //        }
-
-        //        return Json(data);
-        //    }
-        //}
 
         /// <summary>
         /// 说明页

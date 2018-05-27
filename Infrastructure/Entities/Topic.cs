@@ -12,6 +12,7 @@ namespace KiraNet.GutsMvc.BBS.Infrastructure.Entities
             UserId = userId;
             BbsId = bbsId;
             TopicName = topicName;
+            TopicStatus = TopicStatus.Normal;
         }
         public Topic()
         {

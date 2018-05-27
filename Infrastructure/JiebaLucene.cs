@@ -1,4 +1,4 @@
-﻿using KiraNet.GutsMvc.BBS.Infrastructure;
+﻿using KiraNet.GutsMvc.BBS.Commom;
 using KiraNet.GutsMvc.BBS.Models;
 using Lucene.Net.Analysis;
 using Lucene.Net.Documents;
@@ -11,17 +11,17 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace KiraNet.GutsMvc.BBS.Commom
+namespace KiraNet.GutsMvc.BBS.Infrastructure
 {
-    public class JiebaLuceneHelper
+    public class JiebaLucene
     {
         private static object _sync = new object();
 
         #region 单例
 
-        private static JiebaLuceneHelper _instance;
-        private JiebaLuceneHelper() { }
-        public static JiebaLuceneHelper Instance
+        private static JiebaLucene _instance;
+        private JiebaLucene() { }
+        public static JiebaLucene Instance
         {
             get
             {
@@ -31,7 +31,7 @@ namespace KiraNet.GutsMvc.BBS.Commom
                     {
                         if (_instance == null)
                         {
-                            _instance = new JiebaLuceneHelper();
+                            _instance = new JiebaLucene();
                         }
                     }
                 }
@@ -61,14 +61,14 @@ namespace KiraNet.GutsMvc.BBS.Commom
             })
             .ToList();
 
-            JiebaLuceneHelper.Instance.CreateIndex(replies);
+            JiebaLucene.Instance.CreateIndex(replies);
         }
 
         #endregion
 
-        #region 分词测试
+        #region 分词
         /// <summary>
-        /// 分词测试
+        /// 分词
         /// </summary>
         /// <param name="keyword"></param>
         /// <returns></returns>
@@ -423,7 +423,7 @@ namespace KiraNet.GutsMvc.BBS.Commom
         {
             get
             {
-                if (_directory_luce == null) _directory_luce = Lucene.Net.Store.FSDirectory.Open(directory);
+                if (_directory_luce == null) _directory_luce = Lucene.Net.Store.FSDirectory.Open(Directory);
                 return _directory_luce;
             }
         }
@@ -434,7 +434,7 @@ namespace KiraNet.GutsMvc.BBS.Commom
         /// <summary>
         /// 索引在硬盘上的目录
         /// </summary>
-        public System.IO.DirectoryInfo directory
+        public System.IO.DirectoryInfo Directory
         {
             get
             {

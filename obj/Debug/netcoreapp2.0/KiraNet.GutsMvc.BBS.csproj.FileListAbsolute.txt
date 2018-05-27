@@ -18,3 +18,5 @@ D:\Code\KiraNet.GutsMvc.BBS\KiraNet.GutsMvc.BBS\bin\Debug\netcoreapp2.0\KiraNet.
 D:\Code\KiraNet.GutsMvc.BBS\KiraNet.GutsMvc.BBS\bin\Debug\netcoreapp2.0\jieba.NET.dll
 D:\Code\KiraNet.GutsMvc.BBS\KiraNet.GutsMvc.BBS\bin\Debug\netcoreapp2.0\JiebaNet.Analyser.dll
 D:\Code\KiraNet.GutsMvc.BBS\KiraNet.GutsMvc.BBS\bin\Debug\netcoreapp2.0\JiebaNet.Segmenter.dll
+D:\Code\KiraNet.GutsMvc.BBS\KiraNet.GutsMvc.BBS\obj\Debug\netcoreapp2.0\KiraNet.GutsMvc.BBS.csproj.CopyComplete
+D:\Code\KiraNet.GutsMvc.BBS\KiraNet.GutsMvc.BBS\bin\Debug\netcoreapp2.0\setting.json

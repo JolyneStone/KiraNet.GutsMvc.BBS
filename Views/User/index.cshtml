@@ -162,7 +162,7 @@
             if (isStar == null) {
                 return;
             }
-            alert(1);
+         
             var star = !(isStar == 1);
             var userId = $('#userId').val();
             $.get('/user/gouserstar/', { id: userId, isStar: star }, function (data) {

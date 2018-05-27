@@ -24,6 +24,8 @@ namespace KiraNet.GutsMvc.BBS.Infrastructure
         //    }
         //}
 
+        
+
         public GutsMvcDbContext(DbContextOptions<GutsMvcDbContext> options) : base(options)
         {
         }

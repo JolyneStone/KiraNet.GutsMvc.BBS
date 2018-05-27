@@ -1,15 +1,20 @@
-﻿.alink {
+﻿.error {
+    color: red;
+}
+
+.alink {
     text-decoration: none;
 }
 
 #recommends {
-    padding-left:2px;
-    padding-right:2px;
+    padding-left: 2px;
+    padding-right: 2px;
 }
 
 .recomment {
     margin-bottom: 10px;
 }
+
 .upimgbtn {
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f9f9f9',endColorstr='#eeeeee');
     /*background: -webkit-gradient(linear, left top, left bottom, from(#f9f9f9),to(#eeeeee));
@@ -88,12 +93,13 @@ li.loginli > a {
     margin-top: 6px;
     margin-bottom: 6px;
     text-align: center;
-    float:right;
+    float: right;
 }
 
-.star{
-    color:brown;
+.star {
+    color: brown;
 }
+
 .like {
     background: url("../../images/like.png") no-repeat 4px 6px;
 }
@@ -142,10 +148,10 @@ li.loginli > a {
     text-align: center;
 }
 
-.wenwen_btn img
-/* .wenwen_help img */ {
-    height: 40px;
-}
+    .wenwen_btn img
+    /* .wenwen_help img */ {
+        height: 40px;
+    }
 
 .wenwen_text {
     height: 40px;
@@ -176,14 +182,14 @@ li.loginli > a {
     display: none;
 }
 
-.write_box input {
-    height: 40px;
-    padding: 0 5px;
-    line-height: 40px;
-    width: 100%;
-    box-sizing: border-box;
-    border: 0;
-}
+    .write_box input {
+        height: 40px;
+        padding: 0 5px;
+        line-height: 40px;
+        width: 100%;
+        box-sizing: border-box;
+        border: 0;
+    }
 
 #wenwen {
     height: 100%;
@@ -212,9 +218,9 @@ li.loginli > a {
     text-align: right;
 }
 
-.question > div {
-    display: inline-block;
-}
+    .question > div {
+        display: inline-block;
+    }
 
 .left {
     float: left;
@@ -257,23 +263,23 @@ li.loginli > a {
     padding-left: 20px;
 }
 
-.question_text p,
-.answer_text p {
-    border-radius: 10px;
-    padding: .5rem;
-    margin: 0;
-    font-size: 14px;
-    line-height: 28px;
-    box-sizing: border-box;
-    vertical-align: middle;
-    display: table-cell;
-    height: 40px;
-    word-wrap: break-word;
-}
+    .question_text p,
+    .answer_text p {
+        border-radius: 10px;
+        padding: .5rem;
+        margin: 0;
+        font-size: 14px;
+        line-height: 28px;
+        box-sizing: border-box;
+        vertical-align: middle;
+        display: table-cell;
+        height: 40px;
+        word-wrap: break-word;
+    }
 
-.answer_text p {
-    background: rgb(213,213,213);
-}
+    .answer_text p {
+        background: rgb(213,213,213);
+    }
 
 .question_text p {
     background: #666;
@@ -319,9 +325,9 @@ audio {
     display: none;
 }
 
-.saying img {
-    width: 100%;
-}
+    .saying img {
+        width: 100%;
+    }
 
 .write_list {
     position: absolute;

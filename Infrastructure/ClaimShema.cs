@@ -1,4 +1,5 @@
-﻿using KiraNet.GutsMvc.Filter;
+﻿using KiraNet.GutsMvc.BBS.Models;
+using KiraNet.GutsMvc.Filter;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
@@ -14,17 +15,20 @@ namespace KiraNet.GutsMvc.BBS.Infrastructure
     {
         public IPrincipal CreateSchema(HttpContext httpContext)
         {
-            IPrincipal principal;
             if (!httpContext.TryGetUserInfo(out var userInfo))
             {
-                principal = new ClaimsPrincipal();
+                var principal = new ClaimsPrincipal();
                 Thread.CurrentPrincipal = principal;
 
                 return principal;
             }
 
+            return GetPrincipal(userInfo);
+        }
+
+        private IPrincipal GetPrincipal(MoUserInfo userInfo)
+        {
             var claims = new List<Claim>();
-            
             foreach (var role in userInfo.Roles.Trim().Split(','))
             {
                 if (!String.IsNullOrWhiteSpace(role))
@@ -32,7 +36,7 @@ namespace KiraNet.GutsMvc.BBS.Infrastructure
             }
 
             var identity = new ClaimsIdentity(claims, userInfo.Id.ToString());
-            principal = new ClaimsPrincipal(identity);
+            var principal = new ClaimsPrincipal(identity);
             Thread.CurrentPrincipal = principal;
 
             return principal;

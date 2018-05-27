@@ -218,8 +218,6 @@ var gutsmvc = function () {
                             loginArr.push('<li class="loginli"><a href="/user/chat">Chat</a></li>');
                             loginArr.push('<li class="loginli"><a href="/usercenter/index">Personal Center</a></li>');
                             loginArr.push('<li class="loginli"><a href="/member/loginout">Sign out</a></li>');
-                        } else {
-                            console.log(data.Msg);
                         }
                     }
                     if (loginArr.length > 0) {

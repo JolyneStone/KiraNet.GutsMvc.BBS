@@ -2,6 +2,7 @@
 using KiraNet.GutsMvc.BBS.Infrastructure;
 using KiraNet.GutsMvc.BBS.Infrastructure.Entities;
 using KiraNet.GutsMvc.BBS.Models;
+using KiraNet.GutsMvc.Infrastructure;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
@@ -24,7 +25,8 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             _uf = uf;
             _logger = new GutsMvcLogger(logger, _uf);
 
-            //JiebaLuceneHelper.Instance.InitIndex(_uf);
+            // 初始化索引
+            // JiebaLucene.Instance.InitIndex(_uf);
         }
 
         /// <summary>
@@ -63,7 +65,7 @@ namespace KiraNet.GutsMvc.BBS.Controllers
         public async Task<IActionResult> GetTopics(int id, int page = 1)
         {
             var data = new MoData();
-            var topics = await _uf.TopicRepository.GetLatelyTopicsAsync(page, 15, false, id);
+            var topics = await _uf.TopicRepository.GetLatelyTopicsAsync(page, 15, true, id);
             if (topics == null && !topics.Topics.Any())
             {
                 data.IsOk = false;
@@ -73,7 +75,6 @@ namespace KiraNet.GutsMvc.BBS.Controllers
                 data.IsOk = true;
                 data.Data = topics;
             }
-
             return Json(data);
         }
 
@@ -106,7 +107,10 @@ namespace KiraNet.GutsMvc.BBS.Controllers
         [UserAuthorize]
         public async Task<IActionResult> CreateTopic(MoTopicDes topicDes)
         {
-            if (!ModelState.IsValid)
+            ViewData["BBSId"] = topicDes.BBSId;
+            ViewData["BBSName"] = topicDes.BBSName;
+            if (!ModelState.IsValid &&
+                (topicDes.ReplyType == ReplyType.Text && String.IsNullOrWhiteSpace(topicDes.TopicDes)))
             {
                 return ReturnViewMsg("发帖失败，请检查您的标题和内容是否为空");
             }
@@ -118,7 +122,8 @@ namespace KiraNet.GutsMvc.BBS.Controllers
                 await _uf.TopicRepository.InsertAsync(topic);
                 if (await _uf.SaveChangesAsync() == 0)
                 {
-                    return ReturnViewMsg("发表新帖失败");
+                    return ReturnViewMsg("发帖失败，请稍后再试");
+
                 }
                 if (topicDes.ReplyType == ReplyType.Image)
                 {
@@ -126,7 +131,8 @@ namespace KiraNet.GutsMvc.BBS.Controllers
                         HttpRequest.Form.Files.Where(x => x.ContentType.Contains("image")).SingleOrDefault());
                     if (!success)
                     {
-                        return ReturnViewMsg(resultMsg);
+                        this.MsgBox(resultMsg);
+                        return View();
                     }
 
                     topicDes.TopicDes = resultMsg;
@@ -135,7 +141,7 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(userInfo.Id, $"发表新帖失败-{ex.Message.Substring(0, 50)}-{DateTime.Now.ToStandardFormatString()}");
-                return ReturnViewMsg("发表新帖失败");
+                return ReturnViewMsg("发帖失败，请稍后再试");
             }
 
             var reply = new Reply
@@ -149,18 +155,19 @@ namespace KiraNet.GutsMvc.BBS.Controllers
                 ReplyIndex = 1
             };
 
+            UpdateIntegrate(userInfo.Id, (int)IntegrateType.CreateTopic);
             _uf.ReplyRepository.Insert(reply);
-            if (!UpdateIntegrate(userInfo.Id, (int)IntegrateType.CreateTopic) &&
-                _uf.SaveChanges() == 0)
+            if (_uf.SaveChanges() == 0)
             {
                 _uf.TopicRepository.Delete(topic);
                 _uf.SaveChanges();
-                return ReturnViewMsg("发表新帖失败");
+                this.MsgBox("发帖失败，请稍后再试");
             }
 
             AddIndex(topic, reply);
             ViewData["TopicId"] = topic.Id;
-            return ReturnViewMsg("发表新帖成功");
+            this.MsgBox("发帖成功");
+            return View();
         }
 
         /// <summary>
@@ -356,7 +363,6 @@ namespace KiraNet.GutsMvc.BBS.Controllers
                         }
                     }
 
-                    await _uf.SaveChangesAsync();
                     trans.Commit();
                     return Json(new MoData { IsOk = true });
                 }
@@ -387,6 +393,7 @@ namespace KiraNet.GutsMvc.BBS.Controllers
                 reply.ReplyIndex = replyCount + 1; // 除去楼主
                 _uf.TopicRepository.Update(topic);
                 await _uf.ReplyRepository.InsertAsync(reply);
+                await _uf.SaveChangesAsync();
                 AddIndex(topic, reply);
                 return true;
             }
@@ -424,6 +431,7 @@ namespace KiraNet.GutsMvc.BBS.Controllers
                 reply.ReplyCount = replyCount;
                 _uf.ReplyRepository.Update(reply);
                 UpdateIntegrate(user, (int)IntegrateType.Reply);
+                await _uf.SaveChangesAsync();
                 return true;
             }
         }
@@ -448,11 +456,6 @@ namespace KiraNet.GutsMvc.BBS.Controllers
 
             if (reply.ReplyType == ReplyType.Image)
             {
-                //var path = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + reply.Message.Substring(6).Replace('/', Path.DirectorySeparatorChar);
-                //if(System.IO.File.Exists(path))
-                //{
-                //    System.IO.File.Delete(path);
-                //}
                 DeleteImg(reply.Message);
             }
 
@@ -471,11 +474,10 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             }
 
             _uf.ReplyRepository.Delete(reply);
+
             // 删除索引
-            JiebaLuceneHelper.Instance.Delete(reply.Id.ToString());
-
+            JiebaLucene.Instance.Delete(reply.Id.ToString());
             await _uf.SaveChangesAsync();
-
             data.IsOk = true;
             return Json(data);
         }
@@ -500,7 +502,7 @@ namespace KiraNet.GutsMvc.BBS.Controllers
 
             if (childReply.ReplyType == ReplyType.Image)
             {
-                //var path = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + childReply.Message.Substring(6).Replace('/', Path.DirectorySeparatorChar);
+                //var path = RootConfiguration.Root + Path.DirectorySeparatorChar + childReply.Message.Substring(6).Replace('/', Path.DirectorySeparatorChar);
                 //if (System.IO.File.Exists(path))
                 //{
                 //    System.IO.File.Delete(path);
@@ -550,7 +552,7 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             }
 
             var separator = Path.DirectorySeparatorChar;
-            var path = Directory.GetCurrentDirectory() + separator + _mapSetting.UpContentPhotoPath.Replace("\\", $"{separator}") + separator + topic.Id;
+            var path = RootConfiguration.Root + separator + _mapSetting.UpContentPhotoPath.Replace("\\", $"{separator}") + separator + topic.Id;
             if (Directory.Exists(path))
             {
                 Directory.Delete(path, true);
@@ -559,7 +561,7 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             var replies = await _uf.ReplyRepository.GetAllAsync(x => x.TopicId == topic.Id);
             foreach (var reply in replies)
             {
-                JiebaLuceneHelper.Instance.Delete(reply.Id.ToString());
+                JiebaLucene.Instance.Delete(reply.Id.ToString());
             }
 
             _uf.TopicRepository.Delete(topic);
@@ -578,7 +580,7 @@ namespace KiraNet.GutsMvc.BBS.Controllers
 
         #region 辅助方法
 
-        private IActionResult ReturnJsonMsg(bool isOk, string msg, object data=null)
+        private IActionResult ReturnJsonMsg(bool isOk, string msg, object data = null)
         {
             return Json(new MoData { IsOk = isOk, Msg = msg, Data = data });
         }
@@ -641,7 +643,7 @@ namespace KiraNet.GutsMvc.BBS.Controllers
             }
 
             var separator = Path.DirectorySeparatorChar;
-            var directory = Directory.GetCurrentDirectory() + separator + _mapSetting.UpContentPhotoPath + separator + topicId;
+            var directory = RootConfiguration.Root + separator + _mapSetting.UpContentPhotoPath + separator + topicId;
             new DirectoryInfo(directory).CreateDirectory();
 
             var fileExtend = file.FileName.Substring(file.FileName.LastIndexOf('.'));
@@ -664,7 +666,7 @@ namespace KiraNet.GutsMvc.BBS.Controllers
         /// <param name="path"></param>
         private void DeleteImg(string path)
         {
-            path = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + path.Substring(6).Replace('/', Path.DirectorySeparatorChar);
+            path = RootConfiguration.Root + Path.DirectorySeparatorChar + path.Substring(6).Replace('/', Path.DirectorySeparatorChar);
             if (System.IO.File.Exists(path))
             {
                 System.IO.File.Delete(path);
@@ -678,7 +680,7 @@ namespace KiraNet.GutsMvc.BBS.Controllers
         /// <param name="reply"></param>
         private void AddIndex(Topic topic, Reply reply)
         {
-            JiebaLuceneHelper.Instance.AddIndex(new MoContentSearchItem
+            JiebaLucene.Instance.AddIndex(new MoContentSearchItem
             {
                 Id = reply.Id,
                 TopicId = topic.Id,

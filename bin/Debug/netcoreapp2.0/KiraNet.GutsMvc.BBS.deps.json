@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.0",
-    "signature": "b608ed17f6b0a3ca4a3621d9f3f583e1ac69d806"
+    "signature": "0f1cd78541add2b7506dcd8433285bc99e1776c7"
   },
   "compilationOptions": {},
   "targets": {
@@ -12,8 +12,6 @@
           "KiraNet.UnitOfWorkModel": "1.0.0",
           "Lucene.Net": "3.0.3",
           "Lucene.Net.Contrib": "3.0.3",
-          "Lucene.Net.Contrib.Spatial": "3.0.3",
-          "Lucene.Net.Contrib.Spatial.NTS": "3.0.3",
           "MailKit": "1.20.0",
           "Microsoft.EntityFrameworkCore": "2.0.1",
           "Microsoft.EntityFrameworkCore.Design": "2.0.1",
@@ -33,15 +31,11 @@
           "System.Configuration.ConfigurationManager": "4.4.0",
           "jieba.NET": "1.0.0.0",
           "JiebaNet.Analyser": "1.0.0.0",
-          "JiebaNet.Segmenter": "1.0.0.0"
+          "JiebaNet.Segmenter": "1.0.0.0",
+          "NVelocity": "1.0.0.0"
         },
         "runtime": {
           "KiraNet.GutsMvc.BBS.dll": {}
-        }
-      },
-      "GeoAPI/1.6.0": {
-        "runtime": {
-          "lib/net35/GeoAPI.dll": {}
         }
       },
       "Lucene.Net/3.0.3": {
@@ -67,24 +61,6 @@
           "lib/net40/Lucene.Net.Contrib.SimpleFacetedSearch.dll": {},
           "lib/net40/Lucene.Net.Contrib.Snowball.dll": {},
           "lib/net40/Lucene.Net.Contrib.SpellChecker.dll": {}
-        }
-      },
-      "Lucene.Net.Contrib.Spatial/3.0.3": {
-        "dependencies": {
-          "Lucene.Net": "3.0.3",
-          "Spatial4n.Core": "0.3.0"
-        },
-        "runtime": {
-          "lib/net40/Lucene.Net.Contrib.Spatial.dll": {}
-        }
-      },
-      "Lucene.Net.Contrib.Spatial.NTS/3.0.3": {
-        "dependencies": {
-          "Lucene.Net": "3.0.3",
-          "Spatial4n.Core.NTS": "0.3.0"
-        },
-        "runtime": {
-          "lib/net40/Lucene.Net.Contrib.Spatial.NTS.dll": {}
         }
       },
       "MailKit/1.20.0": {
@@ -648,15 +624,6 @@
           "lib/netstandard1.3/MimeKit.dll": {}
         }
       },
-      "NetTopologySuite/1.12.0": {
-        "dependencies": {
-          "GeoAPI": "1.6.0"
-        },
-        "runtime": {
-          "lib/net35/NetTopologySuite.dll": {},
-          "lib/net35/PowerCollections.dll": {}
-        }
-      },
       "Newtonsoft.Json/10.0.3": {
         "dependencies": {
           "Microsoft.CSharp": "4.4.0",
@@ -858,19 +825,6 @@
       "SharpZipLib/0.86.0": {
         "runtime": {
           "lib/20/ICSharpCode.SharpZipLib.dll": {}
-        }
-      },
-      "Spatial4n.Core/0.3.0": {
-        "runtime": {
-          "lib/net40/Spatial4n.Core.dll": {}
-        }
-      },
-      "Spatial4n.Core.NTS/0.3.0": {
-        "dependencies": {
-          "NetTopologySuite": "1.12.0"
-        },
-        "runtime": {
-          "lib/net40/Spatial4n.Core.NTS.dll": {}
         }
       },
       "System.AppContext/4.3.0": {
@@ -2028,7 +1982,6 @@
           "Microsoft.Net.Compilers": "2.4.0",
           "Microsoft.Net.Http.Headers": "2.0.1",
           "Microsoft.VisualStudio.Web.CodeGenerators.Mvc": "2.0.1",
-          "NVelocity": "1.0.0",
           "Newtonsoft.Json": "10.0.3",
           "System.Buffers": "4.4.0",
           "System.ComponentModel": "4.3.0",
@@ -2050,15 +2003,6 @@
           "KiraNet.UnitOfWorkModel.dll": {}
         }
       },
-      "NVelocity/1.0.0": {
-        "dependencies": {
-          "System.Data.Common": "4.3.0",
-          "System.Data.SqlClient": "4.4.0"
-        },
-        "runtime": {
-          "NVelocity.dll": {}
-        }
-      },
       "jieba.NET/1.0.0.0": {
         "runtime": {
           "jieba.NET.dll": {}
@@ -2073,6 +2017,11 @@
         "runtime": {
           "JiebaNet.Segmenter.dll": {}
         }
+      },
+      "NVelocity/1.0.0.0": {
+        "runtime": {
+          "NVelocity.dll": {}
+        }
       }
     }
   },
@@ -2081,13 +2030,6 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
-    },
-    "GeoAPI/1.6.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-SRpviaYF6GWooS9Fv+7zmn99XiWagvFTOjrr8hfd0CbsJIN8FjWsq2HKAffAhmv1aUE+wqGkBCR8QPHFPyEeiA==",
-      "path": "geoapi/1.6.0",
-      "hashPath": "geoapi.1.6.0.nupkg.sha512"
     },
     "Lucene.Net/3.0.3": {
       "type": "package",
@@ -2102,20 +2044,6 @@
       "sha512": "sha512-4aFMsm5657tIIAXWOh3wYxSfPwWFDjrUomXnE3lxKPOuJDjmvLg3CEuTaPYuLvBMKwRaj/C4EwyPM5/pmIwytw==",
       "path": "lucene.net.contrib/3.0.3",
       "hashPath": "lucene.net.contrib.3.0.3.nupkg.sha512"
-    },
-    "Lucene.Net.Contrib.Spatial/3.0.3": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-Ju/K7Khx6fM9ZcW7er7zI8t6EXLYy21SruyEYoux705MD+lFLLDhH95II1Mz3+MQnV7oMwZCJsNkyj+K7ZEU5Q==",
-      "path": "lucene.net.contrib.spatial/3.0.3",
-      "hashPath": "lucene.net.contrib.spatial.3.0.3.nupkg.sha512"
-    },
-    "Lucene.Net.Contrib.Spatial.NTS/3.0.3": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-eDatYuE+CfeFo9u+pjQfhTxJtA+JK17LxdMWxQFHfcIGNiCLJBOUzIY6quZEv9AiXO2MjHolHy/0oGWp0+5KOg==",
-      "path": "lucene.net.contrib.spatial.nts/3.0.3",
-      "hashPath": "lucene.net.contrib.spatial.nts.3.0.3.nupkg.sha512"
     },
     "MailKit/1.20.0": {
       "type": "package",
@@ -2530,17 +2458,10 @@
       "path": "mimekit/1.20.0",
       "hashPath": "mimekit.1.20.0.nupkg.sha512"
     },
-    "NetTopologySuite/1.12.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-AzEuWKyfiahrqVcB8243S+EMMjxKDiezbn2hiKphQUpLrme7R3A3cRTyy7KIFIPY8YKlslBi+EaOR5BxSodRFw==",
-      "path": "nettopologysuite/1.12.0",
-      "hashPath": "nettopologysuite.1.12.0.nupkg.sha512"
-    },
     "Newtonsoft.Json/10.0.3": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-wBM7i7i3U2WX0ecor4zdVGvgrwFUjuigBoHKiL+nH39fCOpCPjBY3RDqJM32edvdyTAVdjzlccHsg41+/+zpSA==",
+      "sha512": "sha512-hSXaFmh7hNCuEoC4XNY5DrRkLDzYHqPx/Ik23R4J86Z7PE/Y6YidhG602dFVdLBRSdG6xp9NabH3dXpcoxWvww==",
       "path": "newtonsoft.json/10.0.3",
       "hashPath": "newtonsoft.json.10.0.3.nupkg.sha512"
     },
@@ -2554,7 +2475,7 @@
     "Portable.BouncyCastle/1.8.1.3": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-imXKRLrhXlEoeus5w5h1t6E1uwSP45N1qn7Gz+kp8GaFKkNuN0GOMMlIWDQ0P0O6OmHL7odRyd+npNmJQTcgwg==",
+      "sha512": "sha512-1jUpszv0ETm+hl78HKnYgY3wPzt6qRtjxaPENNrGCuB8nondbR/j75WAKdd6sxXzOzBcX07WMZhZEYc4s5jVWg==",
       "path": "portable.bouncycastle/1.8.1.3",
       "hashPath": "portable.bouncycastle.1.8.1.3.nupkg.sha512"
     },
@@ -2718,20 +2639,6 @@
       "sha512": "sha512-5DbS1SlKLMi+WG00Cm0ueYf2oyXJrowETQk8nx96rmdjTuHsA3laPykGV7Sxi0R5Xxfx0Kh/EfacAZ1f6M7y/g==",
       "path": "sharpziplib/0.86.0",
       "hashPath": "sharpziplib.0.86.0.nupkg.sha512"
-    },
-    "Spatial4n.Core/0.3.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-qDKhFh3nWLgSmX1MKMJh/MPXWHMy0SXuGMFovzK9AjQcTUetZOmNy3oGY2UVOEalw7yY9M8bm5eTThaScRcA/g==",
-      "path": "spatial4n.core/0.3.0",
-      "hashPath": "spatial4n.core.0.3.0.nupkg.sha512"
-    },
-    "Spatial4n.Core.NTS/0.3.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-XndzbUEo2cWhYm7oLNNv09vfHJNIoS828a0BI3fY9YafXDNRvLndoV+AXtPmPfNKf1eFQfIo6Yvz3sNPT0WSCw==",
-      "path": "spatial4n.core.nts/0.3.0",
-      "hashPath": "spatial4n.core.nts.0.3.0.nupkg.sha512"
     },
     "System.AppContext/4.3.0": {
       "type": "package",
@@ -3415,11 +3322,6 @@
       "serviceable": false,
       "sha512": ""
     },
-    "NVelocity/1.0.0": {
-      "type": "project",
-      "serviceable": false,
-      "sha512": ""
-    },
     "jieba.NET/1.0.0.0": {
       "type": "reference",
       "serviceable": false,
@@ -3431,6 +3333,11 @@
       "sha512": ""
     },
     "JiebaNet.Segmenter/1.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "NVelocity/1.0.0.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""

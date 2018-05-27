@@ -17,16 +17,6 @@ namespace KiraNet.GutsMvc.BBS.Infrastructure.Repositories
         {
         }
 
-        public override IQueryable<Topic> GetAll(Expression<Func<Topic, bool>> predicate = null)
-        {
-            return base.GetAll(predicate).AsNoTracking();
-        }
-
-        public override async Task<IQueryable<Topic>> GetAllAsync(Expression<Func<Topic, bool>> predicate = null)
-        {
-            return (await base.GetAllAsync(predicate)).AsNoTracking();
-        }
-
         public async Task<MoPageData> GetTopicSearchAsync(string query, int page, int pageSize)
         {
             query = query.Trim();
@@ -192,13 +182,13 @@ namespace KiraNet.GutsMvc.BBS.Infrastructure.Repositories
                     TopicId = x.Topic.Id,
                     UserName = x.Topic.User.UserName,
                     UserPhoto = x.Topic.User.HeadPhoto,
-                    CreateTime = x.Topic.CreateTime.ToStandardFormatString(),
                     TopicName = x.Topic.TopicName,
                     TopicDes = x.Reply.Message,
                     DesType = x.Reply.ReplyType,
                     StarCount = x.Topic.StarCount,
                     ReplyCount = x.Topic.ReplyCount,
-                    TopicStatus = x.Topic.TopicStatus
+                    TopicStatus = x.Topic.TopicStatus,
+                    CreateTime = x.Topic.CreateTime.ToStandardFormatString()
                 })
                 .OrderByDescending(x => x.TopicStatus)
                 .ThenByDescending(x => x.TopicId)

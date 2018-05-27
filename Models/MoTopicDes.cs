@@ -11,7 +11,6 @@ namespace KiraNet.GutsMvc.BBS.Models
         [Required]
         [MaxLength(50)]
         public string TopicName { get; set; }
-        [Required]
         [MaxLength(500)]
         public string TopicDes { get; set; } = String.Empty;
         public ReplyType ReplyType { get; set; }

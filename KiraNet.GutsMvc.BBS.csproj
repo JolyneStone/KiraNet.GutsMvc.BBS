@@ -13,8 +13,6 @@
   <ItemGroup>
     <PackageReference Include="Lucene.Net" Version="3.0.3" />
     <PackageReference Include="Lucene.Net.Contrib" Version="3.0.3" />
-    <PackageReference Include="Lucene.Net.Contrib.Spatial" Version="3.0.3" />
-    <PackageReference Include="Lucene.Net.Contrib.Spatial.NTS" Version="3.0.3" />
     <PackageReference Include="MailKit" Version="1.20.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.0.1" />
@@ -36,7 +34,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\KiraNet.GutsMvc\KiraNet.GutsMvc\KiraNet.GutsMvc.csproj" />
-    <ProjectReference Include="..\..\KiraNet\KiraNet\src\KiraNet.UnitOfWorkModel\KiraNet.UnitOfWorkModel\KiraNet.UnitOfWorkModel.csproj" />
+    <ProjectReference Include="..\KiraNet.UnitOfWorkModel\KiraNet.UnitOfWorkModel\KiraNet.UnitOfWorkModel.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -49,6 +47,15 @@
     <Reference Include="JiebaNet.Segmenter">
       <HintPath>Jieba.NetCore\JiebaNet.Segmenter.dll</HintPath>
     </Reference>
+    <Reference Include="NVelocity">
+      <HintPath>..\..\KiraNet.GutsMvc\NVelocity\bin\Release\netstandard2.0\NVelocity.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="setting.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

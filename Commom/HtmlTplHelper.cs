@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using KiraNet.GutsMvc.Infrastructure;
 
 namespace KiraNet.GutsMvc.BBS.Commom
 {
@@ -19,7 +20,7 @@ namespace KiraNet.GutsMvc.BBS.Commom
                 return content;
             }
 
-            folderPath = Directory.GetCurrentDirectory() + separator + folderPath;
+            folderPath = RootConfiguration.Root + separator + folderPath;
             var path = $"{folderPath}{separator}{tpl}.html";
             try
             {

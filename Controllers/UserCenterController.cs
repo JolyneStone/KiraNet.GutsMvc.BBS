@@ -1,6 +1,7 @@
 ﻿using KiraNet.GutsMvc.BBS.Commom;
 using KiraNet.GutsMvc.BBS.Infrastructure;
 using KiraNet.GutsMvc.BBS.Models;
+using KiraNet.GutsMvc.Infrastructure;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
@@ -337,7 +338,7 @@ namespace KiraNet.GutsMvc.BBS.Controllers
                 return View(userInfo);
             }
 
-            var directory = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + _mapSetting.UpHeadPhotoPath;
+            var directory = RootConfiguration.Root + Path.DirectorySeparatorChar + _mapSetting.UpHeadPhotoPath;
             var directoryInfo = new DirectoryInfo(directory);
             directoryInfo.DeleteAll(userInfo.Email);
 
