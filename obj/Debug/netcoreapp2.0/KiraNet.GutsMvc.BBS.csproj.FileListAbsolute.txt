@@ -4,7 +4,6 @@ D:\Code\KiraNet.GutsMvc.BBS\KiraNet.GutsMvc.BBS\bin\Debug\netcoreapp2.0\KiraNet.
 D:\Code\KiraNet.GutsMvc.BBS\KiraNet.GutsMvc.BBS\bin\Debug\netcoreapp2.0\KiraNet.GutsMvc.BBS.dll
 D:\Code\KiraNet.GutsMvc.BBS\KiraNet.GutsMvc.BBS\bin\Debug\netcoreapp2.0\NVelocity.dll
 D:\Code\KiraNet.GutsMvc.BBS\KiraNet.GutsMvc.BBS\bin\Debug\netcoreapp2.0\NVelocity.pdb
-D:\Code\KiraNet.GutsMvc.BBS\KiraNet.GutsMvc.BBS\obj\Debug\netcoreapp2.0\KiraNet.GutsMvc.BBS.csprojResolveAssemblyReference.cache
 D:\Code\KiraNet.GutsMvc.BBS\KiraNet.GutsMvc.BBS\obj\Debug\netcoreapp2.0\KiraNet.GutsMvc.BBS.csproj.CoreCompileInputs.cache
 D:\Code\KiraNet.GutsMvc.BBS\KiraNet.GutsMvc.BBS\obj\Debug\netcoreapp2.0\KiraNet.GutsMvc.BBS.AssemblyInfoInputs.cache
 D:\Code\KiraNet.GutsMvc.BBS\KiraNet.GutsMvc.BBS\obj\Debug\netcoreapp2.0\KiraNet.GutsMvc.BBS.AssemblyInfo.cs
@@ -20,3 +19,4 @@ D:\Code\KiraNet.GutsMvc.BBS\KiraNet.GutsMvc.BBS\bin\Debug\netcoreapp2.0\JiebaNet
 D:\Code\KiraNet.GutsMvc.BBS\KiraNet.GutsMvc.BBS\bin\Debug\netcoreapp2.0\JiebaNet.Segmenter.dll
 D:\Code\KiraNet.GutsMvc.BBS\KiraNet.GutsMvc.BBS\obj\Debug\netcoreapp2.0\KiraNet.GutsMvc.BBS.csproj.CopyComplete
 D:\Code\KiraNet.GutsMvc.BBS\KiraNet.GutsMvc.BBS\bin\Debug\netcoreapp2.0\setting.json
+D:\Code\KiraNet.GutsMvc.BBS\KiraNet.GutsMvc.BBS\obj\Debug\netcoreapp2.0\KiraNet.GutsMvc.BBS.csprojAssemblyReference.cache
